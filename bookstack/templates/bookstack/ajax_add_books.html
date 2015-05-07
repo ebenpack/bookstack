@@ -1,0 +1,12 @@
+<div class="books">
+{% for book in books %}
+    <div class="book">
+        <div class="title">
+            {{ book.title }}
+        </div>
+        <div class="img">
+            <img src="{{ book.img }}">
+        </div>
+    </div>
+{% endfor %}
+</div>

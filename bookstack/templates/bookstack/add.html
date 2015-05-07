@@ -1,0 +1,10 @@
+{% extends "bookstack/base.html" %}
+
+{% block content %}
+<form action="" method="post">{% csrf_token %}
+    {% for form in formset %}
+    {{form}}
+    {% endfor %}
+    <input type="submit" value="Add" />
+</form>
+{% endblock content %}
