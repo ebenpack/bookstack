@@ -1,32 +1,32 @@
-var browserify = require('browserify');
 var gulp = require('gulp');
+var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 var reactify = require('reactify');
-var sass = require('gulp-sass');
-var livereload = require('gulp-livereload');
-
-
-gulp.task('sassify', function(){
-    gulp.src('./sass/*.scss')
-        .pipe(sass())
-        .pipe(gulp.dest('../css'))
-        .pipe(livereload());
-});
+var uglify = require('gulp-uglify');
+var rename = require('gulp-rename');
 
 gulp.task('reactor', function() {
-    var b = browserify();
+    var b = browserify({
+        standalone: 'bookstack'
+    });
     b.transform(reactify);
     b.add('./js/react/main.js');
     return b.bundle()
         .pipe(source('../js/dist/bundle.js'))
-        .pipe(gulp.dest('./'))
-        .pipe(livereload());
+        .pipe(gulp.dest('./'));
 });
 
-gulp.task('watch', function(){
-    livereload.listen();
-    gulp.watch('./js/react/**/*.{js,jsx}', ['reactor']);
-    gulp.watch('./sass/*.scss', ['sassify']);
+gulp.task('watch', function() {
+    gulp.watch('./js/**/*.{js,jsx}', ['reactor']);
 });
+
+gulp.task('compress', function() {
+    return gulp.src('../js/dist/bundle.js')
+        .pipe(uglify())
+        .pipe(rename('bundle.min.js'))
+        .pipe(gulp.dest('../js/dist/'));
+});
+
+gulp.task('build', ['reactor']);
 
 gulp.task('default', ['watch']);
