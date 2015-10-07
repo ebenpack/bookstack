@@ -12,10 +12,10 @@ var Book = React.createClass({
                 <div className="info">
                     <div className="title">{this.props.data.title}</div>
                     By: <ul className="authors">{this.props.data.authors.map(function(author, i) {
-                        return  <Author key={i} data={author} />
+                        return (<Author key={i} data={author} />);
                     })}</ul>
                     {this.props.data.publishers.map(function(publisher, i) {
-                        return  <Publisher key={i} data={publisher} />
+                        return (<Publisher key={i} data={publisher} />);
                     })}
                     <div className="pages">{this.props.data.pages} pages</div>
                     <div className="isbn">ISBN: {this.props.data.isbn}</div>
