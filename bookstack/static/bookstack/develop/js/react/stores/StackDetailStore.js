@@ -1,68 +1,47 @@
-var React = require('react');
+var Reflux = require('reflux');
+var reqwest = require('reqwest');
+var StackDetailActions = require('../actions/StackDetailActions.js');
 
-var AppDispatcher = require('../dispatcher/AppDispatcher.js');
-var EventEmitter = require('events').EventEmitter;
-var assign = require('object-assign');
-
-var StackDetail = require('../components/StackDetail.jsx');
-var StackStoreConstants = require('../constants/StackStoreConstants.js');
-
-// Internal object of shoes
-var _stack = {
-    data: []
-};
-
-// Method to load shoes from action data
-function loadStack(data) {
-    _stack = {
-        data: data
-    };
-}
-
-// Merge our store with Node's Event Emitter
-var StackDetailStore = assign({}, EventEmitter.prototype, {
-
-    // Returns all shoes
-    getStack: function() {
-        return _stack;
+var StackDetailStore = Reflux.createStore({
+    listenables: [StackDetailActions],
+    state: {
+        error: false,
+        loading: false,
+        stackDetail: {},
     },
-
-    emitChange: function() {
-        this.emit('change');
+    sourceUrl: '/api/stack/',
+    setLoadingState: function(state){
+        this.trigger({loading: state});
     },
-
-    addChangeListener: function(callback) {
-        this.on('change', callback);
+    viewStack: function(id){
+        return this.state.stackDetail;
     },
-
-    removeChangeListener: function(callback) {
-        this.removeListener('change', callback);
+    unloadStack: function(){
+        this.trigger({stackDetail: {}});
+    },
+    fetchStack: function(id) {
+        var context = this;
+        context.trigger({
+            loading: true,
+        });
+        reqwest({
+            url: this.sourceUrl + id,
+            contentType: 'application/json',
+            type: 'json',
+        }).then(function(resp){
+            console.log('fetch complete');
+            context.trigger({
+                loading: false,
+                stackDetail: resp,
+            });
+        }).fail(function(err, msg){
+            context.trigger({
+                loading: false,
+                error: true,
+            });
+            console.error(context.sourceUrl, err.toString(), msg);
+        });
     }
-
-});
-
-// Register dispatcher callback
-AppDispatcher.register(function(payload) {
-    var action = payload.action;
-    var text;
-    // Define what to do for certain actions
-    switch (action.actionType) {
-        case StackStoreConstants.LOAD_STACK_DETAIL:
-            // Call internal method based upon dispatched action
-            loadStack(action.data);
-            React.render(<StackDetail staticPath={MyApp.staticPath} />, MyApp.mountPoint);
-            StackDetailActions.loadStack();
-            break;
-
-        default:
-            return true;
-    }
-
-    // If action was acted upon, emit change event
-    StackDetailStore.emitChange();
-
-    return true;
-
 });
 
 module.exports = StackDetailStore;
