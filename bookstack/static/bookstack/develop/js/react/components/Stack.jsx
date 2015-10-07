@@ -1,5 +1,8 @@
 var React = require('react');
 
+var ReactRouter = require('react-router');
+var Link = ReactRouter.Link;
+
 var StackListActions = require('../actions/StackListActions.js');
 var StackDetailActions = require('../actions/StackDetailActions.js');
 
@@ -15,7 +18,11 @@ var Stack =  React.createClass({
         var link = '/app/stack/' + id;
         return (
             <div className="stack">
-                <h1 className="stackName"><a href={link} data-id={id} onClick={this.handleClick}>{this.props.data.name}</a></h1>
+                <h1 className="stackName">
+                    <a onClick={this.handleClick}>
+                        <Link to={"/list/" + id}>About {this.props.data.name}</Link>
+                    </a>
+                </h1>
                 <div className="user">{this.props.data.user}</div>
                 <div className="creationDate">{this.props.data.creation_date}</div>
             </div>
