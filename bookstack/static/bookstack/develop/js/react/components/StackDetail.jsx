@@ -1,16 +1,27 @@
 var React = require('react');
+var Reflux = require('reflux');
 
 var BookStack = require('./BookStack.jsx');
 
 var StackDetailStore = require('../stores/StackDetailStore.js');
 
-function getAppState(){
-    return StackDetailStore.getStack();
+function getAppState() {
+    return StackDetailStore.viewStack();
 }
 
-var StackDetail =  React.createClass({
+var StackDetail = React.createClass({
+    mixins: [Reflux.connect(StackDetailStore)],
     getInitialState: function() {
-        return StackDetailStore.getStack();
+        return {
+            error: false,
+            loading: false,
+            stackDetail: {
+                name: "",
+                user: "",
+                creation_date: "",
+                books: []
+            }
+        };
     },
     // filterList: function(event){
     //     var updatedList = this.state.data;
@@ -21,19 +32,20 @@ var StackDetail =  React.createClass({
     //     this.setState({data: updatedList});
     // },
     componentDidMount: function() {
-        StackDetailStore.addChangeListener(this._onChange);
+        StackDetailStore.fetchStack(this.props.params.id);
     },
     componentWillUnmount: function() {
-        StackDetailStore.removeChangeListener(this._onChange);
+        StackDetailStore.unloadStack();
     },
     render: function() {
-        var staticPath = this.props.staticPath;
+        var staticPath = this.props.route.staticPath;
+        var id = this.props.params.id;
         return (
             <div className="stack">
-                <h1 className="stackName">{this.props.data.name}</h1>
-                <div className="user">{this.props.data.user}</div>
-                <div className="creationDate">{this.props.data.creation_date}</div>
-                {this.props.data.books.map(function(bookStack, i) {
+                <h1 className="stackName">{this.state.stackDetail.name}</h1>
+                <div className="user">{this.state.stackDetail.user}</div>
+                <div className="creationDate">{this.state.stackDetail.creation_date}</div>
+                {this.state.stackDetail.books.map(function(bookStack, i) {
                     return <BookStack key={i} data={bookStack} staticPath={staticPath} />;
                 })}
             </div>
