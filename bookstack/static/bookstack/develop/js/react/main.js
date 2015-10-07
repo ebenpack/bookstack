@@ -1,22 +1,11 @@
-var React = require('react');
-
-// var StackList = require('./dispatcher/AppDispatcher.js');
-var StackList = require('./components/StackList.jsx');
-var StackDetail = require('./components/StackDetail.jsx');
-var StackListActions = require('./actions/StackListActions.js');
-var StackDetailActions = require('./actions/StackDetailActions.js');
+var Router = require('./router.jsx');
 
 window.MyApp = {
-
-    init: function(opts) {
-        var mountPoint = document.querySelector(opts.el);
-        this.mountPoint = mountPoint;
+    init: function(opts){
         var staticPath = opts.staticPath;
-        this.staticPath = staticPath;
-
-        React.render(<StackList staticPath={staticPath} />, mountPoint);
-
-        StackListActions.loadStackList();
-    }
-
+        var el = opts.el;
+        Router.start(staticPath, el);
+    } 
 };
+
+
