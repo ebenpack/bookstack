@@ -1,35 +1,28 @@
 var React = require('react');
+var Reflux = require('reflux');
 
 var StackListStore = require('../stores/StackListStore.js');
 
 var Stack = require('./Stack.jsx');
 
 function getAppState(){
-    return StackListStore.getStacks();
+    return {stackList: StackListStore.viewStacks()};
 }
 
 var StackList = React.createClass({
+    mixins: [Reflux.connect(StackListStore, 'stackList')],
     getInitialState: function() {
         return getAppState();
-    },
-    componentDidMount: function() {
-        StackListStore.addChangeListener(this._onChange);
-    },
-    componentWillUnmount: function() {
-        StackListStore.removeChangeListener(this._onChange);
     },
     render: function() {
         var staticPath = this.props.staticPath;
         return (
             <div className="stacklist">
-                {this.state.data.map(function(stack, i) {
+                {this.state.stackList.map(function(stack, i) {
                     return <Stack key={i} data={stack} staticPath={staticPath} />;
                 })}
             </div>
         );
-    },
-    _onChange: function() {
-        this.setState(getAppState());
     }
 });
 
