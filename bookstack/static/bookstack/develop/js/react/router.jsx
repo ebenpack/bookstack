@@ -6,6 +6,7 @@ var Route = ReactRouter.Route;
 var App = require('./components/App.jsx');
 var StackList = require('./components/StackList.jsx');
 var StackDetail = require('./components/StackDetail.jsx');
+var Login = require('./components/Login.jsx');
 
 function routes(staticPath){
     return (
@@ -13,8 +14,11 @@ function routes(staticPath){
             <Route
                 path="/"
                 component={App}
-                staticPath={staticPath}
             >
+                <Route
+                    path="login"
+                    component={Login}
+                />
                 <Route 
                     path="list"
                     component={StackList}
