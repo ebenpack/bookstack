@@ -1,19 +1,18 @@
 var Reflux = require('reflux');
 var reqwest = require('reqwest');
-var StackListActions = require('../actions/StackListActions.js');
+var StackListActions = require('../actions/StackListActions');
 
 var StackListStore = Reflux.createStore({
     listenables: [StackListActions],
-    stackList: [],
+    state: {
+        stackList: [],
+        token: '',
+    },
     sourceUrl: '/api/stack/',
-
-    init: function() {
-        this.fetchStacks();
+    onSetToken: function(token){
+        this.trigger({token: token});
     },
-    viewStacks: function(){
-        return this.stackList;
-    },
-    fetchStacks: function() {
+    onLoadStackList: function() {
         var context = this;
         reqwest({
             url: this.sourceUrl,
@@ -21,8 +20,7 @@ var StackListStore = Reflux.createStore({
             type: 'json',
         }).then(function(resp){
             console.log('fetch complete');
-            context.stackList = resp;
-            context.trigger(context.stackList);
+            context.trigger({stackList: resp});
         }).fail(function(err, msg){
             console.error(context.sourceUrl, status, err.toString());
         });
