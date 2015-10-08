@@ -3,11 +3,8 @@ var Reflux = require('reflux');
 
 var BookStack = require('./BookStack.jsx');
 
-var StackDetailStore = require('../stores/StackDetailStore.js');
-
-function getAppState() {
-    return StackDetailStore.viewStack();
-}
+var StackDetailStore = require('../stores/StackDetailStore');
+var StackDetailActions = require('../actions/StackDetailActions');
 
 var StackDetail = React.createClass({
     mixins: [Reflux.connect(StackDetailStore)],
@@ -32,10 +29,9 @@ var StackDetail = React.createClass({
     //     this.setState({data: updatedList});
     // },
     componentDidMount: function() {
-        StackDetailStore.fetchStack(this.props.params.id);
-    },
-    componentWillUnmount: function() {
-        StackDetailStore.unloadStack();
+        if (this.props.params.id) {
+            StackDetailActions.loadStack(this.props.params.id);
+        }
     },
     render: function() {
         var staticPath = this.props.route.staticPath;
@@ -50,9 +46,6 @@ var StackDetail = React.createClass({
                 })}
             </div>
         );
-    },
-    _onChange: function() {
-        this.setState(getAppState());
     }
 });
 
