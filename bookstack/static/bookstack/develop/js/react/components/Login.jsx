@@ -7,6 +7,7 @@ var Login = React.createClass({
         return {
             user: '',
             pass: '',
+            save: true,
         };
     },
     handleUserChange: function(e) {
@@ -19,8 +20,13 @@ var Login = React.createClass({
             pass: e.target.value
         });
     },
+    handleSaveChange: function(e) {
+        this.setState({
+            save: e.target.checked
+        });
+    },
     handleSubmit: function(e) {
-        AppActions.login(this.state.user, this.state.pass);
+        AppActions.login(this.state.user, this.state.pass, this.state.save);
     },
     render: function() {
         return (
@@ -29,7 +35,10 @@ var Login = React.createClass({
                     <input onChange={this.handleUserChange} type='text' value={this.state.user} />
                 </div>
                 <div>Password:
-                    <input onChange={this.handlePassChange} type='text' value={this.state.pass} />
+                    <input onChange={this.handlePassChange} type='password' value={this.state.pass} />
+                </div>
+                <div>Stay logged in:
+                    <input onChange={this.handleSaveChange} type='checkbox' checked='checked' />
                 </div>
                 <button onClick={this.handleSubmit}>Login</button>
             </div>
