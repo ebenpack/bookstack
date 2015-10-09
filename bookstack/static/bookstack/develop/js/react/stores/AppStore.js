@@ -11,9 +11,28 @@ var AppStore = Reflux.createStore({
     loginUrl: '/api-token-auth/',
 
     init: function() {
-        this.viewStackList();
+        this.getCookieToken();
     },
-    onLogin: function(user, pass) {
+    getCookieToken: function() {
+        var cookies = document.cookie.split(';');
+        for (var i = 0, len = cookies.length; i < len; i++) {
+            var currentCookie = cookies[i].split('=');
+            if (currentCookie[0] === 'token') {
+                this.broadcastToken(currentCookie[1]);
+                break;
+            }
+        }
+    },
+    setCookieToken: function(token) {
+        var thirtyDays = 30 * 24 * 60 * 60 * 1000;
+        document.cookie = 'token=' + token + ';path=/;expires=' + new Date(Date.now() + thirtyDays).toUTCString();
+    },
+    broadcastToken: function(token) {
+        this.trigger({token: token});
+        StackDetailActions.setToken(token);
+        StackListActions.setToken(token);
+    },
+    onLogin: function(user, pass, save) {
         var context = this;
         reqwest({
             url: this.loginUrl,
@@ -25,16 +44,14 @@ var AppStore = Reflux.createStore({
             type: 'json',
             contentType: 'application/json'
         }).then(function(resp){
-            context.trigger(resp);
-            StackDetailActions.setToken(resp.token)
-            StackListActions.setToken(resp.token)
+            context.broadcastToken(resp.token);
+            if (save) {
+                context.setCookieToken(resp.token);
+            }
         }).fail(function(err, msg){
             console.error(context.sourceUrl, err.toString(), msg);
         });
     },
-
-    viewStackList: function() {},
-    viewStackDetail: function() {}
 });
 
 module.exports = AppStore;
