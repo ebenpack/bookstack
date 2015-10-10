@@ -14,7 +14,7 @@ var StackDetailStore = Reflux.createStore({
     booksetUrl: '/api/bookset/',
     onSetToken: function(token){
         this.state.token = token;
-        this.trigger({token: token});
+        this.trigger({token: this.state.token});
     },
     setLoadingState: function(state){
         this.state.loading = state;
@@ -24,7 +24,8 @@ var StackDetailStore = Reflux.createStore({
         return this.state.stackDetail;
     },
     unloadStack: function(){
-        this.trigger({stackDetail: {}});
+        this.state.stackDetail = {};
+        this.trigger({stackDetail: this.state.stackDetail});
     },
     updateReadStatus: function(book) {
         for (var i = 0, len = this.state.stackDetail.books.length; i < len; i++) {

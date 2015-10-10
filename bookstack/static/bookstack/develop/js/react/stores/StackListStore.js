@@ -10,7 +10,8 @@ var StackListStore = Reflux.createStore({
     },
     sourceUrl: '/api/stack/',
     onSetToken: function(token){
-        this.trigger({token: token});
+        this.state.token = token;
+        this.trigger({token: this.state.token});
     },
     onLoadStackList: function() {
         var context = this;

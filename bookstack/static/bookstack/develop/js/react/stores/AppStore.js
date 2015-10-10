@@ -7,30 +7,45 @@ var reqwest = require('reqwest');
 
 var AppStore = Reflux.createStore({
     listenables: [AppActions],
-    token: '',
+    state: {
+        token: ''
+    },
     loginUrl: '/api-token-auth/',
-
     init: function() {
         this.getCookieToken();
+        this.broadcastToken();
     },
     getCookieToken: function() {
         var cookies = document.cookie.split(';');
         for (var i = 0, len = cookies.length; i < len; i++) {
             var currentCookie = cookies[i].split('=');
-            if (currentCookie[0] === 'token') {
-                this.broadcastToken(currentCookie[1]);
+            if (currentCookie[0].trim() === 'token') {
+                this.state.token = currentCookie[1].trim();
+                this.broadcastToken();
                 break;
             }
         }
     },
     setCookieToken: function(token) {
         var thirtyDays = 30 * 24 * 60 * 60 * 1000;
-        document.cookie = 'token=' + token + ';path=/;expires=' + new Date(Date.now() + thirtyDays).toUTCString();
+        document.cookie = 'token=' + token + '; path=/; expires=' + new Date(Date.now() + thirtyDays).toUTCString();
     },
-    broadcastToken: function(token) {
-        this.trigger({token: token});
+    clearCookieToken: function() {
+        document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        this.state.token = '';
+        this.broadcastToken();
+    },
+    broadcastToken: function() {
+        var token = this.state.token;
         StackDetailActions.setToken(token);
         StackListActions.setToken(token);
+        this.trigger(this.state);
+    },
+    onGetToken: function() {
+        this.broadcastToken();
+    },
+    onLogoff: function() {
+        this.clearCookieToken();
     },
     onLogin: function(user, pass, save) {
         var context = this;
@@ -43,12 +58,14 @@ var AppStore = Reflux.createStore({
             method: 'POST',
             type: 'json',
             contentType: 'application/json'
-        }).then(function(resp){
-            context.broadcastToken(resp.token);
+        }).then(function(resp) {
+            var token = resp.token;
+            context.state.token = token;
+            context.broadcastToken();
             if (save) {
-                context.setCookieToken(resp.token);
+                context.setCookieToken(token);
             }
-        }).fail(function(err, msg){
+        }).fail(function(err, msg) {
             console.error(context.sourceUrl, err.toString(), msg);
         });
     },
