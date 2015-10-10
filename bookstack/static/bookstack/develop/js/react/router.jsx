@@ -8,7 +8,7 @@ var StackList = require('./components/StackList.jsx');
 var StackDetail = require('./components/StackDetail.jsx');
 var Login = require('./components/Login.jsx');
 
-function routes(staticPath){
+function routes(staticPath) {
     return (
         <Router>
             <Route

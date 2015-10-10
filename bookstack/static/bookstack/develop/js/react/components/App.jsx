@@ -25,8 +25,8 @@ var App = React.createClass({
         var loggedIn = this.state.token !== '';
         var login = (
             loggedIn ?
-                <li><a onClick={this.handleClick} href="#">Logoff</a></li> :
-                <li><Link to={"/login"}>Login</Link></li>
+            <li><a onClick={this.handleClick} href="#">Logoff</a></li> :
+            <li><Link to={"/login"}>Login</Link></li>
         );
         return (
             <div>

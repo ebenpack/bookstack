@@ -12,20 +12,17 @@ var StackDetailStore = Reflux.createStore({
     },
     stackUrl: '/api/stack/',
     booksetUrl: '/api/bookset/',
-    onSetToken: function(token){
+    onSetToken: function(token) {
         this.state.token = token;
-        this.trigger({token: this.state.token});
+        this.trigger({
+            token: this.state.token
+        });
     },
-    setLoadingState: function(state){
+    setLoadingState: function(state) {
         this.state.loading = state;
-        this.trigger({loading: state});
-    },
-    viewStack: function(id){
-        return this.state.stackDetail;
-    },
-    unloadStack: function(){
-        this.state.stackDetail = {};
-        this.trigger({stackDetail: this.state.stackDetail});
+        this.trigger({
+            loading: state
+        });
     },
     updateReadStatus: function(book) {
         for (var i = 0, len = this.state.stackDetail.books.length; i < len; i++) {
@@ -52,9 +49,9 @@ var StackDetailStore = Reflux.createStore({
             method: 'PATCH',
             type: 'json',
             contentType: 'application/json'
-        }).then(function(resp){
+        }).then(function(resp) {
             context.updateReadStatus(resp);
-        }).fail(function(err, msg){
+        }).fail(function(err, msg) {
             console.error(context.sourceUrl, err.toString(), msg);
         });
     },
@@ -67,7 +64,7 @@ var StackDetailStore = Reflux.createStore({
             url: this.stackUrl + id + '/',
             contentType: 'application/json',
             type: 'json',
-        }).then(function(resp){
+        }).then(function(resp) {
             console.log('fetch complete');
             context.state.loading = false;
             context.state.stackDetail = resp;
@@ -75,7 +72,7 @@ var StackDetailStore = Reflux.createStore({
                 loading: false,
                 stackDetail: resp,
             });
-        }).fail(function(err, msg){
+        }).fail(function(err, msg) {
             context.state.loading = false;
             context.state.error = true;
             context.trigger({

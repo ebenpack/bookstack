@@ -6,7 +6,7 @@ var Category = require('./Category.jsx');
 var StackDetailActions = require('../actions/StackDetailActions');
 
 var BookStack = React.createClass({
-    handleChange: function(e){
+    handleChange: function(e) {
         StackDetailActions.setReadState(this.props.data.id, e.target.checked);
     },
     render: function() {

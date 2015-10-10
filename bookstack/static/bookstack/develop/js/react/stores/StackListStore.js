@@ -9,9 +9,11 @@ var StackListStore = Reflux.createStore({
         token: '',
     },
     sourceUrl: '/api/stack/',
-    onSetToken: function(token){
+    onSetToken: function(token) {
         this.state.token = token;
-        this.trigger({token: this.state.token});
+        this.trigger({
+            token: this.state.token
+        });
     },
     onLoadStackList: function() {
         var context = this;
@@ -19,10 +21,12 @@ var StackListStore = Reflux.createStore({
             url: this.sourceUrl,
             contentType: 'application/json',
             type: 'json',
-        }).then(function(resp){
+        }).then(function(resp) {
             console.log('fetch complete');
-            context.trigger({stackList: resp});
-        }).fail(function(err, msg){
+            context.trigger({
+                stackList: resp
+            });
+        }).fail(function(err, msg) {
             console.error(context.sourceUrl, status, err.toString());
         });
     }

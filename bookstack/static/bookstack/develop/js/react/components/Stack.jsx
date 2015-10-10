@@ -1,26 +1,23 @@
 var React = require('react');
 
-var ReactRouter = require('react-router');
-var Link = ReactRouter.Link;
+var Link = require('react-router').Link;
 
 var StackListActions = require('../actions/StackListActions.js');
 var StackDetailActions = require('../actions/StackDetailActions.js');
 
-var Stack =  React.createClass({
+var Stack = React.createClass({
     handleClick: function(event) {
         event.preventDefault();
-        StackListActions.unloadStackList();
         StackDetailActions.loadStack(event.target.dataset.id);
     },
     render: function() {
         var staticPath = this.props.staticPath;
         var id = this.props.data.id;
-        var link = '/app/stack/' + id;
         return (
             <div className="stack">
                 <h1 className="stackName">
                     <a onClick={this.handleClick}>
-                        <Link to={"/list/" + id}>About {this.props.data.name}</Link>
+                        <Link to={"/list/" + id}>{this.props.data.name}</Link>
                     </a>
                 </h1>
                 <div className="user">{this.props.data.user}</div>
