@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
-import urllib.request
-import shutil
-import os
+from django.db.models import F
 
 
 class Stack(models.Model):
@@ -20,18 +17,31 @@ class Stack(models.Model):
         all books in a stack will be numbered sequentially from 1-n, where n is
         the number of books in the stack, and each book will have a unique position.
         '''
-        bookstack_set = self.bookstack_set.order_by('position')
+        bookstack_set = self.bookstack_set
+
         start = min(from_position, to_position)
         end = max(from_position, to_position)
-        # Items' positions decrease if moving item later in list,
-        # increase if moving item to earlier position
-        direction = -1 if from_position < to_position else 1
-        for i, book in enumerate(bookstack_set[start-1:end], start):
-            if i == from_position:
-                book.position = to_position
-            else:
-                book.position = book.position + direction
-            book.save()
+        if from_position < to_position:
+            start = start + 1
+            direction = -1
+        else:
+            end = end - 1
+            direction = 1
+
+        # Grab the book being moved first, otherwise we
+        # won't be able to uniquely identify it by its postion
+        moved = bookstack_set.get(position=from_position)
+
+        bookstack_set.filter(
+            position__gte=start
+        ).filter(
+            position__lte=end
+        ).update(
+            position=F('position') + direction
+        )
+
+        moved.position = to_position
+        moved.save()
 
     def __str__(self):
         return self.name
