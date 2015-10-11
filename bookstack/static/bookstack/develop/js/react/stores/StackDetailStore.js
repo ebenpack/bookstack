@@ -40,7 +40,7 @@ var StackDetailStore = Reflux.createStore({
     sortBooks: function() {
         // Sort books based on their position property
         this.state.stackDetail.books.sort(function(book1, book2) {
-            return book1.position > book2.position;
+            return book1.position - book2.position;
         });
     },
     reorder: function(fromPosition, toPosition) {
