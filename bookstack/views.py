@@ -10,6 +10,7 @@ from rest_framework import viewsets
 
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -68,17 +69,21 @@ class BookStackViewSet(viewsets.ModelViewSet):
     serializer_class = BookStackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
-    # def create(self, request):
-    #     from pudb import set_trace; set_trace()
-    #     foo = 10
-        # if author does not exist:
-        #   create author
-        # if publisher does not exist
-        #   create publisher
-        # if book does not exist
-        #   create book
-        # create bookstack
-        # self.perform_create ????
+    @detail_route(methods=['patch'])
+    def renumber(self, request, pk=None):
+        try:
+            position = int(request.data['position'])
+        except ValueError:
+            content = {'detail': 'Invalid position supplied'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        bookstack = self.get_object()
+        max_position = bookstack.max_position()
+        if position > max_position or position < 1:
+            content = {'detail': 'Invalid position supplied'}
+            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        bookstack.renumber(position)
+        serializer = BookStackSerializer(bookstack)
+        return Response(serializer.data)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):

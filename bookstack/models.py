@@ -15,45 +15,23 @@ class Stack(models.Model):
     )
     books = models.ManyToManyField('Book', through='BookStack')
 
-    def renumber(self):
+    def renumber(self, from_position, to_position):
         '''Re-number book positions in the stack. After this method is executed,
         all books in a stack will be numbered sequentially from 1-n, where n is
         the number of books in the stack, and each book will have a unique position.
         '''
-        for i, book in enumerate(self.bookstack_set.order_by('position'), 1):
-            if book.position != i:
-                book.position = i
-                book.save()
-
-    def add_book(self, book):
-        #from pudb import set_trace; set_trace()
-        # Save image file locally
-        imgurl = book["img"]
-        file_name = book["isbn"] + ".jpg"
-        opener = urllib.request.build_opener()
-        opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-        current_path = os.path.realpath(os.path.dirname(__file__))
-        fullpath = os.path.join(current_path, 'static/bookstack/images/', file_name)
-        with opener.open(imgurl) as response, open(fullpath, 'wb') as out_file:
-            shutil.copyfileobj(response, out_file)
-
-        new_book = Book.objects.get_or_create(title=book["title"], pages=book["pages"],
-            isbn=book["isbn"], img=file_name)[0]
-        new_book.save()
-        new_stack = BookStack(read=False)
-        new_stack.stack = self
-        new_stack.book = new_book
-        new_stack.position = len(self.bookstack_set.all()) + 1
-        new_stack.save()
-        for cat in book["categories"].split(","):
-            category = Category.objects.get_or_create(category=cat.strip())[0]
-            new_stack.categories.add(category)
-        for name in book["authors"]:
-            author = Author.objects.get_or_create(name=name)[0]
-            new_book.authors.add(author)
-        publisher = Publisher.objects.get_or_create(name = book["publisher"].strip('\"\''))[0]
-        new_book.publishers.add(publisher)
-        new_book.save()
+        bookstack_set = self.bookstack_set.order_by('position')
+        start = min(from_position, to_position)
+        end = max(from_position, to_position)
+        # Items' positions decrease if moving item later in list,
+        # increase if moving item to earlier position
+        direction = -1 if from_position < to_position else 1
+        for i, book in enumerate(bookstack_set[start-1:end], start):
+            if i == from_position:
+                book.position = to_position
+            else:
+                book.position = book.position + direction
+            book.save()
 
     def __str__(self):
         return self.name
@@ -62,13 +40,21 @@ class Stack(models.Model):
 class BookStack(models.Model):
     class Meta:
         ordering = ['position']
-        
+
     def number():
         no = BookStack.objects.count()
         if no is None:
             return 1
         else:
             return no + 1
+
+    def max_position(self):
+        return self.stack.bookstack_set.count()
+
+    def renumber(self, position):
+        from_position = self.position
+        to_position = position
+        self.stack.renumber(from_position, to_position)
 
     stack = models.ForeignKey(Stack)
     book = models.ForeignKey('Book')
