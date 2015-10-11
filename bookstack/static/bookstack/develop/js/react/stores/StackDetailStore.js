@@ -12,6 +12,7 @@ var StackDetailStore = Reflux.createStore({
     },
     stackUrl: '/api/stack/',
     booksetUrl: '/api/bookset/',
+    updatePositionUrl: '/api/bookset/{id}/renumber/',
     onSetToken: function(token) {
         this.state.token = token;
         this.trigger({
@@ -35,6 +36,49 @@ var StackDetailStore = Reflux.createStore({
                 break;
             }
         }
+    },
+    sortBooks: function() {
+        // Sort books based on their position property
+        this.state.stackDetail.books.sort(function(book1, book2) {
+            return book1.position > book2.position;
+        });
+    },
+    reorder: function(fromPosition, toPosition) {
+        var start = Math.min(fromPosition, toPosition);
+        var end = Math.max(fromPosition, toPosition);
+        var direction = fromPosition < toPosition ? -1 : 1;
+        this.sortBooks();
+        for (var i = start; i <= end; i++) {
+            var book = this.state.stackDetail.books[i-1];
+            if (i === fromPosition) {
+                book.position = toPosition;
+            } else {
+                book.position += direction;
+            }
+        }
+        this.sortBooks();
+        this.trigger({
+            stackDetail: this.state.stackDetail,
+        });
+    },
+    onSetPosition: function(id, fromPosition, toPosition) {
+        var context = this;
+        reqwest({
+            url: this.updatePositionUrl.replace('{id}', id),
+            data: JSON.stringify({
+                position: toPosition,
+            }),
+            headers: {
+                'Authorization': 'Token ' + this.state.token,
+            },
+            method: 'PATCH',
+            type: 'json',
+            contentType: 'application/json'
+        }).then(function(resp) {
+            context.reorder(fromPosition, toPosition);
+        }).fail(function(err, msg) {
+            console.error(context.sourceUrl, err.toString(), msg);
+        });
     },
     onSetReadState: function(bookId, readState) {
         var context = this;
