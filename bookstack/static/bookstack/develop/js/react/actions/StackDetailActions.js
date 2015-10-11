@@ -6,6 +6,7 @@ var StackDetailActions = Reflux.createActions([
     'updateRead',
     'setReadState',
     'setToken',
+    'setPosition',
 ]);
 
 module.exports = StackDetailActions;
