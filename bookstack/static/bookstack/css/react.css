@@ -1,79 +1,44 @@
-.stack {
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto; }
-  .stack:after {
-    content: " ";
-    display: block;
-    clear: both; }
-
 .bookstack {
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.5em;
   border-top: 1px solid #CDCDCD; }
-  .bookstack:after {
-    content: " ";
-    display: block;
-    clear: both; }
   .bookstack .position {
-    width: 5.06329%;
-    float: left;
-    margin-right: 1.26582%;
     font-weight: bold;
     font-size: 1.1em; }
+    .bookstack .position input {
+      max-width: 100%;
+      margin: 0;
+      padding: 0; }
   .bookstack.isRead {
     background-color: #EEE; }
-  .bookstack .info {
-    width: 36.70886%;
-    float: right;
-    margin-right: 0; }
-    .bookstack .info .categories {
-      text-transform: capitalize;
-      display: inline;
-      padding: 0; }
-      .bookstack .info .categories > .category {
-        display: inline; }
-      .bookstack .info .categories > .category:before {
-        content: ',\0000a0';
-        /* Non-breaking space */ }
-      .bookstack .info .categories > .category:first-child:before {
-        content: normal; }
-
-.book {
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  width: 55.6962%;
-  float: left;
-  margin-right: 1.26582%; }
-  .book:after {
-    content: " ";
-    display: block;
-    clear: both; }
-  .book > img {
-    width: 24.05063%;
-    float: left;
-    margin-right: 1.26582%;
-    max-width: 49px; }
-  .book .info {
-    width: 74.68354%;
-    float: left;
-    margin-right: 1.26582%; }
-    .book .info > * {
-      margin: 0 0 0.5em 0; }
-  .book .authors {
-    padding: 0;
+  .bookstack .info .categories {
     text-transform: capitalize;
-    display: inline; }
-    .book .authors > .author {
+    display: inline;
+    padding: 0; }
+    .bookstack .info .categories > .category {
       display: inline; }
-    .book .authors > .author:before {
+    .bookstack .info .categories > .category:before {
       content: ',\0000a0';
       /* Non-breaking space */ }
-    .book .authors > .author:first-child:before {
+    .bookstack .info .categories > .category:first-child:before {
       content: normal; }
+
+.book > img {
+  max-width: 49px; }
+
+.book .info > * {
+  margin: 0 0 0.5em 0; }
+
+.book .authors {
+  padding: 0;
+  text-transform: capitalize;
+  display: inline; }
+  .book .authors > .author {
+    display: inline; }
+  .book .authors > .author:before {
+    content: ',\0000a0';
+    /* Non-breaking space */ }
+  .book .authors > .author:first-child:before {
+    content: normal; }

@@ -1,24 +1,19 @@
-@import "./susy/susy";
-
-$susy: (
-  global-box-sizing: border-box,
-  use-custom: (rem: true)
-  );
 
 .stack {
-    @include container;
 }
 
 .bookstack {
-    @include container(16);
     display: flex;
     align-items: center;
     justify-content: center;
     .position {
-        @include span( 1 of 16 );
-        // align-self: flex-start;
         font-weight: bold;
         font-size: 1.1em;
+        input {
+            max-width: 100%;
+            margin: 0;
+            padding: 0;
+        }
     }
     padding: 0.5em;
     border-top: 1px solid #CDCDCD;
@@ -26,7 +21,6 @@ $susy: (
         background-color: #EEE;
     }
     .info {
-        @include span( 6 of 16 last);
         .categories {
             text-transform: capitalize;
             display: inline;
@@ -47,14 +41,10 @@ $susy: (
 }
 
 .book {
-    @include container(16);
-    @include span( 9 of 16 );
     > img {
-        @include span( 4 of 16 );
         max-width: 49px;
     }
     .info {
-        @include span( 12 of 16 );
         > * {
             margin: 0 0 0.5em 0;
         }
