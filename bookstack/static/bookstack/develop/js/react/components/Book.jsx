@@ -7,7 +7,7 @@ var Book = React.createClass({
     render: function() {
         var staticPath = this.props.staticPath;
         return (
-            <div className="book">
+            <div className="book four columns">
                 <img src={this.props.data.img ? this.props.data.img : staticPath + 'bookstack/images/defaultbook.jpg'} />
                 <div className="info">
                     <div className="title">{this.props.data.title}</div>

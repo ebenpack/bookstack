@@ -34,7 +34,7 @@ var BookStack = React.createClass({
     render: function() {
         var context = this;
         var staticPath = this.props.staticPath;
-        var classString = 'bookstack';
+        var classString = 'bookstack row';
         if (this.props.data.read) {
             classString += ' isRead';
         }
@@ -42,15 +42,16 @@ var BookStack = React.createClass({
         var position = (
             this.state.editing ?
                 (
-                    <input
-                        className="position"
-                        onBlur={this.updatePosition}
-                        defaultValue={this.props.data.position}
-                        onMouseOut={this.setEditingStateOff} />
+                    <div>
+                        <input
+                            className="position"
+                            onBlur={this.updatePosition}
+                            defaultValue={this.props.data.position}
+                            onMouseOut={this.setEditingStateOff} />
+                    </div>
                 ) :
                 (
                     <div
-                        className="position"
                         onClick={this.setEditingStateOn}>
                         {this.props.data.position}
                     </div>
@@ -58,18 +59,20 @@ var BookStack = React.createClass({
         );
         return (
             <div className={classString} >
-                {position}
+                <div className="position one column">
+                    {position}
+                </div>
                 <Book data={this.props.data.book} staticPath={staticPath} />
-                <div className="info">
+                <div className="info seven columns">
                     {categories ? 'Categories: ' : ''}
+                    <div className="read">
+                        Read: <input onChange={this.toggleRead} type="checkbox" checked={this.props.data.read}  />
+                    </div>
                     <ul className="categories">
                         {this.props.data.categories.map(function(category, i) {
                             return (<Category key={i} data={category} />);
                         })}
                     </ul>
-                    <div className="read">
-                        Read: <input onChange={this.toggleRead} type="checkbox" checked={this.props.data.read}  />
-                    </div>
                 </div>
             </div>
         );

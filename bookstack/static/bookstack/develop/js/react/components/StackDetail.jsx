@@ -37,7 +37,7 @@ var StackDetail = React.createClass({
         var staticPath = this.props.route.staticPath;
         var id = this.props.params.id;
         return (
-            <div className="stack">
+            <div className="stack row">
                 <h1 className="stackName">{this.state.stackDetail.name}</h1>
                 <div className="user">{this.state.stackDetail.user}</div>
                 <div className="creationDate">{this.state.stackDetail.creation_date}</div>

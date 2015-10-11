@@ -29,8 +29,8 @@ var App = React.createClass({
             <li><Link to={"/login"}>Login</Link></li>
         );
         return (
-            <div>
-                <ul>
+            <div class="container">
+                <ul class="row menu">
                     <li><Link to={"/list"}>View Stacks</Link></li>
                     {login}
                 </ul>
