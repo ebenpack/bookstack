@@ -12,5 +12,8 @@
         "reflux": "^0.2.12",
         "reqwest": "^2.0.4",
         "vinyl-source-stream": "^1.1.0"
+    },
+    "scripts": {
+        "sass": "sassc sass/react.scss > ../css/react.css"
     }
 }
