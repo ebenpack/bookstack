@@ -29,6 +29,20 @@ var BookStack = React.createClass({
             StackDetailActions.setPosition(id, fromPosition, toPosition);
         }
     },
+    moveUp: function(){
+        var fromPosition = this.props.data.position;
+        var toPosition = fromPosition - 1;
+        var id = this.props.data.id;
+        if (toPosition > 0) {
+            this.updatePosition(id, fromPosition, toPosition);
+        }
+    },
+    moveDown: function(){
+        var fromPosition = this.props.data.position;
+        var toPosition = fromPosition + 1;
+        var id = this.props.data.id;
+        this.updatePosition(id, fromPosition, toPosition);
+    },
     handleBlur: function(e) {
         var toPosition = parseInt(e.target.value, 10);
         var fromPosition = this.props.data.position;
@@ -88,6 +102,10 @@ var BookStack = React.createClass({
                 onDragOver={this.handleDragOver}>
                 <div className="position one column">
                     {position}
+                </div>
+                <div>
+                    <div onClick={this.moveUp}>↑</div>
+                    <div onClick={this.moveDown}>↓</div>
                 </div>
                 <Book data={this.props.data.book} staticPath={staticPath} />
                 <div className="info seven columns">
