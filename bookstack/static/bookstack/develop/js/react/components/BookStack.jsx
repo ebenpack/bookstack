@@ -24,12 +24,33 @@ var BookStack = React.createClass({
             editing: false,
         });
     },
-    updatePosition: function(e) {
-        var position = parseInt(e.target.value, 10);
-        this.setEditingStateOff();
-        if (position && this.props.data.position !== position) {
-            StackDetailActions.setPosition(this.props.data.id, this.props.data.position, position);
+    updatePosition: function(id, fromPosition, toPosition) {
+        if (fromPosition !== toPosition) {
+            StackDetailActions.setPosition(id, fromPosition, toPosition);
         }
+    },
+    handleBlur: function(e) {
+        var toPosition = parseInt(e.target.value, 10);
+        var fromPosition = this.props.data.position;
+        var id = this.props.data.id;
+        this.setEditingStateOff();
+        this.updatePosition(id, fromPosition, toPosition);
+    },
+    handleDragStart: function(e){
+        e.dataTransfer.setData('text', JSON.stringify({
+            id: this.props.data.id,
+            position: this.props.data.position
+        }));
+    },
+    handleDrop: function(e){
+        var dropped = JSON.parse(e.dataTransfer.getData('text'));
+        var id = dropped.id;
+        var fromPosition = dropped.position;
+        var toPosition = this.props.data.position;
+        this.updatePosition(id, fromPosition, toPosition);
+    },
+    handleDragOver: function(e){
+        e.preventDefault();
     },
     render: function() {
         var context = this;
@@ -45,7 +66,7 @@ var BookStack = React.createClass({
                     <div>
                         <input
                             className="position"
-                            onBlur={this.updatePosition}
+                            onBlur={this.handleBlur}
                             defaultValue={this.props.data.position}
                             onMouseOut={this.setEditingStateOff} />
                     </div>
@@ -58,7 +79,13 @@ var BookStack = React.createClass({
                 )
         );
         return (
-            <div className={classString} >
+            <div
+                draggable="true"
+                className={classString}
+                onDragStart={this.handleDragStart}
+                onDragEnd={this.handleDragEnd}
+                onDrop={this.handleDrop}
+                onDragOver={this.handleDragOver}>
                 <div className="position one column">
                     {position}
                 </div>
