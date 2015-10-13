@@ -104,8 +104,8 @@ var BookStack = React.createClass({
                     {position}
                 </div>
                 <div>
-                    <div onClick={this.moveUp}>↑</div>
-                    <div onClick={this.moveDown}>↓</div>
+                    <div className="moveArrow" onClick={this.moveUp}>↑</div>
+                    <div className="moveArrow" onClick={this.moveDown}>↓</div>
                 </div>
                 <Book data={this.props.data.book} staticPath={staticPath} />
                 <div className="info seven columns">
