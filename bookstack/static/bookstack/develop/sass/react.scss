@@ -10,10 +10,17 @@
         font-weight: bold;
         font-size: 1.1em;
         input {
-            max-width: 100%;
+            max-width: 80%;
             margin: 0;
             padding: 0;
         }
+    }
+    .moveArrow {
+        &:hover {
+            color: #313131;
+        }
+        color: #D0D0D0;
+        cursor: pointer;
     }
     padding: 0.5em;
     border-top: 1px solid #CDCDCD;
@@ -36,7 +43,6 @@
                 content: normal;
             }
         }
-        
     }
 }
 
