@@ -1,3 +1,4 @@
+var ReactDOM = require('react-dom');
 var React = require('react');
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
@@ -8,31 +9,36 @@ var StackList = require('./components/StackList.jsx');
 var StackDetail = require('./components/StackDetail.jsx');
 var Login = require('./components/Login.jsx');
 
-function routes(staticPath) {
-    return (
-        <Router>
-            <Route
-                path="/"
-                component={App}
-            >
+var Route = React.createClass({
+    render: function(){
+        return (
+            <Router>
                 <Route
-                    path="login"
-                    component={Login}
-                />
-                <Route 
-                    path="list"
-                    component={StackList}
-                />
-                <Route
-                    path="list/:id"
-                    component={StackDetail}
-                    staticPath={staticPath}
-                />
-            </Route>
-        </Router>
-    );
-}
+                    path="/"
+                    component={App}
+                >
+                    <Route
+                        path="login"
+                        component={Login}
+                    />
+                    <Route
+                        path="list"
+                        component={StackList}
+                    />
+                    <Route
+                        path="list/:id"
+                        component={StackDetail}
+                        staticPath={this.props.staticPath}
+                    />
+                </Route>
+            </Router>
+        );
+    }
+});
 
 exports.start = function(staticPath, el) {
-    React.render(routes(staticPath), document.querySelector(el));
+    ReactDOM.render(
+        <Route staticPath={staticPath} />,
+        document.querySelector(el)
+    );
 };
