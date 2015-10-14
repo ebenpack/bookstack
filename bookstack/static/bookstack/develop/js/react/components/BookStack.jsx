@@ -79,6 +79,12 @@ var BookStack = React.createClass({
                 (
                     <div>
                         <input
+                            autoFocus
+                            ref={function(input) {
+                                if (input != null) {
+                                    input.select();
+                                }
+                            }}
                             className="position"
                             onBlur={this.handleBlur}
                             defaultValue={this.props.data.position}
