@@ -40,8 +40,8 @@ class PublisherSerializer(serializers.ModelSerializer):
 
 class BookSerializer(serializers.ModelSerializer):
 
-    authors = serializers.SlugRelatedField(many=True, read_only=False, slug_field='name', queryset=Author.objects.all())
-    publishers = serializers.SlugRelatedField(many=True, read_only=False, slug_field='name', queryset=Publisher.objects.all())
+    authors = AuthorSerializer(many=True, read_only=False)
+    publishers = PublisherSerializer(many=True, read_only=False)
 
     class Meta:
         model = Book
