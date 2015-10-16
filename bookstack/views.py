@@ -105,6 +105,13 @@ class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = AuthorSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
+    @detail_route(methods=['get'])
+    def books(self, request, pk=None):
+        author = self.get_object()
+        books = author.book_set.all()
+        serializer = BookSerializer(books, many=True)
+        return Response(serializer.data)
+
 
 class PublisherViewSet(viewsets.ModelViewSet):
     """
