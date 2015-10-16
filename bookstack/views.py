@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404
 
 from bookstack.models import Author, Book, BookStack, Category, Publisher, Stack
 
-from bookstack.serializers import StackSerializer, StackListSerializer, BookStackSerializer, BookSerializer, PublisherSerializer, AuthorSerializer, CategorySerializer, GroupSerializer, UserSerializer
+from bookstack.serializers import StackSerializer, StackListSerializer, BookStackSerializer, BookSerializer, PublisherSerializer, AuthorSerializer, CategorySerializer, GroupSerializer, UserSerializer, AuthorDetailSerializer
 
 from rest_framework import viewsets
 
@@ -101,17 +101,20 @@ class AuthorViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows authors to be viewed or edited.
     """
-    queryset = Author.objects.all()
+    queryset = Author.objects.prefetch_related('book_set')
     serializer_class = AuthorSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
-    @detail_route(methods=['get'])
-    def books(self, request, pk=None):
-        author = self.get_object()
-        books = author.book_set.all()
-        serializer = BookSerializer(books, many=True)
+    def list(self, request):
+        queryset = Author.objects.all()
+        serializer = AuthorSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    def retrieve(self, request, pk=None):
+        queryset = Author.objects.prefetch_related('book_set')
+        author_detail = get_object_or_404(queryset, pk=pk)
+        serializer = AuthorDetailSerializer(author_detail)
+        return Response(serializer.data)
 
 class PublisherViewSet(viewsets.ModelViewSet):
     """

@@ -31,7 +31,6 @@ class AuthorSerializer(serializers.ModelSerializer):
         model = Author
         fields = ('name', 'id')
 
-
 class PublisherSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -48,6 +47,13 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = ('title', 'pages', 'isbn', 'img', 'authors', 'publishers', 'id')
 
+
+class AuthorDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = ('name', 'books', 'id')
+
+    books = BookSerializer(many=True, source='book_set')
 
 class BookStackSerializer(serializers.ModelSerializer):
 
