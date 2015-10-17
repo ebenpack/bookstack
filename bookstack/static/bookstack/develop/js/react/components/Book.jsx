@@ -8,17 +8,17 @@ var Book = React.createClass({
         var staticPath = this.props.staticPath;
         return (
             <div className="book four columns">
-                <img src={this.props.data.img ? this.props.data.img : staticPath + 'bookstack/images/defaultbook.jpg'} />
+                <img src={this.props.book.img ? this.props.book.img : staticPath + 'bookstack/images/defaultbook.jpg'} />
                 <div className="info">
-                    <div className="title">{this.props.data.title}</div>
-                    By: <ul className="authors">{this.props.data.authors.map(function(author, i) {
-                        return (<Author key={i} data={author} />);
+                    <div className="title">{this.props.book.title}</div>
+                    By: <ul className="authors">{this.props.book.authors.map(function(author, i) {
+                        return (<Author key={i} author={author} />);
                     })}</ul>
-                    {this.props.data.publishers.map(function(publisher, i) {
-                        return (<Publisher key={i} data={publisher} />);
+                    {this.props.book.publishers.map(function(publisher, i) {
+                        return (<Publisher key={i} publisher={publisher} />);
                     })}
-                    <div className="pages">{this.props.data.pages} pages</div>
-                    <div className="isbn">ISBN: {this.props.data.isbn}</div>
+                    <div className="pages">{this.props.book.pages} pages</div>
+                    <div className="isbn">ISBN: {this.props.book.isbn}</div>
                 </div>
             </div>
         );
