@@ -101,30 +101,37 @@ var StackDetailStore = Reflux.createStore({
     },
     onLoadStack: function(id) {
         var context = this;
-        context.trigger({
-            loading: true,
-        });
-        reqwest({
-            url: this.stackUrl + id + '/',
-            contentType: 'application/json',
-            type: 'json',
-        }).then(function(resp) {
-            console.log('fetch complete');
-            context.state.loading = false;
-            context.state.stackDetail = resp;
+        if (this.state.stackDetail.id !== parseInt(id, 10)) {
             context.trigger({
-                loading: false,
-                stackDetail: resp,
+                loading: true,
             });
-        }).fail(function(err, msg) {
-            context.state.loading = false;
-            context.state.error = true;
-            context.trigger({
-                loading: false,
-                error: true,
+            reqwest({
+                url: this.stackUrl + id + '/',
+                contentType: 'application/json',
+                type: 'json',
+            }).then(function(resp) {
+                console.log('fetch complete');
+                context.state.loading = false;
+                context.state.stackDetail = resp;
+                context.trigger({
+                    loading: false,
+                    stackDetail: resp,
+                });
+            }).fail(function(err, msg) {
+                context.state.loading = false;
+                context.state.error = true;
+                context.trigger({
+                    loading: false,
+                    error: true,
+                });
+                console.error(context.sourceUrl, err.toString(), msg);
             });
-            console.error(context.sourceUrl, err.toString(), msg);
-        });
+        } else {
+            this.trigger({
+                loading: false,
+                stackDetail: this.state.stackDetail,
+            });
+        }
     }
 });
 
