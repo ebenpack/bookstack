@@ -5,6 +5,7 @@ var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 
 var App = require('./components/App.jsx');
+var AuthorDetail = require('./components/AuthorDetail.jsx');
 var StackList = require('./components/StackList.jsx');
 var StackDetail = require('./components/StackDetail.jsx');
 var Login = require('./components/Login.jsx');
@@ -29,6 +30,10 @@ var Route = React.createClass({
                         path="list/:id"
                         component={StackDetail}
                         staticPath={this.props.staticPath}
+                    />
+                    <Route
+                        path="author/:id"
+                        component={AuthorDetail}
                     />
                 </Route>
             </Router>
