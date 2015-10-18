@@ -12,12 +12,33 @@ class Stack(models.Model):
     )
     books = models.ManyToManyField('Book', through='BookStack')
 
-    def renumber(self, from_position, to_position):
+    def __str__(self):
+        return self.name
+
+
+class BookStack(models.Model):
+    class Meta:
+        ordering = ['position']
+
+    def number():
+        no = BookStack.objects.count()
+        if no is None:
+            return 1
+        else:
+            return no + 1
+
+    def max_position(self):
+        return self.stack.bookstack_set.count()
+
+    def renumber(self, position):
         '''Re-number book positions in the stack. After this method is executed,
         all books in a stack will be numbered sequentially from 1-n, where n is
         the number of books in the stack, and each book will have a unique position.
         '''
-        bookstack_set = self.bookstack_set
+        from_position = self.position
+        to_position = position
+
+        bookstack_set = self.stack.bookstack_set
 
         start = min(from_position, to_position)
         end = max(from_position, to_position)
@@ -42,29 +63,6 @@ class Stack(models.Model):
 
         moved.position = to_position
         moved.save()
-
-    def __str__(self):
-        return self.name
-
-
-class BookStack(models.Model):
-    class Meta:
-        ordering = ['position']
-
-    def number():
-        no = BookStack.objects.count()
-        if no is None:
-            return 1
-        else:
-            return no + 1
-
-    def max_position(self):
-        return self.stack.bookstack_set.count()
-
-    def renumber(self, position):
-        from_position = self.position
-        to_position = position
-        self.stack.renumber(from_position, to_position)
 
     stack = models.ForeignKey(Stack)
     book = models.ForeignKey('Book')
