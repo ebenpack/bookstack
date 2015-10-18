@@ -49,7 +49,7 @@ var StackDetailStore = Reflux.createStore({
         var direction = fromPosition < toPosition ? -1 : 1;
         this.sortBooks();
         for (var i = start; i <= end; i++) {
-            var book = this.state.stackDetail.books[i-1];
+            var book = this.state.stackDetail.books[i - 1];
             if (i === fromPosition) {
                 book.position = toPosition;
             } else {
@@ -63,22 +63,26 @@ var StackDetailStore = Reflux.createStore({
     },
     onSetPosition: function(id, fromPosition, toPosition) {
         var context = this;
-        reqwest({
-            url: this.updatePositionUrl.replace('{id}', id),
-            data: JSON.stringify({
-                position: toPosition,
-            }),
-            headers: {
-                'Authorization': 'Token ' + this.state.token,
-            },
-            method: 'PATCH',
-            type: 'json',
-            contentType: 'application/json'
-        }).then(function(resp) {
-            context.reorder(fromPosition, toPosition);
-        }).fail(function(err, msg) {
-            console.error(context.sourceUrl, err.toString(), msg);
-        });
+        if (toPosition > 1 &&
+            this.state.stackDetail.books &&
+            toPosition < this.state.stackDetail.books.length) {
+            reqwest({
+                url: this.updatePositionUrl.replace('{id}', id),
+                data: JSON.stringify({
+                    position: toPosition,
+                }),
+                headers: {
+                    'Authorization': 'Token ' + this.state.token,
+                },
+                method: 'PATCH',
+                type: 'json',
+                contentType: 'application/json'
+            }).then(function(resp) {
+                context.reorder(fromPosition, toPosition);
+            }).fail(function(err, msg) {
+                console.error(context.sourceUrl, err.toString(), msg);
+            });
+        }
     },
     onSetReadState: function(bookId, readState) {
         var context = this;
