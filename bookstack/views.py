@@ -125,6 +125,16 @@ class PublisherViewSet(viewsets.ModelViewSet):
     serializer_class = PublisherSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
+    def list(self, request):
+        queryset = Publisher.objects
+        serializer = PublisherSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = Publisher.objects.prefetch_related('book_set', 'book_set__authors', 'book_set__publishers')
+        publisher_detail = get_object_or_404(queryset, pk=pk)
+        serializer = PublisherDetailSerializer(publisher_detail)
+        return Response(serializer.data)
 
 def app_view(request):
     return render(request, 'bookstack/bookstack_react.html')
