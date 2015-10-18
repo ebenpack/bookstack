@@ -6,6 +6,7 @@ var Route = ReactRouter.Route;
 
 var App = require('./components/App.jsx');
 var AuthorDetail = require('./components/AuthorDetail.jsx');
+var PublisherDetail = require('./components/PublisherDetail.jsx');
 var StackList = require('./components/StackList.jsx');
 var StackDetail = require('./components/StackDetail.jsx');
 var Login = require('./components/Login.jsx');
@@ -34,6 +35,10 @@ var Route = React.createClass({
                     <Route
                         path="author/:id"
                         component={AuthorDetail}
+                    />
+                    <Route
+                        path="publisher/:id"
+                        component={PublisherDetail}
                     />
                 </Route>
             </Router>
