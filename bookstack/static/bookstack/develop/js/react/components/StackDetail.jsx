@@ -2,6 +2,7 @@ var React = require('react');
 var Reflux = require('reflux');
 
 var BookStack = require('./BookStack.jsx');
+var AddBook = require('./AddBook.jsx');
 
 var StackDetailStore = require('../stores/StackDetailStore');
 var StackDetailActions = require('../actions/StackDetailActions');
@@ -12,6 +13,7 @@ var StackDetail = React.createClass({
         return {
             error: false,
             loading: false,
+            editing: false,
             stackDetail: {
                 name: "",
                 user: "",
@@ -33,14 +35,30 @@ var StackDetail = React.createClass({
             StackDetailActions.loadStack(this.props.params.id);
         }
     },
+    toggleEditing: function(){
+        this.setState({
+            editing: !this.state.editing
+        });
+    },
     render: function() {
         var staticPath = this.props.route.staticPath;
         var id = this.props.params.id;
+        var addBook = this.state.editing ?
+            (<div>
+                <div onClick={this.toggleEditing}>Close -</div>
+                <AddBook />
+            </div>) :
+            (<div>
+                <div onClick={this.toggleEditing}>Add book +</div>
+            </div>);
         return (
             <div className="stack row">
                 <h1 className="stackName">{this.state.stackDetail.name}</h1>
                 <div className="user">{this.state.stackDetail.user}</div>
                 <div className="creationDate">{this.state.stackDetail.creation_date}</div>
+                <div className="addBook">
+                    {addBook}
+                </div>
                 {this.state.stackDetail.books.map(function(bookStack, i) {
                     return <BookStack key={i} data={bookStack} staticPath={staticPath} />;
                 })}
