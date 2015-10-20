@@ -13,7 +13,7 @@ class BookStackInline(admin.StackedInline):
         qs = super(BookStackInline, self).get_queryset(request).prefetch_related('book__authors', 'book__publishers')
         if request.user.is_superuser:
             return qs
-        return qs.filter(author=request.user)
+        return qs.filter(stack__user=request.user)
 
 class StackAdmin(admin.ModelAdmin):
     inlines = (BookStackInline, )
@@ -28,7 +28,7 @@ class StackAdmin(admin.ModelAdmin):
         qs = super(StackAdmin, self).get_queryset(request).prefetch_related('bookstack_set__book__authors', 'bookstack_set__book__publishers', 'bookstack_set__categories')
         if request.user.is_superuser:
             return qs
-        return qs.filter(author=request.user)
+        return qs.filter(user=request.user)
 
 admin.site.register(Stack, StackAdmin)
 admin.site.register(Book)
