@@ -16,6 +16,10 @@ var AddBook = React.createClass({
         var search = e.target.value;
         if (search) {
             AddBookActions.searchBooks(search);
+        } else {
+            this.setState({
+                booksAutocomplete: []
+            });
         }
     },
     selectBook: function(id, e){
