@@ -48,6 +48,20 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = ('title', 'pages', 'isbn', 'img', 'authors', 'publishers', 'id')
 
+    def __init__(self, *args, **kwargs):
+        # If instantiated with `include` kwarg,
+        # then limit fields returned to just those
+        # specified
+        include = kwargs.pop('include', None)
+        super(BookSerializer, self).__init__(*args, **kwargs)
+        if include:
+            included = set(include)
+            existing = set(self.fields.keys())
+
+            for field in existing:
+                if field not in included:
+                    self.fields.pop(field)
+
 
 class PublisherDetailSerializer(serializers.ModelSerializer):
 

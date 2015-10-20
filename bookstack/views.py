@@ -55,11 +55,22 @@ class BookViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows books to be viewed or edited.
     """
-    # import pudb; pudb.set_trace()
     queryset = Book.objects.prefetch_related('authors', 'publishers')
     serializer_class = BookSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
+    def list(self, request):
+        queryset = Book.objects.prefetch_related('authors', 'publishers')
+        title = request.query_params.get('search', None)
+        include = None
+        # If the search query param is sent, then filter the
+        # results based on the value sent, and only return the
+        # `title` and `id` fields.
+        if title is not None:
+            queryset = queryset.filter(title__contains=title)
+            include=['title', 'id']
+        serializer = BookSerializer(queryset, include=include, many=True)
+        return Response(serializer.data)
 
 class BookStackViewSet(viewsets.ModelViewSet):
     """
