@@ -7,11 +7,12 @@ var AddBookActions = require('../actions/AddBookActions');
 
 var AddBookStore = Reflux.createStore({
     listenables: [AddBookActions],
-    bookUrl: '/api/book/?search={search}',
+    bookUrl: '/api/book/{id}',
+    bookSearchUrl: '/api/book/?search={search}',
     onSearchBooks: debounce(function(search) {
         var context = this;
         reqwest({
-            url: this.bookUrl.replace('{search}', search),
+            url: this.bookSearchUrl.replace('{search}', search),
             contentType: 'application/json',
             type: 'json',
         }).then(function(resp) {
@@ -22,7 +23,22 @@ var AddBookStore = Reflux.createStore({
         }).fail(function(err, msg) {
             console.error(context.sourceUrl, status, err.toString());
         });
-    }, 250)
+    }, 250),
+    onSelectBook: function(id){
+        var context = this;
+        reqwest({
+            url: this.bookUrl.replace('{id}', id),
+            contentType: 'application/json',
+            type: 'json',
+        }).then(function(resp) {
+            console.log('fetch complete');
+            context.trigger({
+                selectedBook: resp
+            });
+        }).fail(function(err, msg) {
+            console.error(context.sourceUrl, status, err.toString());
+        });
+    },
 });
 
 module.exports = AddBookStore;
