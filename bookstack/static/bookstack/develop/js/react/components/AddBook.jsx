@@ -1,6 +1,8 @@
 var React = require('react');
 var Reflux = require('reflux');
 
+var Book = require('../components/Book.jsx');
+
 var AddBookActions = require('../actions/AddBookActions');
 var AddBookStore = require('../stores/AddBookStore');
 
@@ -10,6 +12,15 @@ var AddBook = React.createClass({
         return {
             title: '',
             booksAutocomplete: [],
+            selectedBook: {
+                "title": "",
+                "pages": "",
+                "isbn": "",
+                "img": "",
+                "authors": [],
+                "publishers": [],
+                "id": ""
+            },
         };
     },
     handleChange: function(e) {
@@ -22,12 +33,15 @@ var AddBook = React.createClass({
             });
         }
     },
-    selectBook: function(id, e){
-        // TODO: Do something here
-        // Get this book, and autofill the form fields
+    selectBook: function(id, e) {
+        this.setState({
+            booksAutocomplete: []
+        });
+        AddBookActions.selectBook(id);
     },
     render: function() {
         var autocompleteResults = "";
+        var selectedBook= "";
         if (this.state.booksAutocomplete.length > 0) {
             autocompleteResults = (
                 <ul className="autocomplete">
@@ -37,29 +51,19 @@ var AddBook = React.createClass({
                 </ul>
             );
         }
+        if (this.state.selectedBook.id) {
+            autocompleteResults = (
+                <Book className="" book={this.state.selectedBook} />
+            );
+        }
         return (
             <div>
             <input type="text" title={this.state.title} onChange={this.handleChange} />
             {autocompleteResults}
+            {selectedBook}
             </div>
         );
     }
-// read (boolean),
-// position (integer),
-// book (BookSerializer),
-// categories (array[string]),
-// stack (string),
-// id (integer)
-
-// title (string),
-// pages (integer),
-// isbn (string),
-// img (string),
-// authors (array[AuthorSerializer]),
-// publishers (array[PublisherSerializer]),
-// id (integer)
-// AuthorSerializer
-// PublisherSerializer
 });
 
 module.exports = AddBook;
