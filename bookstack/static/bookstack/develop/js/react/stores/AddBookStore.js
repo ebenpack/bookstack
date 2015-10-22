@@ -7,8 +7,18 @@ var AddBookActions = require('../actions/AddBookActions');
 
 var AddBookStore = Reflux.createStore({
     listenables: [AddBookActions],
-    bookUrl: '/api/book/{id}',
+    state: {
+        token: '',
+    },
+    selectBookUrl: '/api/book/{id}',
+    addBookUrl: '/api/bookset/',
     bookSearchUrl: '/api/book/?search={search}',
+    onSetToken: function(token) {
+        this.state.token = token;
+        this.trigger({
+            token: this.state.token
+        });
+    },
     onSearchBooks: debounce(function(search) {
         var context = this;
         reqwest({
@@ -27,9 +37,33 @@ var AddBookStore = Reflux.createStore({
     onSelectBook: function(id){
         var context = this;
         reqwest({
-            url: this.bookUrl.replace('{id}', id),
+            url: this.selectBookUrl.replace('{id}', id),
             contentType: 'application/json',
             type: 'json',
+        }).then(function(resp) {
+            console.log('fetch complete');
+            context.trigger({
+                selectedBook: resp
+            });
+        }).fail(function(err, msg) {
+            console.error(context.sourceUrl, status, err.toString());
+        });
+    },
+    onAddBook: function(book, stackId){
+        var context = this;
+        reqwest({
+            url: this.addBookUrl,
+            contentType: 'application/json',
+            type: 'json',
+            method: 'POST',
+            headers: {
+                'Authorization': 'Token ' + this.state.token,
+            },
+            data: JSON.stringify({
+                book: book,
+                categories: [],
+                stack: stackId
+            })
         }).then(function(resp) {
             console.log('fetch complete');
             context.trigger({
