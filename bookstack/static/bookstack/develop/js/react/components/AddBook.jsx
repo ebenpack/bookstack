@@ -33,11 +33,15 @@ var AddBook = React.createClass({
             });
         }
     },
-    selectBook: function(id, e) {
+    selectBook: function(bookId, e) {
         this.setState({
             booksAutocomplete: []
         });
-        AddBookActions.selectBook(id);
+        AddBookActions.selectBook(bookId);
+    },
+    addBook: function(e) {
+        var stackId = this.props.id;
+        AddBookActions.addBook(this.state.selectedBook, stackId);
     },
     render: function() {
         var autocompleteResults = "";
@@ -53,7 +57,10 @@ var AddBook = React.createClass({
         }
         if (this.state.selectedBook.id) {
             autocompleteResults = (
-                <Book className="" book={this.state.selectedBook} />
+                <div>
+                    <Book className="" book={this.state.selectedBook} />
+                    <button onClick={this.addBook}>Add Book</button>
+                </div>
             );
         }
         return (
