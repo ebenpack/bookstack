@@ -46,7 +46,7 @@ var StackDetail = React.createClass({
         var addBook = this.state.editing ?
             (<div>
                 <div onClick={this.toggleEditing}>Close -</div>
-                <AddBook />
+                <AddBook stackId={id} />
             </div>) :
             (<div>
                 <div onClick={this.toggleEditing}>Add book +</div>
