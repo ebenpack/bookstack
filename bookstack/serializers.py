@@ -82,12 +82,23 @@ class AuthorDetailSerializer(serializers.ModelSerializer):
 
 class BookStackSerializer(serializers.ModelSerializer):
 
-    book = BookSerializer()
+    book = BookSerializer(read_only=True)
+    bookId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Book.objects.all())
     categories = serializers.SlugRelatedField(many=True, read_only=False, slug_field='category', queryset=Category.objects.all())
 
     class Meta:
         model = BookStack
-        fields = ('read', 'position', 'book', 'categories', 'stack', 'id')
+        fields = ('read', 'position', 'book', 'bookId', 'categories', 'stack', 'id')
+
+    def create(self, validated_data):
+        categories = validated_data.pop('categories')
+        bookstack = BookStack.objects.create(
+            book=validated_data['bookId'],
+            stack=validated_data['stack']
+        )
+        for category in categories:
+            Category.objects.get_or_create(bookstack=bookstack, **category)
+        return bookstack
 
 
 class StackListSerializer(serializers.ModelSerializer):
