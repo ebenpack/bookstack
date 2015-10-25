@@ -68,7 +68,8 @@ class BookStack(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
-        self.position = self.stack.bookstack_set.count() + 1
+        if not self.position:
+            self.position = self.stack.bookstack_set.count() + 1
         super().save(*args, **kwargs)
 
     def __str__(self):
