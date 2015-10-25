@@ -61,7 +61,7 @@ class BookStack(models.Model):
     book = models.ForeignKey('Book')
     read = models.BooleanField(default=False)
     categories = models.ManyToManyField('Category', blank=True)
-    position = models.IntegerField(default=1, db_index=True)
+    position = models.IntegerField(default=0, db_index=True)
 
     def toggle_read(self):
         self.read = not self.read
