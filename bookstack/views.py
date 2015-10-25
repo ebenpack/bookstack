@@ -1,16 +1,11 @@
 from django.contrib.auth.models import User, Group
-
 from django.shortcuts import render, get_object_or_404
 
-from bookstack.models import Author, Book, BookStack, Category, Publisher, Stack
+from bookstack import models, serializers
 
-from bookstack.serializers import StackSerializer, StackListSerializer, BookStackSerializer, BookSerializer, PublisherSerializer, AuthorSerializer, CategorySerializer, GroupSerializer, UserSerializer, AuthorDetailSerializer, PublisherDetailSerializer
-
-from rest_framework import viewsets
-
+from rest_framework import viewsets, status
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -18,7 +13,7 @@ class UserViewSet(viewsets.ModelViewSet):
     API endpoint that allows users to be viewed or edited.
     """
     queryset = User.objects
-    serializer_class = UserSerializer
+    serializer_class = serializers.UserSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
@@ -27,7 +22,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     API endpoint that allows groups to be viewed or edited.
     """
     queryset = Group.objects
-    serializer_class = GroupSerializer
+    serializer_class = serializers.GroupSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
@@ -35,19 +30,19 @@ class StackViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows book stacks to be viewed or edited.
     """
-    queryset = Stack.objects.prefetch_related('bookstack_set__book__authors', 'bookstack_set__book__publishers', 'bookstack_set__categories')
-    serializer_class = StackSerializer
+    queryset = models.Stack.objects.prefetch_related('bookstack_set__book__authors', 'bookstack_set__book__publishers', 'bookstack_set__categories')
+    serializer_class = serializers.StackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
     def list(self, request):
-        queryset = Stack.objects
-        serializer = StackListSerializer(queryset, many=True)
+        queryset = models.Stack.objects
+        serializer = serializers.StackListSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = Stack.objects.prefetch_related('bookstack_set__book__authors', 'bookstack_set__book__publishers', 'bookstack_set__categories')
+        queryset = models.Stack.objects.prefetch_related('bookstack_set__book__authors', 'bookstack_set__book__publishers', 'bookstack_set__categories')
         stack = get_object_or_404(queryset, pk=pk)
-        serializer = StackSerializer(stack)
+        serializer = serializers.StackSerializer(stack)
         return Response(serializer.data)
 
 
@@ -55,12 +50,12 @@ class BookViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows books to be viewed or edited.
     """
-    queryset = Book.objects.prefetch_related('authors', 'publishers')
-    serializer_class = BookSerializer
+    queryset = models.Book.objects.prefetch_related('authors', 'publishers')
+    serializer_class = serializers.BookSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
     def list(self, request):
-        queryset = Book.objects.prefetch_related('authors', 'publishers')
+        queryset = models.Book.objects.prefetch_related('authors', 'publishers')
         title = request.query_params.get('search', None)
         include = None
         # If the search query param is sent, then filter the
@@ -69,16 +64,16 @@ class BookViewSet(viewsets.ModelViewSet):
         if title is not None:
             queryset = queryset.filter(title__contains=title)
             include=['title', 'id']
-        serializer = BookSerializer(queryset, include=include, many=True)
+        serializer = serializers.BookSerializer(queryset, include=include, many=True)
         return Response(serializer.data)
 
 class BookStackViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows books within stacks to be viewed or edited.
     """
-    queryset = BookStack.objects.order_by(
+    queryset = models.BookStack.objects.order_by(
             'position').prefetch_related('categories', 'book__authors', 'book__publishers')
-    serializer_class = BookStackSerializer
+    serializer_class = serializers.BookStackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
     @detail_route(methods=['patch'])
@@ -96,16 +91,15 @@ class BookStackViewSet(viewsets.ModelViewSet):
         bookstack.renumber(position)
         # Re-fetch object to get updated position
         bookstack = self.get_object()
-        serializer = BookStackSerializer(bookstack)
+        serializer = serializers.BookStackSerializer(bookstack)
         return Response(serializer.data)
-
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows categories to be viewed or edited.
     """
-    queryset = Category.objects
-    serializer_class = CategorySerializer
+    queryset = models.Category.objects
+    serializer_class = serializers.CategorySerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
@@ -113,38 +107,38 @@ class AuthorViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows authors to be viewed or edited.
     """
-    queryset = Author.objects.prefetch_related('book_set')
-    serializer_class = AuthorSerializer
+    queryset = models.Author.objects.prefetch_related('book_set')
+    serializer_class = serializers.AuthorSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
     def list(self, request):
-        queryset = Author.objects
-        serializer = AuthorSerializer(queryset, many=True)
+        queryset = models.Author.objects
+        serializer = serializers.AuthorSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = Author.objects.prefetch_related('book_set', 'book_set__authors', 'book_set__publishers')
+        queryset = models.Author.objects.prefetch_related('book_set', 'book_set__authors', 'book_set__publishers')
         author_detail = get_object_or_404(queryset, pk=pk)
-        serializer = AuthorDetailSerializer(author_detail)
+        serializer = serializers.AuthorDetailSerializer(author_detail)
         return Response(serializer.data)
 
 class PublisherViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows publishers to be viewed or edited.
     """
-    queryset = Publisher.objects.prefetch_related('book_set')
-    serializer_class = PublisherSerializer
+    queryset = models.Publisher.objects.prefetch_related('book_set')
+    serializer_class = serializers.PublisherSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
     def list(self, request):
         queryset = Publisher.objects
-        serializer = PublisherSerializer(queryset, many=True)
+        serializer = serializers.PublisherSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = Publisher.objects.prefetch_related('book_set', 'book_set__authors', 'book_set__publishers')
+        queryset = models.Publisher.objects.prefetch_related('book_set', 'book_set__authors', 'book_set__publishers')
         publisher_detail = get_object_or_404(queryset, pk=pk)
-        serializer = PublisherDetailSerializer(publisher_detail)
+        serializer = serializers.PublisherDetailSerializer(publisher_detail)
         return Response(serializer.data)
 
 def app_view(request):
