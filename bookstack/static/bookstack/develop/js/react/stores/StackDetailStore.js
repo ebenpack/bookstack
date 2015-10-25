@@ -63,9 +63,9 @@ var StackDetailStore = Reflux.createStore({
     },
     onSetPosition: function(id, fromPosition, toPosition) {
         var context = this;
-        if (toPosition > 1 &&
+        if (toPosition > 0 &&
             this.state.stackDetail.books &&
-            toPosition < this.state.stackDetail.books.length) {
+            toPosition <= this.state.stackDetail.books.length) {
             reqwest({
                 url: this.updatePositionUrl.replace('{id}', id),
                 data: JSON.stringify({
