@@ -20,13 +20,6 @@ class BookStack(models.Model):
     class Meta:
         ordering = ['position']
 
-    def number():
-        no = BookStack.objects.count()
-        if no is None:
-            return 1
-        else:
-            return no + 1
-
     def max_position(self):
         return self.stack.bookstack_set.count()
 
@@ -68,11 +61,15 @@ class BookStack(models.Model):
     book = models.ForeignKey('Book')
     read = models.BooleanField(default=False)
     categories = models.ManyToManyField('Category', blank=True)
-    position = models.IntegerField(default=number, db_index=True)
+    position = models.IntegerField(default=1, db_index=True)
 
     def toggle_read(self):
         self.read = not self.read
         self.save()
+
+    def save(self, *args, **kwargs):
+        self.position = self.stack.bookstack_set.count() + 1
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.book.title
