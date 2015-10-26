@@ -61,6 +61,16 @@ var StackDetailStore = Reflux.createStore({
             stackDetail: this.state.stackDetail,
         });
     },
+    removeBook: function(id){
+        var books = this.state.stackDetail.books;
+        this.state.stackDetail.books = books.filter(function(book){
+            return book.id !== id;
+        });
+        this.trigger({
+            stackDetail: this.state.stackDetail
+        });
+        var foo = 'foobarbaz';
+    },
     onSetPosition: function(id, fromPosition, toPosition) {
         var context = this;
         if (toPosition > 0 &&
@@ -99,6 +109,23 @@ var StackDetailStore = Reflux.createStore({
             contentType: 'application/json'
         }).then(function(resp) {
             context.updateReadStatus(resp);
+        }).fail(function(err, msg) {
+            console.error(context.sourceUrl, err.toString(), msg);
+        });
+    },
+    onRemoveBook: function(id){
+        var context = this;
+        reqwest({
+            url: this.booksetUrl + id + '/',
+            contentType: 'application/json',
+            type: 'json',
+            method: 'DELETE',
+            headers: {
+                'Authorization': 'Token ' + this.state.token,
+            },
+        }).then(function(resp) {
+            console.log('fetch complete');
+            context.removeBook(id);
         }).fail(function(err, msg) {
             console.error(context.sourceUrl, err.toString(), msg);
         });
