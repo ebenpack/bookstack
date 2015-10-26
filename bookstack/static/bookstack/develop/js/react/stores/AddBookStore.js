@@ -4,6 +4,7 @@ var reqwest = require('reqwest');
 var debounce = require('../util').debounce;
 
 var AddBookActions = require('../actions/AddBookActions');
+var StackDetailActions = require('../actions/StackDetailActions');
 
 var AddBookStore = Reflux.createStore({
     listenables: [AddBookActions],
@@ -49,7 +50,7 @@ var AddBookStore = Reflux.createStore({
             console.error(context.sourceUrl, status, err.toString());
         });
     },
-    onAddBook: function(book, stackId){
+    onAddBook: function(bookId, stackId){
         var context = this;
         reqwest({
             url: this.addBookUrl,
@@ -60,15 +61,13 @@ var AddBookStore = Reflux.createStore({
                 'Authorization': 'Token ' + this.state.token,
             },
             data: JSON.stringify({
-                book: book,
+                bookId: bookId,
                 categories: [],
                 stack: stackId
             })
         }).then(function(resp) {
             console.log('fetch complete');
-            context.trigger({
-                selectedBook: resp
-            });
+            StackDetailActions.addBook(resp);
         }).fail(function(err, msg) {
             console.error(context.sourceUrl, status, err.toString());
         });
