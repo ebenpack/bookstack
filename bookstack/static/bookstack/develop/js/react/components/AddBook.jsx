@@ -39,9 +39,22 @@ var AddBook = React.createClass({
         });
         AddBookActions.selectBook(bookId);
     },
+    clearSelected: function(){
+        this.setState({
+            selectedBook: {
+                "title": "",
+                "pages": "",
+                "isbn": "",
+                "img": "",
+                "authors": [],
+                "publishers": [],
+                "id": ""
+            },
+        });
+    },
     addBook: function(e) {
-        var stackId = this.props.id;
-        AddBookActions.addBook(this.state.selectedBook, stackId);
+        var stackId = parseInt(this.props.stackId, 10);
+        AddBookActions.addBook(this.state.selectedBook.id, stackId);
     },
     render: function() {
         var autocompleteResults = "";
@@ -57,17 +70,20 @@ var AddBook = React.createClass({
         }
         if (this.state.selectedBook.id) {
             autocompleteResults = (
-                <div>
-                    <Book className="" book={this.state.selectedBook} />
-                    <button onClick={this.addBook}>Add Book</button>
+                <div className="select">
+                    <div>
+                        <a title="Close" className="close" onClick={this.clearSelected}>X</a>
+                        <Book className="" book={this.state.selectedBook} />
+                        <button onClick={this.addBook}>Add Book</button>
+                    </div>
                 </div>
             );
         }
         return (
             <div>
-            <input type="text" title={this.state.title} onChange={this.handleChange} />
-            {autocompleteResults}
-            {selectedBook}
+                <input type="text" title={this.state.title} onChange={this.handleChange} />
+                {autocompleteResults}
+                {selectedBook}
             </div>
         );
     }
