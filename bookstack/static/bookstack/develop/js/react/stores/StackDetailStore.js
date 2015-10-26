@@ -130,6 +130,13 @@ var StackDetailStore = Reflux.createStore({
             console.error(context.sourceUrl, err.toString(), msg);
         });
     },
+    onAddBook: function(book){
+        this.state.stackDetail.books.push(book);
+        this.trigger({
+            stackDetail: this.state.stackDetail,
+            editing: false,
+        });
+    },
     onLoadStack: function(id) {
         var context = this;
         if (this.state.stackDetail.id !== parseInt(id, 10)) {
