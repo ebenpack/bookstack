@@ -66,6 +66,10 @@ var BookStack = React.createClass({
     handleDragOver: function(e){
         e.preventDefault();
     },
+    handleRemove: function() {
+        var id = this.props.data.id;
+        StackDetailActions.removeBook(id);
+    },
     render: function() {
         var context = this;
         var staticPath = this.props.staticPath;
@@ -124,6 +128,9 @@ var BookStack = React.createClass({
                             return (<Category key={i} data={category} />);
                         })}
                     </ul>
+                    <div className="remove">
+                        <button onClick={this.handleRemove}>Remove</button>
+                    </div>
                 </div>
             </div>
         );
