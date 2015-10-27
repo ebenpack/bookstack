@@ -9,6 +9,7 @@ var BookStack = React.createClass({
     getInitialState: function() {
         return {
             editing: false,
+            removeConfirm: false,
         };
     },
     toggleRead: function(e) {
@@ -29,7 +30,7 @@ var BookStack = React.createClass({
             StackDetailActions.setPosition(id, fromPosition, toPosition);
         }
     },
-    moveUp: function(){
+    moveUp: function() {
         var fromPosition = this.props.data.position;
         var toPosition = fromPosition - 1;
         var id = this.props.data.id;
@@ -37,7 +38,7 @@ var BookStack = React.createClass({
             this.updatePosition(id, fromPosition, toPosition);
         }
     },
-    moveDown: function(){
+    moveDown: function() {
         var fromPosition = this.props.data.position;
         var toPosition = fromPosition + 1;
         var id = this.props.data.id;
@@ -50,25 +51,38 @@ var BookStack = React.createClass({
         this.setEditingStateOff();
         this.updatePosition(id, fromPosition, toPosition);
     },
-    handleDragStart: function(e){
+    handleDragStart: function(e) {
         e.dataTransfer.setData('text', JSON.stringify({
             id: this.props.data.id,
             position: this.props.data.position
         }));
     },
-    handleDrop: function(e){
+    handleDrop: function(e) {
         var dropped = JSON.parse(e.dataTransfer.getData('text'));
         var id = dropped.id;
         var fromPosition = dropped.position;
         var toPosition = this.props.data.position;
         this.updatePosition(id, fromPosition, toPosition);
     },
-    handleDragOver: function(e){
+    handleDragOver: function(e) {
         e.preventDefault();
     },
     handleRemove: function() {
+        this.setState({
+            removeConfirm: true,
+        });
+    },
+    handleCancel: function() {
+        this.setState({
+            removeConfirm: false,
+        });
+    },
+    handleConfirm: function() {
         var id = this.props.data.id;
         StackDetailActions.removeBook(id);
+        this.setState({
+            removeConfirm: false,
+        });
     },
     render: function() {
         var context = this;
@@ -80,8 +94,8 @@ var BookStack = React.createClass({
         var categories = (this.props.data.categories && this.props.data.categories.length > 0);
         var position = (
             this.state.editing ?
-                (
-                    <div>
+            (
+                <div>
                         <input
                             autoFocus
                             ref={function(input) {
@@ -94,13 +108,27 @@ var BookStack = React.createClass({
                             defaultValue={this.props.data.position}
                             onMouseOut={this.setEditingStateOff} />
                     </div>
-                ) :
-                (
-                    <div
+            ) :
+            (
+                <div
                         onClick={this.setEditingStateOn}>
                         {this.props.data.position}
                     </div>
-                )
+            )
+        );
+        var remove = (
+            this.state.removeConfirm ?
+            (
+                <div className="remove">
+                        <button className="cancel" onClick={this.handleCancel}>Cancel</button>
+                        <button className="confirm" onClick={this.handleConfirm}>Remove</button>
+                    </div>
+            ) :
+            (
+                <div className="remove">
+                        <a onClick={this.handleRemove}>Remove</a>
+                    </div>
+            )
         );
         return (
             <div
@@ -128,9 +156,7 @@ var BookStack = React.createClass({
                             return (<Category key={i} data={category} />);
                         })}
                     </ul>
-                    <div className="remove">
-                        <button onClick={this.handleRemove}>Remove</button>
-                    </div>
+                    {remove}
                 </div>
             </div>
         );
