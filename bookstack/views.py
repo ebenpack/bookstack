@@ -30,7 +30,11 @@ class StackViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows book stacks to be viewed or edited.
     """
-    queryset = models.Stack.objects.prefetch_related('bookstack_set__book__authors', 'bookstack_set__book__publishers', 'bookstack_set__categories')
+    queryset = models.Stack.objects.prefetch_related(
+        'bookstack_set__book__authors',
+        'bookstack_set__book__publishers',
+        'bookstack_set__categories'
+    )
     serializer_class = serializers.StackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
@@ -40,7 +44,11 @@ class StackViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = models.Stack.objects.prefetch_related('bookstack_set__book__authors', 'bookstack_set__book__publishers', 'bookstack_set__categories')
+        queryset = models.Stack.objects.prefetch_related(
+            'bookstack_set__book__authors',
+            'bookstack_set__book__publishers',
+            'bookstack_set__categories'
+        )
         stack = get_object_or_404(queryset, pk=pk)
         serializer = serializers.StackSerializer(stack)
         return Response(serializer.data)
@@ -50,12 +58,28 @@ class BookViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows books to be viewed or edited.
     """
-    queryset = models.Book.objects.prefetch_related('authors', 'publishers')
+    queryset = models.Book.objects.prefetch_related(
+        'authors',
+        'publishers'
+    )
     serializer_class = serializers.BookSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
+    # def partial_update(self, request, pk=None):
+    #     import pudb; pudb.set_trace()
+    #     serializer = serializers.BookSerializer(data=request.data, partial=True)
+    #     if not serializer.is_valid():
+    #         return Response(serializer.errors,
+    #               status=status.HTTP_400_BAD_REQUEST)
+
+    #     serializer.save()
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     def list(self, request):
-        queryset = models.Book.objects.prefetch_related('authors', 'publishers')
+        queryset = models.Book.objects.prefetch_related(
+            'authors',
+            'publishers'
+        )
         title = request.query_params.get('search', None)
         include = None
         # If the search query param is sent, then filter the
@@ -72,7 +96,12 @@ class BookStackViewSet(viewsets.ModelViewSet):
     API endpoint that allows books within stacks to be viewed or edited.
     """
     queryset = models.BookStack.objects.order_by(
-            'position').prefetch_related('categories', 'book__authors', 'book__publishers')
+        'position'
+    ).prefetch_related(
+        'categories',
+        'book__authors',
+        'book__publishers'
+    )
     serializer_class = serializers.BookStackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
@@ -117,7 +146,11 @@ class AuthorViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = models.Author.objects.prefetch_related('book_set', 'book_set__authors', 'book_set__publishers')
+        queryset = models.Author.objects.prefetch_related(
+            'book_set',
+            'book_set__authors',
+            'book_set__publishers'
+        )
         author_detail = get_object_or_404(queryset, pk=pk)
         serializer = serializers.AuthorDetailSerializer(author_detail)
         return Response(serializer.data)
@@ -136,7 +169,11 @@ class PublisherViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
-        queryset = models.Publisher.objects.prefetch_related('book_set', 'book_set__authors', 'book_set__publishers')
+        queryset = models.Publisher.objects.prefetch_related(
+            'book_set',
+            'book_set__authors',
+            'book_set__publishers'
+        )
         publisher_detail = get_object_or_404(queryset, pk=pk)
         serializer = serializers.PublisherDetailSerializer(publisher_detail)
         return Response(serializer.data)
