@@ -71,6 +71,25 @@ var StackDetailStore = Reflux.createStore({
         });
         var foo = 'foobarbaz';
     },
+    onUpdateCategories: function(categories, bookId) {
+        var context = this;
+        reqwest({
+            url: this.booksetUrl + bookId + '/',
+            data: JSON.stringify({
+                categories: categories,
+            }),
+            headers: {
+                'Authorization': 'Token ' + this.state.token,
+            },
+            method: 'PATCH',
+            type: 'json',
+            contentType: 'application/json'
+        }).then(function(resp) {
+            context.updateReadStatus(resp);
+        }).fail(function(err, msg) {
+            console.error(context.sourceUrl, err.toString(), msg);
+        });
+    },
     onSetPosition: function(id, fromPosition, toPosition) {
         var context = this;
         if (toPosition > 0 &&
