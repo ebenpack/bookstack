@@ -76,8 +76,9 @@
     .info {
         .categories {
             text-transform: capitalize;
-            display: inline;
-            padding: 0;
+            padding: 1em;
+            margin: 1em 0;
+            background-color: aliceblue;
             > .category {
                 display: inline;
             }
