@@ -10,6 +10,8 @@ var BookStack = React.createClass({
         return {
             editing: false,
             removeConfirm: false,
+            addingCategory: false,
+            category: "",
         };
     },
     toggleRead: function(e) {
@@ -84,6 +86,26 @@ var BookStack = React.createClass({
             removeConfirm: false,
         });
     },
+    toggleAddingCategory: function() {
+        this.setState({
+            addingCategory: !this.state.addingCategory,
+        });
+    },
+    handleCategoryChange: function(e) {
+        this.setState({
+            category: e.target.value,
+        });
+    },
+    handleCategoryKeyUp: function(e) {
+        if (e.key === "Enter") {
+            var categories = this.props.data.categories.concat(this.state.category);
+            var id = this.props.data.id;
+            StackDetailActions.updateCategories(categories, id);
+            this.setState({
+                category: '',
+            });
+        }
+    },
     render: function() {
         var context = this;
         var staticPath = this.props.staticPath;
@@ -130,6 +152,24 @@ var BookStack = React.createClass({
                     </div>
             )
         );
+        var addCategory = (
+            this.state.addingCategory ?
+            (
+                <div>
+                    <div className="addCategory" onClick={this.toggleAddingCategory}>- Cancel</div>
+                    <input
+                        type="text"
+                        value={this.state.category}
+                        onChange={this.handleCategoryChange}
+                        onKeyUp={this.handleCategoryKeyUp} />
+                </div>
+            ) :
+            (
+                <div>
+                    <div className="addCategory" onClick={this.toggleAddingCategory}>+ Add category</div>
+                </div>
+            )
+        );
         return (
             <div
                 draggable="true"
@@ -147,15 +187,18 @@ var BookStack = React.createClass({
                 </div>
                 <Book book={this.props.data.book} staticPath={staticPath} />
                 <div className="info seven columns">
-                    {categories ? 'Categories: ' : ''}
+                    <div className="categories">
+                        <h5>Categories</h5>
+                        <ul>
+                            {this.props.data.categories.map(function(category, i) {
+                                return (<Category key={i} data={category} />);
+                            })}
+                        </ul>
+                        {addCategory}
+                    </div>
                     <div className="read">
                         Read: <input onChange={this.toggleRead} type="checkbox" checked={this.props.data.read}  />
                     </div>
-                    <ul className="categories">
-                        {this.props.data.categories.map(function(category, i) {
-                            return (<Category key={i} data={category} />);
-                        })}
-                    </ul>
                     {remove}
                 </div>
             </div>
