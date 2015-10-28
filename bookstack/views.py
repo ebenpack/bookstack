@@ -65,16 +65,6 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BookSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
-    # def partial_update(self, request, pk=None):
-    #     import pudb; pudb.set_trace()
-    #     serializer = serializers.BookSerializer(data=request.data, partial=True)
-    #     if not serializer.is_valid():
-    #         return Response(serializer.errors,
-    #               status=status.HTTP_400_BAD_REQUEST)
-
-    #     serializer.save()
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED)
-
     def list(self, request):
         queryset = models.Book.objects.prefetch_related(
             'authors',
