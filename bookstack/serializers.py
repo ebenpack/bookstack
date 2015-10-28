@@ -84,7 +84,12 @@ class BookStackSerializer(serializers.ModelSerializer):
 
     book = BookSerializer(read_only=True)
     bookId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Book.objects.all())
-    categories = serializers.SlugRelatedField(many=True, read_only=False, slug_field='category', queryset=Category.objects.all())
+    categories = serializers.SlugRelatedField(
+        many=True,
+        read_only=False,
+        slug_field='category',
+        queryset=Category.objects.all()
+    )
 
     class Meta:
         model = BookStack
