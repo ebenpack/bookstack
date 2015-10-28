@@ -6,6 +6,7 @@ var StackDetailActions = Reflux.createActions([
     'updateRead',
     'removeBook',
     'addBook',
+    'updateCategories',
     'setReadState',
     'setToken',
     'setPosition',
