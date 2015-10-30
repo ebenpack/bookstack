@@ -12,6 +12,7 @@ var BookStack = React.createClass({
             removeConfirm: false,
             addingCategory: false,
             category: "",
+            autoSuggestCategories: [],
         };
     },
     toggleRead: function(e) {
@@ -96,15 +97,25 @@ var BookStack = React.createClass({
             category: e.target.value,
         });
     },
+    addCategory: function(category) {
+        var categories = this.props.data.categories.concat(category);
+        this.updateCategories(categories);
+        this.setState({
+            category: '',
+        });
+    },
+    removeCategory: function(e, id){
+        var categories = this.props.data.categories.filter(function(category){
+            return category.id !== id;
+        });
+        this.updateCategories(categories);
+    },
+    updateCategories: function(categories){
+        var id = this.props.data.id;
+        StackDetailActions.updateCategories(categories, id);
+    },
     handleCategoryKeyUp: function(e) {
-        if (e.key === "Enter") {
-            var categories = this.props.data.categories.concat(this.state.category);
-            var id = this.props.data.id;
-            StackDetailActions.updateCategories(categories, id);
-            this.setState({
-                category: '',
-            });
-        }
+        StackDetailActions.autoSuggestCategories(e.target.value);
     },
     render: function() {
         var context = this;
@@ -121,7 +132,7 @@ var BookStack = React.createClass({
                         <input
                             autoFocus
                             ref={function(input) {
-                                if (input != null) {
+                                if (input !== null) {
                                     input.select();
                                 }
                             }}
@@ -152,6 +163,16 @@ var BookStack = React.createClass({
                     </div>
             )
         );
+        var autoSuggestCategories = '';
+        if (this.state.autoSuggestCategories.length > 0) {
+            autoSuggestCategories = (
+                <ul className="autocomplete">
+                    {this.state.autoSuggestCategories.map(function(suggestion){
+                        return (<li key={suggestion.id} onClick={this.selectBook.bind(this, suggestion.id)}>{suggestion.title}</li>);
+                    }, this)}
+                </ul>
+            );
+        }
         var addCategory = (
             this.state.addingCategory ?
             (
@@ -162,6 +183,7 @@ var BookStack = React.createClass({
                         value={this.state.category}
                         onChange={this.handleCategoryChange}
                         onKeyUp={this.handleCategoryKeyUp} />
+                    {autoSuggestCategories}
                 </div>
             ) :
             (
@@ -191,8 +213,8 @@ var BookStack = React.createClass({
                         <h5>Categories</h5>
                         <ul>
                             {this.props.data.categories.map(function(category, i) {
-                                return (<Category key={i} data={category} />);
-                            })}
+                                return (<Category key={i} category={category} onClick={this.removeCategory} />);
+                            }, this)}
                         </ul>
                         {addCategory}
                     </div>
