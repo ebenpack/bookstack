@@ -2,7 +2,9 @@ var React = require('react');
 
 var Category = React.createClass({
     onClick: function(e) {
-        this.props.onClick(e, this.props.category.id);
+        if (this.props.onClick) {
+            this.props.onClick(e, this.props.category.id);
+        }
     },
     render: function() {
         return (
