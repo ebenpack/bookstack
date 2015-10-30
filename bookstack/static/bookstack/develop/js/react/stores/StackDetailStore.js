@@ -1,6 +1,7 @@
 var Reflux = require('reflux');
 var reqwest = require('reqwest');
 var StackDetailActions = require('../actions/StackDetailActions');
+var debounce = require('../util').debounce;
 
 var StackDetailStore = Reflux.createStore({
     listenables: [StackDetailActions],
@@ -13,6 +14,7 @@ var StackDetailStore = Reflux.createStore({
     stackUrl: '/api/stack/',
     booksetUrl: '/api/bookset/',
     updatePositionUrl: '/api/bookset/{id}/renumber/',
+    categorySearchUrl: '/api/category/?search={search}',
     onSetToken: function(token) {
         this.state.token = token;
         this.trigger({
@@ -71,6 +73,11 @@ var StackDetailStore = Reflux.createStore({
         });
         var foo = 'foobarbaz';
     },
+    setAutoSuggestCategories: function(categories) {
+        this.trigger({
+            autoSuggestCategories: categories,
+        });
+    },
     onUpdateCategories: function(categories, bookId) {
         var context = this;
         reqwest({
@@ -90,6 +97,18 @@ var StackDetailStore = Reflux.createStore({
             console.error(context.sourceUrl, err.toString(), msg);
         });
     },
+    onAutoSuggestCategories: debounce(function(search) {
+        var context = this;
+        reqwest({
+            url: this.categorySearchUrl.replace('{search}', search),
+            type: 'json',
+            contentType: 'application/json'
+        }).then(function(resp) {
+            context.setAutoSuggestCategories(resp);
+        }).fail(function(err, msg) {
+            console.error(context.sourceUrl, err.toString(), msg);
+        });
+    }, 250),
     onSetPosition: function(id, fromPosition, toPosition) {
         var context = this;
         if (toPosition > 0 &&
