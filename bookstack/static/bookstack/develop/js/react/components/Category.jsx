@@ -1,10 +1,13 @@
 var React = require('react');
 
 var Category = React.createClass({
+    onClick: function(e) {
+        this.props.onClick(e, this.props.category.id);
+    },
     render: function() {
         return (
-            <li className="category">
-                {this.props.data}
+            <li key={this.props.category.id} className="category" onClick={this.onClick}>
+                {this.props.category.category}
             </li>
         );
     }
