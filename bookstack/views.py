@@ -121,6 +121,17 @@ class CategoryViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CategorySerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
+    def list(self, request):
+        queryset = models.Category.objects
+        category = request.query_params.get('search', None)
+        include = None
+        # If the search query param is sent, then filter the
+        # results based on the value sent, and only return the
+        # `title` and `id` fields.
+        if category is not None:
+            queryset = queryset.filter(category__contains=category)
+        serializer = serializers.CategorySerializer(queryset, many=True)
+        return Response(serializer.data)
 
 class AuthorViewSet(viewsets.ModelViewSet):
     """
