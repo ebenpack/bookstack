@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 
 from bookstack import models, serializers
 
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -64,22 +64,9 @@ class BookViewSet(viewsets.ModelViewSet):
     )
     serializer_class = serializers.BookSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
+    filter_backends = (filters.SearchFilter, )
+    search_fields = ('title', )
 
-    def list(self, request):
-        queryset = models.Book.objects.prefetch_related(
-            'authors',
-            'publishers'
-        )
-        title = request.query_params.get('search', None)
-        include = None
-        # If the search query param is sent, then filter the
-        # results based on the value sent, and only return the
-        # `title` and `id` fields.
-        if title is not None:
-            queryset = queryset.filter(title__contains=title)
-            include=['title', 'id']
-        serializer = serializers.BookSerializer(queryset, include=include, many=True)
-        return Response(serializer.data)
 
 class BookStackViewSet(viewsets.ModelViewSet):
     """
@@ -120,18 +107,9 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = models.Category.objects
     serializer_class = serializers.CategorySerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
+    filter_backends = (filters.SearchFilter, )
+    search_fields = ('category', )
 
-    def list(self, request):
-        queryset = models.Category.objects
-        category = request.query_params.get('search', None)
-        include = None
-        # If the search query param is sent, then filter the
-        # results based on the value sent, and only return the
-        # `title` and `id` fields.
-        if category is not None:
-            queryset = queryset.filter(category__contains=category)
-        serializer = serializers.CategorySerializer(queryset, many=True)
-        return Response(serializer.data)
 
 class AuthorViewSet(viewsets.ModelViewSet):
     """
