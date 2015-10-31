@@ -60,7 +60,11 @@ class BookStack(models.Model):
     stack = models.ForeignKey(Stack)
     book = models.ForeignKey('Book')
     read = models.BooleanField(default=False)
-    categories = models.ManyToManyField('Category', blank=True)
+    categories = models.ManyToManyField(
+        'Category',
+        through='BookStackCategory',
+        blank=True
+    )
     position = models.IntegerField(default=0, db_index=True)
 
     def toggle_read(self):
@@ -96,6 +100,14 @@ class Category(models.Model):
 
     def __str__(self):
         return self.category
+
+
+class BookStackCategory(models.Model):
+    bookstack = models.ForeignKey(BookStack)
+    category = models.ForeignKey(Category)
+
+    class Meta:
+        unique_together = (('category', 'bookstack'))
 
 
 class Author(models.Model):
