@@ -7,6 +7,7 @@ from bookstack import views
 router = routers.DefaultRouter()
 router.register(r'stack', views.StackViewSet)
 router.register(r'bookset', views.BookStackViewSet)
+router.register(r'booksetcategory', views.BookStackCategoryViewSet)
 router.register(r'book', views.BookViewSet)
 router.register(r'author', views.AuthorViewSet)
 router.register(r'publisher', views.PublisherViewSet)
