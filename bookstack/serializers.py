@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 
 from rest_framework import serializers
 
-from bookstack.models import Author, Book, BookStack, Category, Publisher, Stack
+from bookstack.models import Author, Book, BookStack, Category, Publisher, Stack, BookStackCategory
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -80,11 +80,24 @@ class AuthorDetailSerializer(serializers.ModelSerializer):
     books = BookSerializer(many=True, source='book_set')
 
 
+class BookStackCategorySerializer(serializers.ModelSerializer):
+
+    detail = CategorySerializer(read_only=True, source='category')
+    category = serializers.PrimaryKeyRelatedField(
+        write_only=True,
+        queryset=Category.objects.all()
+    )
+
+    class Meta:
+        model = BookStackCategory
+        fields = ('bookstack', 'category', 'detail', 'id')
+
+
 class BookStackSerializer(serializers.ModelSerializer):
 
     book = BookSerializer(read_only=True)
     bookId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Book.objects.all())
-    categories = CategorySerializer(many=True)
+    categories = BookStackCategorySerializer(many=True, source='bookstackcategory_set')
 
     class Meta:
         model = BookStack
@@ -115,7 +128,6 @@ class BookStackSerializer(serializers.ModelSerializer):
             Category.objects.get_or_create(bookstack=instance, **category)
 
         return instance
-
 
 
 class StackListSerializer(serializers.ModelSerializer):
