@@ -1,11 +1,15 @@
 var React = require('react');
+var Reflux = require('reflux');
 
+var Autocomplete = require('./Autocomplete.jsx');
 var Book = require('./Book.jsx');
 var Category = require('./Category.jsx');
 
 var StackDetailActions = require('../actions/StackDetailActions');
+var StackDetailStore = require('../stores/StackDetailStore');
 
 var BookStack = React.createClass({
+    mixins: [Reflux.ListenerMixin],
     getInitialState: function() {
         return {
             editing: false,
@@ -14,6 +18,16 @@ var BookStack = React.createClass({
             category: "",
             autoSuggestCategories: [],
         };
+    },
+    onAutoSuggestCategories: function(update) {
+        if (update.autoSuggestCategories) {
+            this.setState({
+                autoSuggestCategories: update.autoSuggestCategories
+            });
+        }
+    },
+    componentDidMount: function() {
+        this.listenTo(StackDetailStore, this.onAutoSuggestCategories);
     },
     toggleRead: function(e) {
         StackDetailActions.setReadState(this.props.data.id, e.target.checked);
@@ -97,25 +111,30 @@ var BookStack = React.createClass({
             category: e.target.value,
         });
     },
-    addCategory: function(category) {
-        var categories = this.props.data.categories.concat(category);
-        this.updateCategories(categories);
+    addCategory: function(categoryId) {
+        var bookstackId = this.props.data.id;
+        StackDetailActions.addCategory(bookstackId, categoryId);
+    },
+    removeCategory: function(categoryId, e){
+        var bookstackId = this.props.data.id;
+        StackDetailActions.removeCategory(bookstackId, categoryId);
+    },
+    clearAutocomplete: function() {
         this.setState({
-            category: '',
+            autoSuggestCategories: [],
+            addingCategory: false,
+            category: "",
         });
-    },
-    removeCategory: function(e, id){
-        var categories = this.props.data.categories.filter(function(category){
-            return category.id !== id;
-        });
-        this.updateCategories(categories);
-    },
-    updateCategories: function(categories){
-        var id = this.props.data.id;
-        StackDetailActions.updateCategories(categories, id);
     },
     handleCategoryKeyUp: function(e) {
-        StackDetailActions.autoSuggestCategories(e.target.value);
+        if (e.target.value) {
+            StackDetailActions.autoSuggestCategories(e.target.value);
+        } else {
+            this.setState({
+                autoSuggestCategories: [],
+                category: "",
+            });
+        }
     },
     render: function() {
         var context = this;
@@ -129,48 +148,48 @@ var BookStack = React.createClass({
             this.state.editing ?
             (
                 <div>
-                        <input
-                            autoFocus
-                            ref={function(input) {
-                                if (input !== null) {
-                                    input.select();
-                                }
-                            }}
-                            className="position"
-                            onBlur={this.handleBlur}
-                            defaultValue={this.props.data.position}
-                            onMouseOut={this.setEditingStateOff} />
-                    </div>
+                    <input
+                        autoFocus
+                        ref={function(input) {
+                            if (input !== null) {
+                                input.select();
+                            }
+                        }}
+                        className="position"
+                        onBlur={this.handleBlur}
+                        defaultValue={this.props.data.position}
+                        onMouseOut={this.setEditingStateOff} />
+                </div>
             ) :
             (
                 <div
-                        onClick={this.setEditingStateOn}>
-                        {this.props.data.position}
-                    </div>
+                    onClick={this.setEditingStateOn}>
+                    {this.props.data.position}
+                </div>
             )
         );
         var remove = (
             this.state.removeConfirm ?
             (
                 <div className="remove">
-                        <button className="cancel" onClick={this.handleCancel}>Cancel</button>
-                        <button className="confirm" onClick={this.handleConfirm}>Remove</button>
-                    </div>
+                    <button className="cancel" onClick={this.handleCancel}>Cancel</button>
+                    <button className="confirm" onClick={this.handleConfirm}>Remove</button>
+                </div>
             ) :
             (
                 <div className="remove">
-                        <a onClick={this.handleRemove}>Remove</a>
-                    </div>
+                    <a onClick={this.handleRemove}>Remove</a>
+                </div>
             )
         );
         var autoSuggestCategories = '';
         if (this.state.autoSuggestCategories.length > 0) {
             autoSuggestCategories = (
-                <ul className="autocomplete">
-                    {this.state.autoSuggestCategories.map(function(suggestion){
-                        return (<li key={suggestion.id} onClick={this.selectBook.bind(this, suggestion.id)}>{suggestion.title}</li>);
-                    }, this)}
-                </ul>
+                <Autocomplete
+                    suggestions={this.state.autoSuggestCategories}
+                    displayProperty={'category'}
+                    onClick={this.addCategory}
+                />
             );
         }
         var addCategory = (
@@ -182,7 +201,8 @@ var BookStack = React.createClass({
                         type="text"
                         value={this.state.category}
                         onChange={this.handleCategoryChange}
-                        onKeyUp={this.handleCategoryKeyUp} />
+                        onKeyUp={this.handleCategoryKeyUp}
+                    />
                     {autoSuggestCategories}
                 </div>
             ) :
@@ -213,7 +233,11 @@ var BookStack = React.createClass({
                         <h5>Categories</h5>
                         <ul>
                             {this.props.data.categories.map(function(category, i) {
-                                return (<Category key={i} category={category} onClick={this.removeCategory} />);
+                                return (
+                                    <li key={category.id}>
+                                        {category.detail.category} - <span onClick={this.removeCategory.bind(this, category.id)}>Remove</span>
+                                    </li>
+                                );
                             }, this)}
                         </ul>
                         {addCategory}
