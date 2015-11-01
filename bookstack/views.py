@@ -100,6 +100,7 @@ class BookStackViewSet(viewsets.ModelViewSet):
         serializer = serializers.BookStackSerializer(bookstack)
         return Response(serializer.data)
 
+
 class CategoryViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows categories to be viewed or edited.
@@ -109,6 +110,15 @@ class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly, )
     filter_backends = (filters.SearchFilter, )
     search_fields = ('category', )
+
+
+class BookStackCategoryViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows categories to be viewed or edited.
+    """
+    queryset = models.BookStackCategory.objects
+    serializer_class = serializers.BookStackCategorySerializer
+    permission_classes = (IsAuthenticatedOrReadOnly, )
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
@@ -133,6 +143,7 @@ class AuthorViewSet(viewsets.ModelViewSet):
         author_detail = get_object_or_404(queryset, pk=pk)
         serializer = serializers.AuthorDetailSerializer(author_detail)
         return Response(serializer.data)
+
 
 class PublisherViewSet(viewsets.ModelViewSet):
     """
