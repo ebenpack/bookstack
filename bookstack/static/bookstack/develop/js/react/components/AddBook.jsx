@@ -1,7 +1,8 @@
 var React = require('react');
 var Reflux = require('reflux');
 
-var Book = require('../components/Book.jsx');
+var Book = require('./Book.jsx');
+var Autocomplete = require('./Autocomplete.jsx');
 
 var AddBookActions = require('../actions/AddBookActions');
 var AddBookStore = require('../stores/AddBookStore');
@@ -61,11 +62,11 @@ var AddBook = React.createClass({
         var selectedBook= "";
         if (this.state.booksAutocomplete.length > 0) {
             autocompleteResults = (
-                <ul className="autocomplete">
-                    {this.state.booksAutocomplete.map(function(suggestion){
-                        return (<li key={suggestion.id} onClick={this.selectBook.bind(this, suggestion.id)}>{suggestion.title}</li>);
-                    }, this)}
-                </ul>
+                <Autocomplete
+                    suggestions={this.state.booksAutocomplete}
+                    displayProperty={'title'}
+                    onClick={this.selectBook}
+                />
             );
         }
         if (this.state.selectedBook.id) {
