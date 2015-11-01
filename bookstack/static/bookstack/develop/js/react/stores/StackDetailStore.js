@@ -13,6 +13,7 @@ var StackDetailStore = Reflux.createStore({
     },
     stackUrl: '/api/stack/',
     booksetUrl: '/api/bookset/',
+    booksetCategoryUrl: '/api/booksetcategory/',
     updatePositionUrl: '/api/bookset/{id}/renumber/',
     categorySearchUrl: '/api/category/?search={search}',
     onSetToken: function(token) {
@@ -78,21 +79,62 @@ var StackDetailStore = Reflux.createStore({
             autoSuggestCategories: categories,
         });
     },
-    onUpdateCategories: function(categories, bookId) {
+    removeCategory: function(bookstackId, categoryId) {
+        this.state.stackDetail.books = this.state.stackDetail.books.map(function(book){
+            if (book.id === bookstackId) {
+                book.categories = book.categories.filter(function(category){
+                    return category.id !== categoryId;
+                });
+            }
+            return book;
+        });
+        this.trigger({
+            stackDetail: this.state.stackDetail,
+        });
+    },
+    addCategory: function(bookStackId, category) {
+        this.state.stackDetail.books = this.state.stackDetail.books.map(function(book){
+            if (book.id === bookStackId) {
+                book.categories.push(category);
+            }
+            return book;
+        });
+        this.trigger({
+            stackDetail: this.state.stackDetail,
+        });
+    },
+    onAddCategory: function(bookStackId, categoryId) {
         var context = this;
         reqwest({
-            url: this.booksetUrl + bookId + '/',
+            url: this.booksetCategoryUrl,
             data: JSON.stringify({
-                categories: categories,
+                category: categoryId,
+                bookstack: bookStackId,
             }),
             headers: {
                 'Authorization': 'Token ' + this.state.token,
             },
-            method: 'PATCH',
+            method: 'POST',
             type: 'json',
             contentType: 'application/json'
         }).then(function(resp) {
-            context.updateReadStatus(resp);
+            context.addCategory(bookStackId, resp);
+        }).fail(function(err, msg) {
+            console.error(context.sourceUrl, err.toString(), msg);
+        });
+    },
+    onRemoveCategory: function(bookstackId, categoryId) {
+        var context = this;
+        reqwest({
+            url: this.booksetCategoryUrl + categoryId + '/',
+            headers: {
+                'Authorization': 'Token ' + this.state.token,
+            },
+            method: 'DELETE',
+            type: 'json',
+            contentType: 'application/json'
+        }).then(function() {
+            context.removeCategory(bookstackId, categoryId);
         }).fail(function(err, msg) {
             console.error(context.sourceUrl, err.toString(), msg);
         });
