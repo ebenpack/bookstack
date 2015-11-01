@@ -120,15 +120,14 @@
     }
 }
 
-.addBook {
-    .autocomplete {
-        position: absolute;
-        background-color: white;
-        width: 30%;
-        height: 200px;
-        overflow-y: scroll;
-        border: 1px solid gray;
-    }
+
+.autocomplete {
+    position: absolute;
+    background-color: white;
+    width: 30%;
+    height: 200px;
+    overflow-y: scroll;
+    border: 1px solid gray;
 }
 
 .addBook .select {
