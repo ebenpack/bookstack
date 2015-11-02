@@ -1,3 +1,9 @@
+$color_blue: #F0F8FF;
+$color_green: #F0FFF0;
+$color_peach: #FFDAB9;
+$color_yellow: #FFFACD;
+$color_pink: #FFE4E1;
+
 @mixin modal-dialog() {
     position: fixed;
     font-family: Arial, Helvetica, sans-serif;
@@ -44,10 +50,6 @@
     }
 }
 
-
-.stack {
-}
-
 .bookstack {
     display: flex;
     align-items: center;
@@ -78,7 +80,7 @@
             text-transform: capitalize;
             padding: 1em;
             margin: 1em 0;
-            background-color: aliceblue;
+            background-color: $color_blue;
             > .category {
                 display: inline;
             }
@@ -128,6 +130,28 @@
     height: 200px;
     overflow-y: scroll;
     border: 1px solid gray;
+}
+
+.autocomplete {
+    position: absolute;
+    background-color: white;
+    width: 30%;
+    max-height: 120px;
+    overflow-y: scroll;
+    border: 1px solid gray;
+
+    & li {
+        list-style-type: none;
+        margin: 0;
+
+        &:nth-child(odd) {
+            background-color: $color_blue;
+        }
+
+        &:hover {
+            background-color: $color_green;
+        }
+    }
 }
 
 .addBook .select {
