@@ -8,7 +8,6 @@ var StackDetailActions = Reflux.createActions([
     'addBook',
     'addCategory',
     'removeCategory',
-    'autoSuggestCategories',
     'setReadState',
     'setToken',
     'setPosition',
