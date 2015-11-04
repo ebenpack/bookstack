@@ -74,11 +74,6 @@ var StackDetailStore = Reflux.createStore({
         });
         var foo = 'foobarbaz';
     },
-    setAutoSuggestCategories: function(categories) {
-        this.trigger({
-            autoSuggestCategories: categories,
-        });
-    },
     removeCategory: function(bookstackId, categoryId) {
         this.state.stackDetail.books = this.state.stackDetail.books.map(function(book){
             if (book.id === bookstackId) {
@@ -103,24 +98,18 @@ var StackDetailStore = Reflux.createStore({
             stackDetail: this.state.stackDetail,
         });
     },
-    onAddCategory: function(bookStackId, categoryId) {
-        var context = this;
-        reqwest({
-            url: this.booksetCategoryUrl,
-            data: JSON.stringify({
-                category: categoryId,
-                bookstack: bookStackId,
-            }),
-            headers: {
-                'Authorization': 'Token ' + this.state.token,
-            },
-            method: 'POST',
-            type: 'json',
-            contentType: 'application/json'
-        }).then(function(resp) {
-            context.addCategory(bookStackId, resp);
-        }).fail(function(err, msg) {
-            console.error(context.sourceUrl, err.toString(), msg);
+    onAddCategory: function(category) {
+        var i, len;
+        len = this.state.stackDetail.books.length;
+        for (i = 0; i < len; i++) {
+            var book = this.state.stackDetail.books[i];
+            if (book.id === category.bookstack) {
+                book.categories.push(category);
+                break;
+            }
+        }
+        this.trigger({
+            stackDetail: this.state.stackDetail,
         });
     },
     onRemoveCategory: function(bookstackId, categoryId) {
@@ -139,18 +128,6 @@ var StackDetailStore = Reflux.createStore({
             console.error(context.sourceUrl, err.toString(), msg);
         });
     },
-    onAutoSuggestCategories: debounce(function(search) {
-        var context = this;
-        reqwest({
-            url: this.categorySearchUrl.replace('{search}', search),
-            type: 'json',
-            contentType: 'application/json'
-        }).then(function(resp) {
-            context.setAutoSuggestCategories(resp);
-        }).fail(function(err, msg) {
-            console.error(context.sourceUrl, err.toString(), msg);
-        });
-    }, 250),
     onSetPosition: function(id, fromPosition, toPosition) {
         var context = this;
         if (toPosition > 0 &&
