@@ -13,6 +13,7 @@ var AddBookStore = Reflux.createStore({
     },
     selectBookUrl: '/api/book/{id}/',
     addBookUrl: '/api/bookset/',
+    addNewBookUrl: '/api/book/',
     bookSearchUrl: '/api/book/?search={search}',
     onSetToken: function(token) {
         this.state.token = token;
@@ -72,6 +73,23 @@ var AddBookStore = Reflux.createStore({
             console.error(context.sourceUrl, status, err.toString());
         });
     },
+    onAddNewBook: function(book){
+        var context = this;
+        reqwest({
+            url: this.addBookUrl,
+            contentType: 'application/json',
+            type: 'json',
+            method: 'POST',
+            headers: {
+                'Authorization': 'Token ' + this.state.token,
+            },
+            data: JSON.stringify(book)
+        }).then(function(resp) {
+            console.log('fetch complete');
+        }).fail(function(err, msg) {
+            console.error(context.sourceUrl, status, err.toString());
+        });
+    }
 });
 
 module.exports = AddBookStore;
