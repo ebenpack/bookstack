@@ -3,6 +3,7 @@ var AppActions = require('../actions/AppActions.js');
 var StackDetailActions = require('../actions/StackDetailActions');
 var StackListActions = require('../actions/StackListActions');
 var AddBookActions = require('../actions/AddBookActions');
+var AddCategoryActions = require('../actions/AddCategoryActions');
 
 var reqwest = require('reqwest');
 
@@ -41,6 +42,7 @@ var AppStore = Reflux.createStore({
         StackDetailActions.setToken(token);
         StackListActions.setToken(token);
         AddBookActions.setToken(token);
+        AddCategoryActions.setToken(token);
         this.trigger(this.state);
     },
     onGetToken: function() {
