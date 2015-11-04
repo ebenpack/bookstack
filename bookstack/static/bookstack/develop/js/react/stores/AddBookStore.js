@@ -11,7 +11,7 @@ var AddBookStore = Reflux.createStore({
     state: {
         token: '',
     },
-    selectBookUrl: '/api/book/{id}',
+    selectBookUrl: '/api/book/{id}/',
     addBookUrl: '/api/bookset/',
     bookSearchUrl: '/api/book/?search={search}',
     onSetToken: function(token) {
