@@ -4,6 +4,7 @@ var AddBookActions = Reflux.createActions([
     'searchBooks',
     'selectBook',
     'addBook',
+    'addNewBook',
     'setToken',
 ]);
 
