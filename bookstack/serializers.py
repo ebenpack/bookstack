@@ -104,13 +104,13 @@ class BookStackSerializer(serializers.ModelSerializer):
         fields = ('read', 'position', 'book', 'bookId', 'categories', 'stack', 'id')
 
     def create(self, validated_data):
-        categories = validated_data.pop('categories')
+        categories = validated_data.pop('bookstackcategory_set')
         bookstack = BookStack.objects.create(
             book=validated_data['bookId'],
             stack=validated_data['stack']
         )
         for category in categories:
-            Category.objects.get_or_create(bookstack=bookstack, **category)
+            BookStackCategory.objects.get_or_create(bookstack=bookstack, **category)
         return bookstack
 
     def update(self, instance, validated_data):
