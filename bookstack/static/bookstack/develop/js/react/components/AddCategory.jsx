@@ -14,6 +14,7 @@ var AddCategory = React.createClass({
             addingCategory: false,
             autoSuggestCategories: [],
             category: '',
+            addCategory: '',
         };
     },
     onAutoSuggestCategories: function(update) {
@@ -35,6 +36,21 @@ var AddCategory = React.createClass({
         this.setState({
             category: category,
         });
+    },
+    handleAddChange: function(e) {
+        this.setState({
+            addCategory: e.target.value,
+        });
+    },
+    handleAddCategoryKeyUp: function(e) {
+        if (e.key === 'Enter') {
+            var bookstackId = this.props.id;
+            var category = this.state.addCategory;
+            AddCategoryActions.addNewCategory(bookstackId, category);
+            this.setState({
+                addCategory: ''
+            });
+        }
     },
     clearAutocomplete: function() {
         this.setState({
@@ -60,12 +76,17 @@ var AddCategory = React.createClass({
         }
         return (
             <div>
-                <input
+                <label>Search: <input
                     type="text"
                     value={this.state.category}
                     onChange={this.handleChange}
-                    onKeyUp={this.handleCategoryKeyUp}
-                />
+                /></label>
+                <label>Add Category: <input
+                    type="text"
+                    value={this.state.addCategory}
+                    onChange={this.handleAddChange}
+                    onKeyUp={this.handleAddCategoryKeyUp}
+                /></label>
                 {autoSuggestCategories}
             </div>
         );
