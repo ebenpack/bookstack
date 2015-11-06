@@ -11,8 +11,8 @@ var AddCategoryStore = Reflux.createStore({
     state: {
         token: '',
     },
-    addCategoryUrl: '/api/booksetcategory/',
-    categorySearchUrl: '/api/category/?search={search}',
+    categoryUrl: '/api/category/',
+    booksetCategoryUrl: '/api/booksetcategory/',
     onSetToken: function(token) {
         this.state.token = token;
         this.trigger({
@@ -24,10 +24,29 @@ var AddCategoryStore = Reflux.createStore({
             autoSuggestCategories: categories,
         });
     },
-    onAddCategory: function(bookstackId, categoryId){
-         var context = this;
+    onAddNewCategory: function(bookstackId, category){
+        var context = this;
         reqwest({
-            url: this.addCategoryUrl,
+            url: this.categoryUrl,
+            type: 'json',
+            contentType: 'application/json',
+            method: "POST",
+            headers: {
+                'Authorization': 'Token ' + this.state.token,
+            },
+            data: JSON.stringify({
+                category: category
+            })
+        }).then(function(category) {
+            AddCategoryActions.addCategory(bookstackId, category.id);
+        }).fail(function(err, msg) {
+            console.error(context.sourceUrl, err.toString(), msg);
+        });
+    },
+    onAddCategory: function(bookstackId, categoryId){
+        var context = this;
+        reqwest({
+            url: this.booksetCategoryUrl,
             type: 'json',
             contentType: 'application/json',
             method: "POST",
@@ -47,7 +66,7 @@ var AddCategoryStore = Reflux.createStore({
     onAutoSuggestCategories: debounce(function(search) {
         var context = this;
         reqwest({
-            url: this.categorySearchUrl.replace('{search}', search),
+            url: this.categoryUrl + '?search=' + search,
             type: 'json',
             contentType: 'application/json'
         }).then(function(resp) {
