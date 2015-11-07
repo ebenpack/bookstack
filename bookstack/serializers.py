@@ -94,7 +94,6 @@ class BookStackCategorySerializer(serializers.ModelSerializer):
 
 
 class BookStackSerializer(serializers.ModelSerializer):
-
     book = BookSerializer(read_only=True)
     bookId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Book.objects.all())
     categories = BookStackCategorySerializer(many=True, source='bookstackcategory_set')

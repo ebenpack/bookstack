@@ -82,6 +82,16 @@ class BookStackViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BookStackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
+    def destroy(self, request, pk=None):
+        # Move item to last position in stack
+        # before deleting, in order to maintain
+        # stack order.
+        bookstack = self.get_object()
+        position = bookstack.max_position()
+        bookstack.renumber(position)
+        bookstack.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     @detail_route(methods=['patch'])
     def renumber(self, request, pk=None):
         try:
