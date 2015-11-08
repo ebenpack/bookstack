@@ -40,6 +40,21 @@ var StackDetailStore = Reflux.createStore({
             }
         }
     },
+    getPosition: function(id) {
+        var books = this.state.stackDetail.books;
+        var len = books && books.length ?
+            books.length :
+            0;
+        var position = -1;
+        for (var i = 0; i < len; i++) {
+            var current = books[i];
+            if (current.id === id) {
+                position = current.position;
+                break;
+            }
+        }
+        return position;
+    },
     sortBooks: function() {
         // Sort books based on their position property
         this.state.stackDetail.books.sort(function(book1, book2) {
@@ -64,9 +79,9 @@ var StackDetailStore = Reflux.createStore({
             stackDetail: this.state.stackDetail,
         });
     },
-    removeBook: function(id){
+    removeBook: function(id) {
         var books = this.state.stackDetail.books;
-        this.state.stackDetail.books = books.filter(function(book){
+        this.state.stackDetail.books = books.filter(function(book) {
             return book.id !== id;
         });
         this.trigger({
@@ -75,9 +90,9 @@ var StackDetailStore = Reflux.createStore({
         var foo = 'foobarbaz';
     },
     removeCategory: function(bookstackId, categoryId) {
-        this.state.stackDetail.books = this.state.stackDetail.books.map(function(book){
+        this.state.stackDetail.books = this.state.stackDetail.books.map(function(book) {
             if (book.id === bookstackId) {
-                book.categories = book.categories.filter(function(category){
+                book.categories = book.categories.filter(function(category) {
                     return category.id !== categoryId;
                 });
             }
@@ -88,7 +103,7 @@ var StackDetailStore = Reflux.createStore({
         });
     },
     addCategory: function(bookStackId, category) {
-        this.state.stackDetail.books = this.state.stackDetail.books.map(function(book){
+        this.state.stackDetail.books = this.state.stackDetail.books.map(function(book) {
             if (book.id === bookStackId) {
                 book.categories.push(category);
             }
@@ -170,7 +185,7 @@ var StackDetailStore = Reflux.createStore({
             console.error(context.sourceUrl, err.toString(), msg);
         });
     },
-    onRemoveBook: function(id){
+    onRemoveBook: function(id) {
         var context = this;
         reqwest({
             url: this.booksetUrl + id + '/',
@@ -182,12 +197,17 @@ var StackDetailStore = Reflux.createStore({
             },
         }).then(function(resp) {
             console.log('fetch complete');
-            context.removeBook(id);
+            var fromPosition = context.getPosition(id);
+            var toPosition = context.state.stackDetail.books.length;
+            if (fromPosition >= 0) {
+                context.reorder(fromPosition, toPosition);
+                context.removeBook(id);
+            }
         }).fail(function(err, msg) {
             console.error(context.sourceUrl, err.toString(), msg);
         });
     },
-    onAddBook: function(book){
+    onAddBook: function(book) {
         this.state.stackDetail.books.push(book);
         this.trigger({
             stackDetail: this.state.stackDetail,
