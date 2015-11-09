@@ -113,7 +113,7 @@ class BookStackSerializer(serializers.ModelSerializer):
         return bookstack
 
     def update(self, instance, validated_data):
-        categories = validated_data.pop('categories')
+        categories = validated_data.pop('categories', [])
         instance.read = validated_data.get('read', instance.read)
         instance.position = validated_data.get('position', instance.position)
 
