@@ -139,6 +139,9 @@ class AuthorViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.AuthorSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
+    filter_backends = (filters.SearchFilter, )
+    search_fields = ('name', )
+
     def list(self, request):
         queryset = models.Author.objects
         serializer = serializers.AuthorSerializer(queryset, many=True)
@@ -162,6 +165,9 @@ class PublisherViewSet(viewsets.ModelViewSet):
     queryset = models.Publisher.objects.prefetch_related('book_set')
     serializer_class = serializers.PublisherSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
+
+    filter_backends = (filters.SearchFilter, )
+    search_fields = ('name', )
 
     def list(self, request):
         queryset = Publisher.objects
