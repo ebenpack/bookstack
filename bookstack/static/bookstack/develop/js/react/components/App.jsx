@@ -33,6 +33,7 @@ var App = React.createClass({
                 <ul className="row menu">
                     <li><Link to={"/list"}>View Stacks</Link></li>
                     {login}
+                    <li><Link to={"/addbook"}>Add Book</Link></li>
                 </ul>
                 {this.props.children}
             </div>
