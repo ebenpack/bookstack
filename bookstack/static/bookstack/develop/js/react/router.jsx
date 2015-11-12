@@ -10,6 +10,7 @@ var PublisherDetail = require('./components/PublisherDetail.jsx');
 var StackList = require('./components/StackList.jsx');
 var StackDetail = require('./components/StackDetail.jsx');
 var Login = require('./components/Login.jsx');
+var AddNewBook = require('./components/AddNewBook.jsx');
 
 var Route = React.createClass({
     render: function(){
@@ -39,6 +40,10 @@ var Route = React.createClass({
                     <Route
                         path="publisher/:id"
                         component={PublisherDetail}
+                    />
+                    <Route
+                        path="addbook"
+                        component={AddNewBook}
                     />
                 </Route>
             </Router>
