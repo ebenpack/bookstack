@@ -5,11 +5,17 @@ var Publisher = require('./Publisher.jsx');
 var Author = require('./Author.jsx');
 var Autocomplete = require('./Autocomplete.jsx');
 
-var AddBook = React.createClass({
+var AddNewBookActions = require('../actions/AddNewBookActions');
+var AddNewBookStore = require('../stores/AddNewBookStore');
+
+var AddNewBook = React.createClass({
+    mixins: [Reflux.connect(AddNewBookStore)],
     getInitialState: function() {
         return {
             authorsAutocomplete: [],
             publishersAutocomplete: [],
+            bookAutocomplete: [],
+            search: '',
             title: '',
             pages: '',
             isbn: '',
@@ -20,54 +26,20 @@ var AddBook = React.createClass({
             publishers: [],
         };
     },
-    handleTitleChange: function(e){
+    handleSearchChange: function(e){
+        var search = e.target.value;
         this.setState({
-            title: e.target.value
+            search: search
         });
-    },
-    handlePagesChange: function(e){
-        this.setState({
-            pages: e.target.value
-        });
-    },
-    handleIsbnChange: function(e){
-        this.setState({
-            isbn: e.target.value
-        });
-    },
-    handleImageChange: function(e){
-        this.setState({
-            img: e.target.value
-        });
-    },
-    handleAuthorChange: function(e){
-        this.setState({
-            authors: e.target.value
-        });
-    },
-    handlePublisherChange: function(e){
-        this.setState({
-            publishers: e.target.value
-        });
-    },
-    handleSubmit: function(e){
-        this.setState({
-            publishers: e.target.value
-        });
+        AddNewBookActions.searchBooks(search);
     },
     render: function() {
         return (
             <div>
-                <label>Title<input type="text" title={this.state.title} onChange={this.handleTitleChange} /></label>
-                <label>Pages<input type="text" title={this.state.pages} onChange={this.handlePagesChange} /></label>
-                <label>ISBN<input type="text" title={this.state.isbn} onChange={this.handleIsbnChange} /></label>
-                <label>Image URL<input type="text" title={this.state.img} onChange={this.handleImageChange} /></label>
-                <label>Authors<input type="text" title={this.state.authors} onChange={this.handleAuthorChange} /></label>
-                <label>Publishers<input type="text" title={this.state.publishers} onChange={this.handlePublisherChange} /></label>
-                <button onClick={handleSubmit}>Add</button>
+                <label>Search<input type="text" title={this.state.search} onChange={this.handleSearchChange} /></label>
             </div>
         );
     }
 });
 
-module.exports = AddBook;
+module.exports = AddNewBook;
