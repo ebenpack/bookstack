@@ -50,6 +50,12 @@ $color_pink: #FFE4E1;
     }
 }
 
+.menu li {
+    list-style-type: none;
+    display: inline-block;
+    margin: 0 10px;
+}
+
 .bookstack {
     display: flex;
     align-items: center;
