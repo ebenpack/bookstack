@@ -82,7 +82,7 @@ var AddBook = React.createClass({
         }
         return (
             <div>
-                <input type="text" title={this.state.title} onChange={this.handleChange} />
+                <input type="text" value={this.state.title} onChange={this.handleChange} />
                 {autocompleteResults}
                 {selectedBook}
             </div>
