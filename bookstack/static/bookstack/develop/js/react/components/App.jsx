@@ -16,7 +16,8 @@ var App = React.createClass({
     getInitialState: function() {
         return {
             token: '',
-            bookSearch: '',
+            search: '',
+            searchFocus: false,
         };
     },
     componentDidMount: function() {
@@ -27,15 +28,22 @@ var App = React.createClass({
         e.stopPropagation();
         AppActions.logoff();
     },
-    handleSearch: function(e) {
-        this.setState({
-            bookSearch: e.target.value,
-        });
-    },
     handleKeyUp: function(e) {
         if (e.key === 'Enter') {
-            this.history.pushState({foobar: "baz"}, '/addbook');
+            this.history.pushState(null, '/booksearch?search=' + this.state.search);
         }
+    },
+    toggleFocus: function(e) {
+        e.preventDefault();
+        this.setState({
+            searchFocus: !this.state.searchFocus,
+        });
+    },
+    handleSearchChange: function(e) {
+        var search = e.target.value;
+        this.setState({
+            search: search
+        });
     },
     render: function() {
         var loggedIn = this.state.token !== '';
@@ -44,18 +52,23 @@ var App = React.createClass({
             <li><a onClick={this.handleClick} href="#">Logoff</a></li> :
             <li><Link to={"/login"}>Login</Link></li>
         );
+        var search = (
+            this.state.searchFocus ?
+            <label>Search<input
+                type="text"
+                value={this.state.search}
+                onChange={this.handleSearchChange}
+                onBlur={this.toggleFocus}
+                onKeyUp={this.handleKeyUp} />
+            </label> :
+            <a href="#" onClick={this.toggleFocus}>Search Books</a>
+        );
         return (
             <div className="container">
                 <ul className="row menu">
                     <li><Link to={"/list"}>View Stacks</Link></li>
                     <li>
-                        <label>
-                            Add Book <input
-                                type="text"
-                                title={this.state.bookSearch}
-                                onChange={this.handleSearch}
-                                onKeyUp={this.handleKeyUp} />
-                        </label>
+                        {search}
                     </li>
                     {login}
                 </ul>
