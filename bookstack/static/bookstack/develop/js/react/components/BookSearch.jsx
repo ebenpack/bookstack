@@ -33,6 +33,9 @@ var BookSearch = React.createClass({
         });
         BookSearchActions.searchBooks(search);
     },
+    handleSubmit: function(e, book) {
+        BookSearchActions.addBook(book);
+    },
     render: function() {
         return (
             <div>
@@ -44,7 +47,13 @@ var BookSearch = React.createClass({
                 </label>
                 {this.state.books.map(function(book, idx){
                     var key = book.isbn || idx;
-                    return <Book key={key} book={book} />;
+                    var submit = this.handleSubmit;
+                    return (
+                        <div>
+                            <Book key={key} book={book} />
+                            <button onClick={function(e){submit(e, book)}}>Add Book</button>
+                        </div>
+                    );
                 }, this)}
             </div>
         );
