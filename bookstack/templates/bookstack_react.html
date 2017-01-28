@@ -1,0 +1,18 @@
+{% extends "bookstack/base_react.html" %}
+
+{% load staticfiles %}
+
+{% block head %}
+<link rel="icon" type="image/png" href="{% static "bookstack/images/favicon.png" %}">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
+<link rel="stylesheet" href="{% static "bookstack/css/react.css" %}" />
+{% endblock head %}
+
+
+{% block body %}
+<div id="stack"></div>
+{% endblock body %}
+
+{% block scripts %}
+<script src="{% static "bookstack/js/dist/bundle.js" %}"></script>
+{% endblock scripts %}

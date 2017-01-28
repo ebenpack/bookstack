@@ -1,0 +1,8 @@
+{% extends "bookstack/base.html" %}
+
+{% block content %}
+<h1 id="stuff">STUFF</h1>
+{% for stack in latest_stack_list %}
+<div class="stack"><a href="{% url 'bookstack:stack' user=stack.user.username pk=stack.id  %}">{{ stack.name }}</a></div>
+{% endfor %}
+{% endblock content %}

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% load i18n %}
+<html>
+  <head>
+    <meta http-equiv='Content-type' content='text/html; charset=utf-8'>
+    <title>{% block page_title %}{% endblock page_title %}</title>
+    {% load staticfiles %}
+    
+    {% block head %}
+    {% endblock head %}
+  </head>
+  <body>
+    {% block body %}
+    {% endblock body %}
+    <script src="{% static "bookstack/js/vendor/jquery-1.11.2.js" %}"></script>
+    {% block scripts %}
+    {% endblock scripts %}
+    <script>
+      window.MyApp.init({el: '#stack', staticPath: '{{ STATIC_URL }}'});
+    </script>
+  </body>
+</html>
