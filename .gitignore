@@ -4,3 +4,4 @@ migrations/
 dist/
 vendor/
 css/
+__pycache__/
