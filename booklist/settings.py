@@ -22,8 +22,6 @@ SECRET_KEY = 'vbmb999aw1_zm8jgpb@%$))a_c#x3sc4h3_2nmu(t32do(wjxz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -67,6 +65,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -86,6 +85,21 @@ DATABASES = {
     }
 }
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+         'APP_DIRS': True,
+            'OPTIONS': {
+                    'context_processors': [
+                                'django.template.context_processors.debug',
+                                'django.template.context_processors.request',
+                                'django.contrib.auth.context_processors.auth',
+                                'django.contrib.messages.context_processors.messages',
+                            ],
+                },
+    }
+]
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
 
@@ -98,10 +112,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-TEMPLATE_DIRS = (
-    PROJECT_PATH + '/templates', 
-)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/

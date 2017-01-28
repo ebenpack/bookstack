@@ -185,4 +185,4 @@ class PublisherViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 def app_view(request):
-    return render(request, 'bookstack/bookstack_react.html')
+    return render(request, 'bookstack_react.html')
