@@ -2,7 +2,7 @@ import {render} from 'react-dom';
 import React from 'react';
 import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
-import {Router, Route, browserHistory} from 'react-router';
+import {Router, Route, hashHistory} from 'react-router';
 import thunkMiddleware from 'redux-thunk';
 import Immutable from 'immutable';
 
@@ -30,6 +30,8 @@ import bookSearchStore from './stores/BookSearchStore';
 
 import addBookStore from './stores/AddBookStore';
 
+import addCategoryStore from './stores/AddCategoryStore';
+
 import Login from './components/Login.jsx';
 
 
@@ -42,6 +44,7 @@ function initializeStore(apiUrl) {
         publisherDetailStore,
         bookSearchStore,
         addBookStore,
+        addCategoryStore,
     });
     return createStore(
         reducers,
@@ -56,7 +59,7 @@ function initializeStore(apiUrl) {
 
 const AppRouter = (props) => (
     <Provider store={initializeStore(props.apiUrl)}>
-        <Router history={browserHistory}>
+        <Router history={hashHistory}>
             <Route
                 path="/"
                 component={App}
