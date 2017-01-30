@@ -48,8 +48,6 @@ class StackDetail extends React.Component {
             (<div>
                 <div onClick={e => this.toggleEditing()}>Add book +</div>
             </div>);
-        let setReadState = this.props.actions.setReadState;
-        let removeBook = this.props.actions.removeBook;
         let apiUrl = this.props.apiUrl;
         let token = this.props.token;
         return (
@@ -60,16 +58,21 @@ class StackDetail extends React.Component {
                 <div className="addBook">
                     {addBook}
                 </div>
-                {this.props.books.map(function (bookStack, i) {
-                    return <BookStack
+                {this.props.books.map((bookStack, i) =>
+                    <BookStack
                         key={i}
                         bookStack={bookStack}
                         staticPath={staticPath}
                         setReadState={(id, checked) =>
-                            setReadState(apiUrl, token, id, checked)}
-                        removeBook={id => removeBook(apiUrl, token, id)}
-                    />;
-                })}
+                            this.props.actions.setReadState(apiUrl, token, id, checked)}
+                        removeBook={id =>
+                            this.props.actions.removeBook(apiUrl, token, id)}
+                        removeCategory={(bookstackId, categoryId) =>
+                            this.props.actions.removeCategory(apiUrl, token, bookstackId, categoryId)}
+                        setPosition={(id, from, to) =>
+                            this.props.actions.setPosition(apiUrl, token, id, from, to, this.props.books.size)}
+                    />
+                )}
             </div>
         );
     }
