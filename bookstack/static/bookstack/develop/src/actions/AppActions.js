@@ -28,7 +28,10 @@ function clearCookieToken() {
 
 export function initialize() {
     return dispatch =>
-        dispatch({type: 'APP_SET_TOKEN', token: getCookieToken()});
+        dispatch({
+            type: 'APP_SET_TOKEN',
+            token: getCookieToken()
+        });
 }
 
 export function login(apiUrl, user, pass, save) {
@@ -47,7 +50,10 @@ export function login(apiUrl, user, pass, save) {
         		if (save) {
                     setCookieToken(resp.token);
 				}
-                return dispatch({type: 'APP_SET_TOKEN', token: resp.token})
+                return dispatch({
+                    type: 'APP_SET_TOKEN',
+                    token: resp.token
+                })
             }
 		)
 }
@@ -55,6 +61,8 @@ export function login(apiUrl, user, pass, save) {
 export function logoff(){
     return dispatch => {
         clearCookieToken();
-        dispatch({type: 'APP_DELETE_TOKEN'});
+        return dispatch({
+            type: 'APP_DELETE_TOKEN'
+        });
     }
 }

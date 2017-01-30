@@ -2,14 +2,17 @@ import Immutable from 'immutable';
 
 const bookLocation = Immutable.List(['stackDetail', 'books']);
 
-export default function stackDetailReducer(state = Immutable.fromJS({
+const defaultState = Immutable.fromJS({
     stackDetail: {
         books: []
     },
     error: false,
     loading: false,
     editing: false,
-}), action) {
+});
+
+// TODO: This is probably too big, should be broken up
+export default function stackDetailReducer(state = defaultState, action) {
     switch (action.type) {
         case 'STACK_DETAIL_LOAD':
             return state.set('stackDetail', Immutable.fromJS(action.value));

@@ -1,8 +1,10 @@
 import Immutable from 'immutable';
 
-export default function categoryReducer(state = Immutable.fromJS({
+const defaultState = Immutable.fromJS({
     autoSuggestCategories: []
-}), action) {
+});
+
+export default function categoryReducer(state = defaultState, action) {
     switch (action.type) {
         case 'ADD_CATAGORY_AUTOCOMPLETE_SUGGESTIONS':
             return state.set('autoSuggestCategories', Immutable.fromJS(action.autoSuggestCategories));

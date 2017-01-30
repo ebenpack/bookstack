@@ -11,7 +11,10 @@ export function addBook(apiUrl, token, book) {
                 'Authorization': 'Token ' + token,
             },
             data: JSON.stringify(book.toJS()),
-        }).then(resp => {/*???*/});
+        }).then(resp => {
+                // TODO: WHAT DO????
+            }
+        );
 }
 
 export function bookSearch(query) {
@@ -22,6 +25,7 @@ export function bookSearch(query) {
             contentType: 'application/json',
             type: 'json',
         }).then(resp => {
+            // TODO: Revisit this...
             let books = [];
             if (resp.totalItems) {
                 books = resp.items.map(function (book) {
@@ -39,10 +43,10 @@ export function bookSearch(query) {
                                 }
                             }, '') : undefined,
                         authors: book.volumeInfo.authors ? book.volumeInfo.authors.map(function (author) {
-                            return {
-                                name: author,
-                            };
-                        }): [],
+                                return {
+                                    name: author,
+                                };
+                            }) : [],
                         img: (
                             book.volumeInfo.imageLinks &&
                             book.volumeInfo.imageLinks.smallThumbnail
@@ -58,7 +62,10 @@ export function bookSearch(query) {
                     };
                 });
             }
-            dispatch({type: 'BOOKSEARCH_SET_BOOKS', books});
+            return dispatch({
+                type: 'BOOKSEARCH_SET_BOOKS',
+                books
+            });
         });
     }
 }

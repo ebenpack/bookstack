@@ -6,12 +6,11 @@ export function loadStack(apiUrl, id) {
             url: `${apiUrl}/api/stack/${id}/`,
             contentType: 'application/json',
             type: 'json'
-        }).then(
-            resp =>
-                dispatch({
-                    type: 'STACK_DETAIL_LOAD',
-                    value: resp
-                })
+        }).then(resp =>
+            dispatch({
+                type: 'STACK_DETAIL_LOAD',
+                value: resp
+            })
         );
 }
 
@@ -86,7 +85,7 @@ export function removeBook(apiUrl, token, id) {
             headers: {
                 'Authorization': `Token ${token}`,
             },
-        }).then(resp =>
+        }).then(() =>
             dispatch({
                 type: 'STACK_DETAIL_REMOVE_BOOK',
                 id
@@ -329,7 +328,8 @@ export function setLoadingState(state) {
 //                 console.error(context.sourceUrl, err.toString(), msg);
 //             });
 //         } else {
-//             this.trigger({
+//             this.tr
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++igger({
 //                 loading: false,
 //                 stackDetail: this.state.stackDetail,
 //             });

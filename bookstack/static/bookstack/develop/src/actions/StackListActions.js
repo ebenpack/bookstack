@@ -6,8 +6,15 @@ export function loadStackList(apiUrl) {
             url: apiUrl + '/api/stack/',
             contentType: 'application/json',
             type: 'json'
-        }).then(resp => dispatch({type: 'LOAD_STACK', value: resp}))
+        }).then(stack =>
+            dispatch({
+                type: 'LOAD_STACK',
+                stack
+            }))
 }
-export const unloadStackList = {
-    type: 'UNLOAD_STACK'
-};
+export function unloadStackList() {
+    return dispatch =>
+        dispatch({
+            type: 'UNLOAD_STACK'
+        });
+}

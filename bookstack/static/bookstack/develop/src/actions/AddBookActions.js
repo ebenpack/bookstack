@@ -6,13 +6,12 @@ export function searchBooks(apiUrl, query) {
             url: `${apiUrl}/api/book/?search=${query}`,
             contentType: 'application/json',
             type: 'json',
-        }).then(function (resp) {
-            console.log('fetch complete');
+        }).then(resp =>
             dispatch({
                 type: 'ADD_BOOK_AUTOCOMPLETE_SUGGESTIONS',
                 booksAutocomplete: resp
-            });
-        });
+            })
+        );
 }
 
 export function selectBook(apiUrl, id) {
@@ -45,12 +44,12 @@ export function addBook(apiUrl, token, bookId, stackId) {
                 categories: [],
                 stack: stackId
             })
-        }).then(function (resp) {
+        }).then(resp =>
             dispatch({
                 type: 'STACK_DETAIL_ADD_BOOK',
                 book: resp
             })
-        });
+        );
 
 
 }
@@ -60,7 +59,7 @@ export function clearSelected() {
         dispatch({type: 'ADD_BOOK_CLEAR_SELECTED'});
 }
 
-export function addNewBook(apiUrl, token){
+export function addNewBook(apiUrl, token) {
     return dispatch =>
         reqwest({
             url: `${apiUrl}/api/bookset/`,
@@ -71,7 +70,10 @@ export function addNewBook(apiUrl, token){
                 'Authorization': `Token ${token}`,
             },
             data: JSON.stringify(book.toJS())
-        }).then(function (resp) {
-            console.log('fetch complete');
-        });
+        }).then(() =>
+            // TODO: WHAT DO????
+            // Probably need to dispatch(addBook(...))
+            // But posting new book needs to be fixed on server-side first
+            console.log('fetch complete')
+        );
 }

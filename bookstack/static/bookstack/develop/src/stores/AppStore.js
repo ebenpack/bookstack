@@ -1,6 +1,8 @@
 import Immutable from 'immutable';
 
-export default function storeReducer(state = Immutable.Map({apiUrl: '', token: ''}), action) {
+const defaultState = Immutable.Map({apiUrl: '', token: ''});
+
+export default function storeReducer(state = defaultState, action) {
     switch (action.type) {
         case 'APP_SET_APIURL':
             return state.set('apiUrl', action.apiUrl);

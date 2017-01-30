@@ -27,6 +27,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
+// TODO: Refactor to pure render function
 class AddBook extends React.Component {
 
     handleChange(e) {
@@ -34,6 +35,9 @@ class AddBook extends React.Component {
         if (query) {
             this.props.searchBooks(this.props.apiUrl, query);
         } else {
+            // TODO: Fix this right here
+            // booksAutocomplete is no longer state
+            // Probably need to add a clear action
             this.setState({
                 booksAutocomplete: []
             });

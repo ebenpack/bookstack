@@ -1,10 +1,12 @@
 import Immutable from 'immutable';
 
-export default function BookSearchReducer(state = Immutable.fromJS({
+const defaultState = Immutable.fromJS({
     books: [],
     name: '',
     id: 0
-}), action) {
+});
+
+export default function BookSearchReducer(state = defaultState, action) {
     switch (action.type) {
         case 'BOOKSEARCH_SET_BOOKS':
             return Immutable.fromJS({books: action.books});
