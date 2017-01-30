@@ -6,19 +6,27 @@ export function loadStack(apiUrl, id) {
             url: `${apiUrl}/api/stack/${id}/`,
             contentType: 'application/json',
             type: 'json'
-        }).then(resp => dispatch({type: 'STACK_DETAIL_LOAD', value: resp}))
+        }).then(
+            resp =>
+                dispatch({
+                    type: 'STACK_DETAIL_LOAD',
+                    value: resp
+                })
+        );
 }
 
 export function unloadStack() {
-    return {
-        type: 'STACK_DETAIL_UNLOAD'
-    };
+    return dispatch =>
+        dispatch({
+            type: 'STACK_DETAIL_UNLOAD'
+        });
 }
 
 export function toggleEditing() {
-    return {
-        type: 'STACK_DETAIL_TOGGLE_EDITING'
-    };
+    return dispatch =>
+        dispatch({
+            type: 'STACK_DETAIL_TOGGLE_EDITING'
+        });
 }
 
 export function setReadState(apiUrl, token, bookId, readState) {
@@ -35,13 +43,37 @@ export function setReadState(apiUrl, token, bookId, readState) {
             type: 'json',
             contentType: 'application/json'
         }).then(resp =>
-            dispatch({type: 'STACK_DETAIL_SET_READ_STATE', id: resp.id, read: resp.read})
+            dispatch({
+                type: 'STACK_DETAIL_SET_READ_STATE',
+                id: resp.id,
+                read: resp.read
+            })
         );
 
 }
 
-export function setPosition(id, from, to) {
-    return dispatch => dispatch({});
+export function setPosition(apiUrl, token, id, from, to, stackLength) {
+    return dispatch => {
+        if (to > 0 && to <= stackLength) {
+            reqwest({
+                url: `${apiUrl}/api/bookset/${id}/renumber/`,
+                data: JSON.stringify({
+                    position: to,
+                }),
+                headers: {
+                    'Authorization': `Token ${token}`,
+                },
+                method: 'PATCH',
+                type: 'json',
+                contentType: 'application/json'
+            }).then(() =>
+                dispatch({
+                    type: 'STACK_DETAIL_REORDER',
+                    from,
+                    to
+                }));
+        }
+    };
 }
 
 export function removeBook(apiUrl, token, id) {
@@ -62,24 +94,40 @@ export function removeBook(apiUrl, token, id) {
         );
 }
 
-export function removeCategory(bookstackId, categoryId) {
-    return dispatch => dispatch({});
+export function removeCategory(apiUrl, token, bookstackId, categoryId) {
+    return dispatch =>
+        reqwest({
+            url: `${apiUrl}/api/booksetcategory/${categoryId}/`,
+            headers: {
+                'Authorization': `Token ${token}`,
+            },
+            method: 'DELETE',
+            type: 'json',
+            contentType: 'application/json'
+        }).then(() =>
+            dispatch({
+                type: 'STACK_DETAIL_REMOVE_CATEGORY',
+                bookstackId,
+                categoryId
+            })
+        );
 }
 
 export function setLoadingState(state) {
-    return dispatch => dipatch({type: 'STACK_DETAIL_SET_LOADING_STATE', state});
+    return dispatch =>
+        dipatch({
+            type: 'STACK_DETAIL_SET_LOADING_STATE',
+            state
+        });
 }
 
-var blah = {
-    stackUrl: '/api/stack/',
-    booksetCategoryUrl: '/api/booksetcategory/',
-    booksetUrl: '/api/bookset/',
-    updatePositionUrl: '/api/bookset/{id}/renumber/',
-    categorySearchUrl: '/api/category/?search={search}',
-}
-
+// URLS
+//     stackUrl: '/api/stack/',
+//     booksetCategoryUrl: '/api/booksetcategory/',
+//     booksetUrl: '/api/bookset/',
+//     updatePositionUrl: '/api/bookset/{id}/renumber/',
+//     categorySearchUrl: '/api/category/?search={search}',
 // var StackDetailStore = Reflux.createStore({
-
 //     setLoadingState: function(state) {
 //         this.state.loading = state;
 //         this.trigger({
