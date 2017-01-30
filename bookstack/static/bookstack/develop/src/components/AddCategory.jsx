@@ -1,68 +1,93 @@
-var React = require('react');
-//var Reflux = require('reflux');
+import React from 'react';
+import {connect} from 'react-redux';
 
-var Category = require('./Category.jsx');
-var Autocomplete = require('./Autocomplete.jsx');
+import Category from './Category.jsx';
+import Autocomplete from './Autocomplete.jsx';
 
-var AddCategoryActions = require('../actions/AddCategoryActions');
-var AddCategoryStore = require('../stores/AddCategoryStore');
+import {
+    addCategory,
+    addNewCategory,
+    setAutoSuggestCategories,
+    clearAutoSuggestCategories
+} from '../actions/AddCategoryActions';
 
-var AddCategory = React.createClass({
-    //mixins: [Reflux.connect(AddCategoryStore)],
-    getInitialState: function() {
-        return {
+function mapStateToProps(state) {
+    return {
+        apiUrl: state.appStore.get('apiUrl'),
+        token: state.appStore.get('token'),
+        autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories'),
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        addCategory: (apiUrl, token, bookstackId, categoryId) =>
+            dispatch(addCategory(apiUrl, token, bookstackId, categoryId)),
+        addNewCategory: (apiUrl, token, category, bookstackId) =>
+            dispatch(addNewCategory(apiUrl, token, category, bookstackId)),
+        setAutoSuggestCategories: (apiUrl, query) =>
+            dispatch(setAutoSuggestCategories(apiUrl, query)),
+        clearAutoSuggestCategories: () =>
+            dispatch(clearAutoSuggestCategories())
+    }
+}
+
+
+class AddCategory extends React.Component {
+    constructor() {
+        super();
+        this.state = {
             addingCategory: false,
-            autoSuggestCategories: [],
             category: '',
         };
-    },
-    onAutoSuggestCategories: function(update) {
-        if (update.autoSuggestCategories) {
-            this.setState({
-                autoSuggestCategories: update.autoSuggestCategories
-            });
-        }
-    },
-    handleChange: function(e) {
-        var category = e.target.value;
+    }
+
+    componentWillUnmount(){
+        this.props.clearAutoSuggestCategories();
+    }
+
+    handleChange(e) {
+        let category = e.target.value;
         if (category) {
-            AddCategoryActions.autoSuggestCategories(category);
+            this.props.setAutoSuggestCategories(this.props.apiUrl, category);
         } else {
-            this.setState({
-                autoSuggestCategories: []
-            });
+            this.props.clearAutoSuggestCategories();
         }
         this.setState({
             category: category,
         });
-    },
-    handleAddCategoryKeyUp: function(e) {
+    }
+
+    handleAddCategoryKeyUp(e) {
         if (e.key === 'Enter') {
-            var bookstackId = this.props.id;
-            var category = this.state.category;
-            AddCategoryActions.addNewCategory(bookstackId, category);
+            let bookstackId = this.props.id;
+            let category = this.state.category;
+            this.props.addNewCategory(this.props.apiUrl, this.props.token, category, bookstackId);
             this.clearAutocomplete();
         }
-    },
-    clearAutocomplete: function() {
+    }
+
+    clearAutocomplete() {
         this.setState({
-            autoSuggestCategories: [],
             addingCategory: false,
             category: "",
         });
-    },
-    addCategory: function(categoryId) {
-        var bookstackId = this.props.id;
-        AddCategoryActions.addCategory(bookstackId, categoryId);
-    },
-    render: function() {
-        var autoSuggestCategories = '';
-        if (this.state.autoSuggestCategories.length > 0) {
+        this.props.clearAutoSuggestCategories();
+    }
+
+    addCategory(categoryId) {
+        let bookstackId = this.props.id;
+        this.props.addCategory(this.props.apiUrl, this.props.token, bookstackId, categoryId);
+    }
+
+    render() {
+        let autoSuggestCategories = '';
+        if (this.props.autoSuggestCategories.size > 0) {
             autoSuggestCategories = (
                 <Autocomplete
-                    suggestions={this.state.autoSuggestCategories}
+                    suggestions={this.props.autoSuggestCategories}
                     displayProperty={'category'}
-                    onClick={this.addCategory}
+                    onClick={e => this.addCategory(e)}
                 />
             );
         }
@@ -71,13 +96,16 @@ var AddCategory = React.createClass({
                 <label>Add Category: <input
                     type="text"
                     value={this.state.category}
-                    onChange={this.handleChange}
-                    onKeyUp={this.handleAddCategoryKeyUp}
+                    onChange={e => this.handleChange(e)}
+                    onKeyUp={e => this.handleAddCategoryKeyUp(e)}
                 /></label>
                 {autoSuggestCategories}
             </div>
         );
     }
-});
+}
 
-module.exports = AddCategory;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(AddCategory);
