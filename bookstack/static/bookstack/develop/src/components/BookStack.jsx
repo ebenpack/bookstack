@@ -33,7 +33,7 @@ class BookStack extends React.Component {
 
     updatePosition(id, fromPosition, toPosition) {
         if (fromPosition !== toPosition) {
-            setPosition(id, fromPosition, toPosition);
+            this.props.setPosition(id, fromPosition, toPosition);
         }
     }
 
@@ -113,7 +113,7 @@ class BookStack extends React.Component {
     // }
     removeCategory(categoryId) {
         let bookstackId = this.props.bookStack.get('id');
-        removeCategory(bookstackId, categoryId);
+        this.props.removeCategory(bookstackId, categoryId);
     }
 
     render() {
@@ -203,8 +203,8 @@ class BookStack extends React.Component {
                             {this.props.bookStack.get('categories').map(function (category) {
                                 return (
                                     <li key={category.get('id')}>
-                                        {category.getIn('detail.category')} -
-                                        <span onClick={e => this.removeCategory(e, category.get('id'))}>
+                                        {category.getIn(['detail','category'])} -
+                                        <span onClick={e => this.removeCategory(category.get('id'))}>
                                             Remove
                                         </span>
                                     </li>
