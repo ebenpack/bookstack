@@ -126,6 +126,7 @@ class BookStackSerializer(serializers.ModelSerializer):
         for category in categories:
             Category.objects.get_or_create(bookstack=instance, **category)
 
+        instance.save()
         return instance
 
 

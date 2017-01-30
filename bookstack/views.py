@@ -107,7 +107,7 @@ class BookStackViewSet(viewsets.ModelViewSet):
         bookstack.renumber(position)
         # Re-fetch object to get updated position
         bookstack = self.get_object()
-        serializer = serializers.BookStackSerializer(bookstack)
+        serializer = serializers.BookStackSerializer(bookstack, partial=True)
         return Response(serializer.data)
 
 
