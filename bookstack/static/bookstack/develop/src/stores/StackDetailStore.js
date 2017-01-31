@@ -15,15 +15,13 @@ const defaultState = Immutable.fromJS({
 export default function stackDetailReducer(state = defaultState, action) {
     switch (action.type) {
         case 'STACK_DETAIL_LOAD':
-            return state.set('stackDetail', Immutable.fromJS(action.value));
+            return state.set('stackDetail', Immutable.fromJS(action.stack));
         case 'STACK_DETAIL_UNLOAD':
-            return state.set('stackDetail', Immutable.fromJS({
-                books: []
-            }));
+            return state.set('stackDetail', Immutable.fromJS({books: []}));
         case 'STACK_DETAIL_ADD_BOOK':
             return state.updateIn(
                 bookLocation,
-                books => books.push(action.book)
+                books => books.push(Immutable.fromJS(action.book))
             );
         case 'STACK_DETAIL_TOGGLE_EDITING':
             return state.set('editing', !state.get('editing'));

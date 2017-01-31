@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 
-defaultState = Immutable.fromJS({
+const defaultState = Immutable.fromJS({
     books: [],
     name: ''
 });

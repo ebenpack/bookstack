@@ -42,7 +42,7 @@ class StackDetail extends React.Component {
         let id = this.props.params.id;
         let addBook = this.props.editing ?
             (<div>
-                <div onClick={this.toggleEditing}>Close -</div>
+                <div onClick={e=>this.toggleEditing()}>Close -</div>
                 <AddBook stackId={id}/>
             </div>) :
             (<div>

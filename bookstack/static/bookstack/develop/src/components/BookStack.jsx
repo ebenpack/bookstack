@@ -68,6 +68,14 @@ class BookStack extends React.Component {
         }));
     }
 
+    handleDragOver(e) {
+        e.preventDefault();
+    }
+
+    handleDragEnd(e) {
+        e.preventDefault();
+    }
+
     handleDrop(e) {
         let dropped = JSON.parse(e.dataTransfer.getData('text'));
         let id = dropped.id;
@@ -76,9 +84,8 @@ class BookStack extends React.Component {
         this.updatePosition(id, fromPosition, toPosition);
     }
 
-    static handleDragOver(e) {
-        e.preventDefault();
-    }
+
+
 
     handleRemove() {
         this.setState({

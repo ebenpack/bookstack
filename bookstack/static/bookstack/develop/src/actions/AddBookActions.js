@@ -44,11 +44,18 @@ export function addBook(apiUrl, token, bookId, stackId) {
                 categories: [],
                 stack: stackId
             })
-        }).then(resp =>
-            dispatch({
-                type: 'STACK_DETAIL_ADD_BOOK',
-                book: resp
-            })
+        }).then(resp => {
+                dispatch({
+                    type: 'STACK_DETAIL_ADD_BOOK',
+                    book: resp
+                });
+                dispatch({
+                    type: 'ADD_BOOK_CLEAR_SELECTED'
+                });
+                dispatch({
+                    type: 'STACK_DETAIL_TOGGLE_EDITING'
+                });
+            }
         );
 
 
@@ -56,7 +63,9 @@ export function addBook(apiUrl, token, bookId, stackId) {
 
 export function clearSelected() {
     return dispatch =>
-        dispatch({type: 'ADD_BOOK_CLEAR_SELECTED'});
+        dispatch({
+            type: 'ADD_BOOK_CLEAR_SELECTED'
+        });
 }
 
 export function addNewBook(apiUrl, token) {

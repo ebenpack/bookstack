@@ -6,10 +6,10 @@ export function loadStack(apiUrl, id) {
             url: `${apiUrl}/api/stack/${id}/`,
             contentType: 'application/json',
             type: 'json'
-        }).then(resp =>
+        }).then(stack =>
             dispatch({
                 type: 'STACK_DETAIL_LOAD',
-                value: resp
+                stack
             })
         );
 }
