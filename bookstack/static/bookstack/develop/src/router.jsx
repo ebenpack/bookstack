@@ -3,6 +3,7 @@ import React from 'react';
 import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
 import {Router, Route, hashHistory} from 'react-router';
+import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import thunkMiddleware from 'redux-thunk';
 import Immutable from 'immutable';
 
@@ -45,8 +46,9 @@ function initializeStore(apiUrl) {
         bookSearchStore,
         addBookStore,
         addCategoryStore,
+        routing: routerReducer
     });
-    return createStore(
+    let store = createStore(
         reducers,
         {
             appStore: Immutable.Map({apiUrl: apiUrl, token: ''})
@@ -55,11 +57,18 @@ function initializeStore(apiUrl) {
             applyMiddleware(thunkMiddleware)
         ),
     );
+    let history = syncHistoryWithStore(hashHistory, store);
+    return {
+        store,
+        history
+    }
 }
 
-const AppRouter = (props) => (
-    <Provider store={initializeStore(props.apiUrl)}>
-        <Router history={hashHistory}>
+const AppRouter = (props) => {
+    let {store, history} = initializeStore(props.apiUrl);
+    return (
+    <Provider store={store}>
+        <Router history={history}>
             <Route
                 path="/"
                 component={App}
@@ -91,7 +100,7 @@ const AppRouter = (props) => (
             </Route>
         </Router>
     </Provider>
-);
+)};
 
 const start = function (el, apiUrl) {
     render(
