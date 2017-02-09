@@ -5,3 +5,5 @@ dist/
 vendor/
 css/
 __pycache__/
+.idea/
+bundle.js

@@ -101,6 +101,12 @@ $color_pink: #FFE4E1;
     }
 }
 
+.bookSearch {
+    .book {
+        float: left;
+    }
+}
+
 .book {
     > img {
         max-width: 49px;
