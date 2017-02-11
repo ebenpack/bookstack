@@ -62,6 +62,21 @@ class BookSerializer(serializers.ModelSerializer):
                 if field not in included:
                     self.fields.pop(field)
 
+    def create(self, validated_data):
+        # import pudb; pu.db
+        authors = validated_data.pop('authors')
+        publishers = validated_data.pop('publishers')
+        book = Book.objects.create(**validated_data)
+
+        for author in authors:
+            a, created = Author.objects.get_or_create(name=author['name'])
+            book.authors.add(a)
+
+        for publisher in publishers:
+            p, created = Publisher.objects.get_or_create(name=publisher['name'])
+            book.publishers.add(p)
+        
+        return book
 
 class PublisherDetailSerializer(serializers.ModelSerializer):
 
