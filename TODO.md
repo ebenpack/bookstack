@@ -2,7 +2,6 @@
 
 # Back-end
 * Unit tests
-* Fix book posting
 
 
 # Front-end
@@ -13,3 +12,4 @@
 * PropTypes?
 * Disable features when not authenticated
 * Rethink UI & CSS
+* Fix add-book layout / UX
