@@ -33,7 +33,7 @@ class StackViewSet(viewsets.ModelViewSet):
     queryset = models.Stack.objects.prefetch_related(
         'bookstack_set__book__authors',
         'bookstack_set__book__publishers',
-        'bookstack_set__categories'
+        'bookstack_set__bookstackcategory_set__category'
     )
     serializer_class = serializers.StackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
@@ -41,16 +41,6 @@ class StackViewSet(viewsets.ModelViewSet):
     def list(self, request):
         queryset = models.Stack.objects
         serializer = serializers.StackListSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        queryset = models.Stack.objects.prefetch_related(
-            'bookstack_set__book__authors',
-            'bookstack_set__book__publishers',
-            'bookstack_set__categories'
-        )
-        stack = get_object_or_404(queryset, pk=pk)
-        serializer = serializers.StackSerializer(stack)
         return Response(serializer.data)
 
 
@@ -72,12 +62,14 @@ class BookStackViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows books within stacks to be viewed or edited.
     """
-    queryset = models.BookStack.objects.order_by(
-        'position'
-    ).prefetch_related(
-        'categories',
+    queryset = models.BookStack.objects.prefetch_related(
+        'bookstackcategory_set__category',
         'book__authors',
         'book__publishers'
+    ).select_related(
+        'book'
+    ).order_by(
+        'position'
     )
     serializer_class = serializers.BookStackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
@@ -126,7 +118,9 @@ class BookStackCategoryViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows categories to be viewed or edited.
     """
-    queryset = models.BookStackCategory.objects
+    queryset = models.BookStackCategory.objects.prefetch_related(
+        'category'
+    )
     serializer_class = serializers.BookStackCategorySerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
@@ -170,7 +164,7 @@ class PublisherViewSet(viewsets.ModelViewSet):
     search_fields = ('name', )
 
     def list(self, request):
-        queryset = Publisher.objects
+        queryset = models.Publisher.objects
         serializer = serializers.PublisherSerializer(queryset, many=True)
         return Response(serializer.data)
 
