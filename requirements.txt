@@ -2,7 +2,7 @@ codegen==1.0
 coreapi==2.1.1
 Django==1.10.5
 django-cors-headers==2.0.0
-django-debug-toolbar==1.6
+django-debug-toolbar==1.7
 django-rest-swagger==2.1.1
 djangorestframework==3.5.3
 itypes==1.1.0

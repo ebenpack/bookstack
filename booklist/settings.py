@@ -34,12 +34,12 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'debug_toolbar',
     'rest_framework_swagger',
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
     'bookstack',
+    'debug_toolbar',
 )
 
 REST_FRAMEWORK = {
@@ -56,16 +56,15 @@ REST_FRAMEWORK = {
     ]
 }
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -88,15 +87,15 @@ DATABASES = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-         'APP_DIRS': True,
-            'OPTIONS': {
-                    'context_processors': [
-                                'django.template.context_processors.debug',
-                                'django.template.context_processors.request',
-                                'django.contrib.auth.context_processors.auth',
-                                'django.contrib.messages.context_processors.messages',
-                            ],
-                },
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
     }
 ]
 
@@ -121,3 +120,5 @@ STATICDIRS = (
 )
 
 STATIC_URL = '/static/'
+
+INTERNAL_IPS = ('127.0.0.1',)
