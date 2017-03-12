@@ -16,7 +16,11 @@
     {% block scripts %}
     {% endblock scripts %}
     <script>
-      window.MyApp.init({el: '#stack', staticPath: '{{ STATIC_URL }}'});
+      window.MyApp.init({
+        el: '#stack',
+        staticPath: '{{ STATIC_URL }}',
+        apiUrl: '{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}'
+      });
     </script>
   </body>
 </html>
