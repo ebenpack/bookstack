@@ -30,7 +30,7 @@
   "scripts": {
     "build:dev": "webpack",
     "build": "NODE_ENV=production webpack",
-    "sass": "sassc sass/react.scss > ../css/react.css",
+    "sass": "sassc sass/react.scss > ../bookstack/static/bookstack/css/react.css",
     "server:dev": "webpack-dev-server --content-base ./build"
   }
 }
