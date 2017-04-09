@@ -1,6 +1,4 @@
 node_modules/
-migrations/
-*.sqlite3
 dist/
 vendor/
 css/
