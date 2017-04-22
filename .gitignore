@@ -5,3 +5,4 @@ css/
 __pycache__/
 .idea/
 bundle.js
+.DS_Store
