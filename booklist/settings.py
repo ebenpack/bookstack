@@ -24,6 +24,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+DEBUG_TOOLBAR_CONFIG = {
+    # Fix djdt performance issue in 1.11
+    'DISABLE_PANELS': {
+        'debug_toolbar.panels.templates.TemplatesPanel',
+        'debug_toolbar.panels.redirects.RedirectsPanel',
+    },
+}
+
 
 # Application definition
 
