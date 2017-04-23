@@ -1,8 +1,7 @@
 from django.contrib.auth.models import User, Group
-
 from rest_framework import serializers
 
-from bookstack.models import Author, Book, BookStack, Category, Publisher, Stack, BookStackCategory
+from bookstack.models import (Author, Book, BookStack, Category, Publisher, Stack, BookStackCategory)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -58,6 +57,7 @@ class BookSerializer(serializers.ModelSerializer):
             included = set(include)
             existing = set(self.fields.keys())
 
+            # TODO: Union or some shit?
             for field in existing:
                 if field not in included:
                     self.fields.pop(field)
@@ -110,13 +110,14 @@ class BookStackCategorySerializer(serializers.ModelSerializer):
 
 class BookStackSerializer(serializers.ModelSerializer):
     book = BookSerializer(read_only=True)
-    bookId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Book.objects.all())
     categories = BookStackCategorySerializer(many=True, source='bookstackcategory_set')
+    stack = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = BookStack
-        fields = ('read', 'position', 'book', 'bookId', 'categories', 'stack', 'id')
+        fields = ('read', 'position', 'book', 'categories', 'stack', 'id')
 
+    # TODO: FIX ME
     def create(self, validated_data):
         categories = validated_data.pop('bookstackcategory_set')
         bookstack = BookStack.objects.create(
