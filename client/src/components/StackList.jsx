@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {loadStackList, unloadStackList} from '../actions/StackListActions';
+import {loadStackList, unloadStackList} from '../actions/StackList';
 
 import Stack from './Stack.jsx';
 
@@ -13,26 +13,35 @@ function mapStateToProps(state) {
     }
 }
 
+function mapDispatchToProps(dispatch) {
+    return {
+        loadStackList: () => dispatch(loadStackList()),
+        unloadStackList: () => dispatch(unloadStackList()),
+    }
+}
+
 class StackList extends React.Component {
     componentDidMount() {
-        this.props.dispatch(loadStackList(this.props.apiUrl));
+        this.props.loadStackList();
     }
 
     componentWillUnmount() {
-        this.props.dispatch(unloadStackList);
+        this.props.unloadStackList();
     }
 
     render() {
         const staticPath = this.props.staticPath;
+        this.props.stackList
         return (
             <div className="stacklist">
-                {this.props.stackList.map(function (stack, i) {
-                    return <Stack key={i} data={stack} staticPath={staticPath}/>;
-                })}
+                {this.props.stackList.map((stack, i) =>
+                    <Stack key={i} stack={stack} staticPath={staticPath}/>
+                )}
             </div>
         );
     }
 }
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(StackList);

@@ -10,34 +10,41 @@ module.exports = {
         filename: 'bundle.js',
     },
 
-    devtool: 'eval-source-map',
+    devtool: 'source-map',
 
     plugins: process.env.NODE_ENV === 'production' ? [
-            new webpack.optimize.DedupePlugin(),
-            new webpack.optimize.OccurrenceOrderPlugin(),
-            new webpack.optimize.UglifyJsPlugin()
-        ] : [
-            new webpack.OldWatchingPlugin()
-        ],
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.optimize.UglifyJsPlugin()
+    ] : [],
 
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
-                loader: 'babel',
-                query: {
-                    presets: ['react', 'es2015']
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['react', 'es2015'],
+                        plugins: [require('babel-plugin-transform-object-rest-spread')]
+                    }
                 }
             },
             {
                 test: /\.scss$/,
-                loaders: ["style-loader", "css-loader", "sass-loader"]
+                use: [{
+                    loader: "style-loader"
+                }, {
+                    loader:  "css-loader"
+                }, {
+                    loader: "sass-loader",
+                    options: {
+                        sourceMap: true,
+                        includePaths: [path.resolve(__dirname, "sass")]
+                    }
+                }]
             }
-        ],
-        sassLoader: {
-            sourceMap: true,
-            includePaths: [path.resolve(__dirname, "sass")]
-        }
+        ]
     }
 }

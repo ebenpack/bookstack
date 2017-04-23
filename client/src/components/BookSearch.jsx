@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 
 import Book from '../components/Book.jsx';
 
-import {bookSearch, addBook} from '../actions/BookSearchActions';
+import {bookSearch, addBook} from '../actions/BookSearch';
 
 function mapDispatchToProps(dispatch) {
     return {

@@ -1,5 +1,7 @@
 import Immutable from 'immutable';
 
+import * as addBookActions from '../actions/AddBook';
+
 const defaultState = Immutable.fromJS({
     title: '',
     booksAutocomplete: [],
@@ -16,11 +18,11 @@ const defaultState = Immutable.fromJS({
 
 export default function addBookReducer(state = defaultState, action) {
     switch (action.type) {
-        case 'ADD_BOOK_SELECT_BOOK':
+        case addBookActions.ADD_BOOK_SELECT_BOOK:
             return state.set('selectedBook', Immutable.fromJS(action.selectedBook));
-        case 'ADD_BOOK_AUTOCOMPLETE_SUGGESTIONS':
+        case addBookActions.ADD_BOOK_AUTOCOMPLETE_SUGGESTIONS:
             return state.set('booksAutocomplete', Immutable.fromJS(action.booksAutocomplete));
-        case 'ADD_BOOK_CLEAR_SELECTED':
+        case addBookActions.ADD_BOOK_CLEAR_SELECTED:
             return state.set('selectedBook', Immutable.fromJS({
                 "title": "",
                 "pages": "",

@@ -1,18 +1,12 @@
 import React from 'react';
 
-import {login} from '../actions/AppActions.js';
+import {login} from '../actions/App.js';
 
 import {connect} from 'react-redux';
 
-function mapStateToProps(state) {
-    return {
-        apiUrl: state.appStore.get('apiUrl'),
-    }
-}
-
 function mapDispatchToProps(dispatch) {
     return {
-        login: (apiUrl, user, pass,save) => dispatch(login(apiUrl, user, pass, save))
+        login: (user, pass, save) => dispatch(login(user, pass, save))
     };
 }
 
@@ -45,7 +39,7 @@ class Login extends React.Component {
     }
 
     handleSubmit() {
-        this.props.login(this.props.apiUrl, this.state.user, this.state.pass, this.state.save);
+        this.props.login(this.state.user, this.state.pass, this.state.save);
     }
 
     render() {
@@ -55,10 +49,10 @@ class Login extends React.Component {
                     <input onChange={e => this.handleUserChange(e)} type='text' value={this.state.user}/>
                 </div>
                 <div>Password:
-                    <input onChange={e =>this.handlePassChange(e)} type='password' value={this.state.pass}/>
+                    <input onChange={e => this.handlePassChange(e)} type='password' value={this.state.pass}/>
                 </div>
                 <div>Stay logged in:
-                    <input onChange={e => this.handleSaveChange(e)} type='checkbox' checked='checked'/>
+                    <input onChange={e => this.handleSaveChange(e)} type='checkbox' checked={this.state.save ? 'checked' : ''}/>
                 </div>
                 <button onClick={e => this.handleSubmit(e)}>Login</button>
             </div>
@@ -67,6 +61,6 @@ class Login extends React.Component {
 }
 
 export default connect(
-    mapStateToProps,
+    undefined,
     mapDispatchToProps
 )(Login);

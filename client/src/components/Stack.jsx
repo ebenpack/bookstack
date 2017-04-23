@@ -1,13 +1,14 @@
 import React from 'react';
 
-import { Link } from 'react-router';
+import {Link} from 'react-router';
 
 
-export default  function Stack(props) {
-    let id = props.data.get('id');
-    let name = props.data.get('name');
-    let user = props.data.get('user');
-    let creation_date = props.data.get('creation_date');
+
+export default function Stack(props) {
+    let id = props.stack.get('id');
+    let name = props.stack.get('name');
+    let user = props.stack.get('user');
+    let creation_date = props.stack.get('creation_date');
     return (
         <div className="stack">
             <h1 className="stackName">

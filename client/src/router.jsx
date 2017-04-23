@@ -4,7 +4,7 @@ import {createStore, applyMiddleware, compose} from 'redux';
 import {Provider} from 'react-redux';
 import {Router, Route, hashHistory} from 'react-router';
 import {syncHistoryWithStore} from 'react-router-redux'
-import thunkMiddleware from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
 import Immutable from 'immutable';
 
 import '../sass/react.scss';
@@ -19,7 +19,10 @@ import PublisherDetail from './components/PublisherDetail.jsx';
 import BookSearch from './components/BookSearch.jsx';
 import Login from './components/Login.jsx';
 
-import reducers from './stores/reducers';
+import reducers from './reducers/index';
+import sagas from './sagas/index';
+
+const sagaMiddleware = createSagaMiddleware();
 
 function initializeStore(apiUrl) {
     let store = createStore(
@@ -28,10 +31,11 @@ function initializeStore(apiUrl) {
             appStore: Immutable.Map({apiUrl: apiUrl, token: ''})
         },
         composeEnhancers(
-            applyMiddleware(thunkMiddleware)
+            applyMiddleware(sagaMiddleware)
         ),
     );
     let history = syncHistoryWithStore(hashHistory, store);
+    sagaMiddleware.run(sagas);
     return {
         store,
         history

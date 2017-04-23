@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import { start } from './router.jsx';
 
 window.MyApp = {

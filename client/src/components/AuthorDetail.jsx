@@ -1,11 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Book from '../components/Book.jsx';
-import {loadAuthor} from '../actions/AuthorDetailActions';
+import {loadAuthor} from '../actions/AuthorDetail';
 
 function mapDispatchToProps(dispatch) {
     return {
-        loadAuthor: (apiUrl, id)=>dispatch(loadAuthor(apiUrl, id)),
+        loadAuthor: id => dispatch(loadAuthor(id)),
     };
 }
 
@@ -17,10 +17,11 @@ function mapStateToProps(state) {
     }
 }
 
+// TODO: Make pure?
 class AuthorDetail extends React.Component {
     componentDidMount() {
         if (this.props.params.id) {
-            this.props.loadAuthor(this.props.apiUrl, this.props.params.id);
+            this.props.loadAuthor(this.props.params.id);
         }
     }
 

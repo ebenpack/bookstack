@@ -1,5 +1,7 @@
 import Immutable from 'immutable';
 
+import * as publisherDetailActions from '../actions/PublisherDetail';
+
 const defaultState = Immutable.fromJS({
     books: [],
     name: '',
@@ -8,7 +10,7 @@ const defaultState = Immutable.fromJS({
 
 export default function PublisherDetailReducer(state = defaultState, action) {
     switch (action.type) {
-        case 'PUBLISHER_LOAD':
+        case publisherDetailActions.PUBLISHER_SET:
             return Immutable.fromJS(action.publisher);
         default:
             return state;

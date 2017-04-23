@@ -1,5 +1,7 @@
 import Immutable from 'immutable';
 
+import * as stackDetailActions from '../actions/StackDetail';
+
 const bookLocation = Immutable.List(['stackDetail', 'books']);
 
 const defaultState = Immutable.fromJS({
@@ -14,20 +16,18 @@ const defaultState = Immutable.fromJS({
 // TODO: This is probably too big, should be broken up
 export default function stackDetailReducer(state = defaultState, action) {
     switch (action.type) {
-        case 'STACK_DETAIL_LOAD':
+        case stackDetailActions.STACK_DETAIL_SET:
             return state.set('stackDetail', Immutable.fromJS(action.stack));
-        case 'STACK_DETAIL_UNLOAD':
+        case stackDetailActions.STACK_DETAIL_UNLOAD:
             return state.set('stackDetail', Immutable.fromJS({books: []}));
-        case 'STACK_DETAIL_ADD_BOOK':
+        case stackDetailActions.STACK_DETAIL_SET_BOOK:
             return state.updateIn(
                 bookLocation,
                 books => books.push(Immutable.fromJS(action.book))
             );
-        case 'STACK_DETAIL_TOGGLE_EDITING':
+        case stackDetailActions.STACK_DETAIL_SET_EDITING_STATE:
             return state.set('editing', !state.get('editing'));
-        case 'STACK_DETAIL_SET_LOADING_STATE':
-            return state.set('loading', action.state);
-        case 'STACK_DETAIL_SET_READ_STATE':
+        case stackDetailActions.STACK_DETAIL_SET_READ_STATE:
             return state.setIn(
                 [
                     'stackDetail',
@@ -38,7 +38,7 @@ export default function stackDetailReducer(state = defaultState, action) {
                 ],
                 action.read
             );
-        case 'STACK_DETAIL_REMOVE_BOOK':
+        case stackDetailActions.STACK_DETAIL_REMOVE_BOOK:
             return state.updateIn(
                 bookLocation,
                 books =>
@@ -46,7 +46,7 @@ export default function stackDetailReducer(state = defaultState, action) {
                         books.findIndex(book => book.get('id') === action.id)
                     )
             );
-        case 'STACK_DETAIL_ADD_CATAGORY':
+        case stackDetailActions.STACK_DETAIL_SET_CATEGORY:
             return state.updateIn(
                 [
                     'stackDetail',
@@ -58,7 +58,7 @@ export default function stackDetailReducer(state = defaultState, action) {
                 categories =>
                     categories.push(Immutable.fromJS(action.category))
             );
-        case 'STACK_DETAIL_REMOVE_CATEGORY':
+        case stackDetailActions.STACK_DETAIL_REMOVE_CATEGORY:
             return state.updateIn(
                 [
                     'stackDetail',
@@ -72,7 +72,7 @@ export default function stackDetailReducer(state = defaultState, action) {
                         categories.findIndex(book => book.get('id') === action.categoryId),
                     )
             );
-        case 'STACK_DETAIL_REORDER':
+        case stackDetailActions.STACK_DETAIL_SET_POSITION:
             let from = action.from - 1; // Damn this inconsistent indexing
             let to = action.to - 1;
             // TODO: Profile, possibly find a more

@@ -1,7 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import Category from './Category.jsx';
 import Autocomplete from './Autocomplete.jsx';
 
 import {
@@ -9,30 +8,28 @@ import {
     addNewCategory,
     setAutoSuggestCategories,
     clearAutoSuggestCategories
-} from '../actions/AddCategoryActions';
+} from '../actions/AddCategory';
 
 function mapStateToProps(state) {
     return {
-        apiUrl: state.appStore.get('apiUrl'),
-        token: state.appStore.get('token'),
         autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories'),
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-        addCategory: (apiUrl, token, bookstackId, categoryId) =>
-            dispatch(addCategory(apiUrl, token, bookstackId, categoryId)),
-        addNewCategory: (apiUrl, token, category, bookstackId) =>
-            dispatch(addNewCategory(apiUrl, token, category, bookstackId)),
-        setAutoSuggestCategories: (apiUrl, query) =>
-            dispatch(setAutoSuggestCategories(apiUrl, query)),
+        addCategory: (bookstackId, categoryId) =>
+            dispatch(addCategory(bookstackId, categoryId)),
+        addNewCategory: (category, bookstackId) =>
+            dispatch(addNewCategory(category, bookstackId)),
+        setAutoSuggestCategories: query =>
+            dispatch(setAutoSuggestCategories(query)),
         clearAutoSuggestCategories: () =>
             dispatch(clearAutoSuggestCategories())
     }
 }
 
-
+// TODO: Make pure, stateless render function?
 class AddCategory extends React.Component {
     constructor() {
         super();
@@ -42,14 +39,14 @@ class AddCategory extends React.Component {
         };
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.clearAutoSuggestCategories();
     }
 
     handleChange(e) {
         let category = e.target.value;
         if (category) {
-            this.props.setAutoSuggestCategories(this.props.apiUrl, category);
+            this.props.setAutoSuggestCategories(category);
         } else {
             this.props.clearAutoSuggestCategories();
         }
@@ -62,7 +59,7 @@ class AddCategory extends React.Component {
         if (e.key === 'Enter') {
             let bookstackId = this.props.id;
             let category = this.state.category;
-            this.props.addNewCategory(this.props.apiUrl, this.props.token, category, bookstackId);
+            this.props.addNewCategory(category, bookstackId);
             this.clearAutocomplete();
         }
     }
@@ -77,7 +74,7 @@ class AddCategory extends React.Component {
 
     addCategory(categoryId) {
         let bookstackId = this.props.id;
-        this.props.addCategory(this.props.apiUrl, this.props.token, bookstackId, categoryId);
+        this.props.addCategory(bookstackId, categoryId);
     }
 
     render() {
