@@ -31,7 +31,6 @@ class StackList extends React.Component {
 
     render() {
         const staticPath = this.props.staticPath;
-        this.props.stackList
         return (
             <div className="stacklist">
                 {this.props.stackList.map((stack, i) =>

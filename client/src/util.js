@@ -1,13 +1,13 @@
 function debounce(fn, timeout){
-    var lastCalled,
+    let lastCalled,
         timeoutId;
     return function() {
         lastCalled = Date.now();
-        var context = this;
-        var args = arguments;
+        let context = this;
+        let args = arguments;
         function debounced(){
-            var now = Date.now();
-            var elapsed = now - lastCalled;
+            let now = Date.now();
+            let elapsed = now - lastCalled;
             if (elapsed > timeout){
                 fn.apply(context, args);
             } else {

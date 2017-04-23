@@ -45,7 +45,7 @@ export function* addBook({bookId, stackId}) {
             stack: stackId
         })
     });
-    yield put(stackDetailActions.addBook(bookId, stackId));
+    yield put(addBookActions.addBook(bookId, stackId));
     yield put(addBookActions.clearSelected());
     yield put(stackDetailActions.toggleEditing())
 }

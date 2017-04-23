@@ -1,11 +1,11 @@
-var React = require('react');
+import React from 'react';
 
-export default function Autocomplete(props) {
-    const onClick = props.onClick ? props.onClick : ()=>{};
+export default function Autocomplete({onClick, suggestions, displayProperty}) {
+    onClick = onClick ? onClick : ()=>{};
     return (
         <ul className="autocomplete">
-            {props.suggestions.map(function (suggestion) {
-                const displayProperty = props.displayProperty;
+            {suggestions.map(function (suggestion) {
+                const displayProperty = displayProperty;
                 const id = suggestion.get('id');
                 return (
                     <li
@@ -17,5 +17,4 @@ export default function Autocomplete(props) {
             }, this)}
         </ul>
     );
-
 };

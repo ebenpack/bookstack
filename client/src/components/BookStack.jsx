@@ -226,4 +226,4 @@ class BookStack extends React.Component {
     }
 }
 
-module.exports = BookStack;
+export default BookStack;

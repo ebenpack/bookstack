@@ -1,9 +1,7 @@
 import axios from 'axios';
 
 import {delay} from 'redux-saga';
-import {put, call, take} from 'redux-saga/effects';
-
-import {getCredentials} from './utils';
+import {put, call, take, fork} from 'redux-saga/effects';
 
 import * as bookSearchActions from '../actions/BookSearch';
 
@@ -52,7 +50,7 @@ export function* bookSearch({query}) {
         type: 'json',
     });
     let results = response.data;
-    let books = results.totalItems ? resp.items.map(formatBook) : [];
+    let books = results.totalItems ? results.items.map(formatBook) : [];
     yield put(bookSearchActions.bookSearchSetResults(books));
 }
 
@@ -68,5 +66,5 @@ function* watchBookSearch() {
 }
 
 export default [
-        watchBookSearch,
-    ];
+    watchBookSearch,
+];

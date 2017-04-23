@@ -10,8 +10,8 @@ export const ADD_CATEGORY_CLEAR_AUTOCOMPLETE_SUGGESTIONS = 'ADD_CATEGORY_CLEAR_A
 export const addCategory = (bookstackId, categoryId) =>
     makeAction(ADD_CATEGORY, {bookstackId, categoryId});
 
-export const addNewCategory = book =>
-    makeAction(ADD_BOOK_ADD_NEW_CATEGORY, {category, bookstackId});
+export const addNewCategory = category =>
+    makeAction(ADD_CATEGORY_ADD_NEW_CATEGORY, {category});
 
 export const setAutoSuggestCategories = query =>
     makeAction(ADD_CATEGORY_SET_AUTOCOMPLETE_SUGGESTIONS, {query});

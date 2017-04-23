@@ -3,12 +3,13 @@ import {connect} from 'react-redux';
 
 import Book from '../components/Book.jsx';
 
-import {bookSearch, addBook} from '../actions/BookSearch';
+import {bookSearch} from '../actions/BookSearch';
+import {addBook} from '../actions/AddBook';
 
 function mapDispatchToProps(dispatch) {
     return {
-        bookSearch: (apiUrl, query) => dispatch(bookSearch(apiUrl, query)),
-        addBook: (apiUrl, token, book)=>dispatch(addBook(apiUrl, token, book))
+        bookSearch: query => dispatch(bookSearch(query)),
+        addBook: book => dispatch(addBook(book))
     };
 }
 
@@ -30,7 +31,7 @@ class BookSearch extends React.Component {
 
     componentDidMount() {
         if (this.props.location && this.props.location.search) {
-            let match = this.props.location.search.match(/\?search\=([^&]*)/);
+            let match = this.props.location.search.match(/\?search=([^&]*)/);
             let query = match && match[1] ? match[1] : '';
             if (query) {
                 this.setState({
@@ -68,7 +69,7 @@ class BookSearch extends React.Component {
                     let key = book.get('isbn') || idx;
                     return (
                         <div className="four columns">
-                            <Book key={key} book={book} className="" />
+                            <Book key={key} book={book} className=""/>
                             <button
                                 onClick={() => this.handleSubmit(apiUrl, token, book)}
                             >
