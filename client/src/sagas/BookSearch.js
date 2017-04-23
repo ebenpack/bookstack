@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import {delay} from 'redux-saga';
-import {put, call, take, fork} from 'redux-saga/effects';
+import {put, call, take, fork, cancel} from 'redux-saga/effects';
 
 import * as bookSearchActions from '../actions/BookSearch';
 
@@ -40,7 +40,7 @@ function formatBook(book) {
     };
 }
 
-export function* bookSearch({query}) {
+export function* bookSearch(query) {
     yield call(delay, 500);
     let googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
     let response = yield call(axios, {
@@ -61,7 +61,11 @@ function* watchBookSearch() {
         if (search) {
             yield cancel(search);
         }
-        search = yield fork(bookSearch, query);
+        if (query) {
+            search = yield fork(bookSearch, query);
+        } else {
+            yield put(bookSearchActions.bookSearchClearResults());
+        }
     }
 }
 

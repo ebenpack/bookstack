@@ -12,6 +12,8 @@ export default function BookSearchReducer(state = defaultState, action) {
     switch (action.type) {
         case bookSearchActions.BOOK_SEARCH_SET_BOOKS:
             return Immutable.fromJS({books: action.books});
+        case bookSearchActions.BOOK_SEARCH_CLEAR_BOOKS:
+            return Immutable.fromJS({books: []});
         default:
             return state;
     }
