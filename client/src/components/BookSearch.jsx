@@ -68,8 +68,8 @@ class BookSearch extends React.Component {
                 {this.props.books.map(function (book, idx) {
                     let key = book.get('isbn') || idx;
                     return (
-                        <div className="four columns">
-                            <Book key={key} book={book} className=""/>
+                        <div key={key} className="four columns">
+                            <Book book={book} className=""/>
                             <button
                                 onClick={() => this.handleSubmit(apiUrl, token, book)}
                             >
