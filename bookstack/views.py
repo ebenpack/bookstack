@@ -1,12 +1,13 @@
 from django.contrib.auth.models import User, Group
 from django.shortcuts import render, get_object_or_404
-
-from bookstack import models, serializers
-
 from rest_framework import viewsets, status, filters
-from rest_framework.decorators import detail_route, list_route
-from rest_framework.response import Response
+from rest_framework.decorators import detail_route
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
+
+from bookstack import serializers
+from bookstack import models
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -34,12 +35,13 @@ class StackViewSet(viewsets.ModelViewSet):
         'bookstack_set__book__authors',
         'bookstack_set__book__publishers',
         'bookstack_set__bookstackcategory_set__category'
-    )
+        # 'bookstack_set__user'
+    ).select_related('user')
     serializer_class = serializers.StackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 
     def list(self, request):
-        queryset = models.Stack.objects
+        queryset = models.Stack.objects.select_related('user')
         serializer = serializers.StackListSerializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -73,6 +75,33 @@ class BookStackViewSet(viewsets.ModelViewSet):
     )
     serializer_class = serializers.BookStackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
+
+    def list(self, request):
+        queryset = models.BookStack.objects.prefetch_related(
+            'bookstackcategory_set__category',
+            'book__authors',
+            'book__publishers'
+        ).select_related(
+            'book'
+        ).order_by(
+            'position'
+        )
+        serializer = serializers.BookStackSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        queryset = models.BookStack.objects.prefetch_related(
+            'bookstackcategory_set__category',
+            'book__authors',
+            'book__publishers'
+        ).select_related(
+            'book'
+        ).order_by(
+            'position'
+        )
+        bookstack_detail = get_object_or_404(queryset, pk=pk)
+        serializer = serializers.BookStackSerializer(bookstack_detail)
+        return Response(serializer.data)
 
     def destroy(self, request, pk=None):
         # Move item to last position in stack
@@ -119,7 +148,8 @@ class BookStackCategoryViewSet(viewsets.ModelViewSet):
     API endpoint that allows categories to be viewed or edited.
     """
     queryset = models.BookStackCategory.objects.prefetch_related(
-        'category'
+        'bookstack__categories',
+        # 'category__bookstack_set__category'
     )
     serializer_class = serializers.BookStackCategorySerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
