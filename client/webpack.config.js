@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+var DashboardPlugin = require('webpack-dashboard/plugin');
 
 module.exports = {
     entry: ['./src/main.js'],
@@ -16,7 +17,9 @@ module.exports = {
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.UglifyJsPlugin()
-    ] : [],
+    ] : [
+        new DashboardPlugin()
+    ],
 
     module: {
         rules: [
