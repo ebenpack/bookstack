@@ -52,7 +52,8 @@ class Login extends React.Component {
                     <input onChange={e => this.handlePassChange(e)} type='password' value={this.state.pass}/>
                 </div>
                 <div>Stay logged in:
-                    <input onChange={e => this.handleSaveChange(e)} type='checkbox' checked={this.state.save ? 'checked' : ''}/>
+                    <input onChange={e => this.handleSaveChange(e)} type='checkbox'
+                           checked={this.state.save ? 'checked' : ''}/>
                 </div>
                 <button onClick={e => this.handleSubmit(e)}>Login</button>
             </div>

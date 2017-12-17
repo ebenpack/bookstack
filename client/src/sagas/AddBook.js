@@ -5,60 +5,34 @@ import {put, call, select, takeEvery} from 'redux-saga/effects';
 import {getCredentials} from './utils';
 
 import * as addBookActions from '../actions/AddBook';
-import * as stackDetailActions from '../actions/StackDetail';
+import * as stackActions from '../actions/StackDetail';
 
 export function* searchBooks({query}) {
     let {apiUrl} = yield select(getCredentials);
     let booksAutocomplete = yield call(axios, {
         method: 'GET',
         url: `${apiUrl}/api/book/?search=${query}`,
-        contentType: 'application/json',
-        type: 'json',
     });
-    yield put(addBookActions.addAutocompleteSuggestions(booksAutocomplete.data));
+    yield put(addBookActions.searchBooks.success(booksAutocomplete.data));
 }
 
-export function* selectBook({id}) {
+export function* getBook({id}) {
     let {apiUrl} = yield select(getCredentials);
     let selected = yield call(axios, {
         method: 'GET',
         url: `${apiUrl}/api/book/${id}/`,
-        contentType: 'application/json',
-        type: 'json',
     });
-    yield put(addBookActions.selectBook(selected.data));
+    yield put(addBookActions.selectBook.success(selected.data));
 }
 
-export function* addBook({bookId, stackId}) {
-    let {apiUrl, token} = yield select(getCredentials);
-    yield call(axios, {
-        url: `${apiUrl}/api/bookset/`,
-        contentType: 'application/json',
-        type: 'json',
-        method: 'POST',
-        headers: {
-            'Authorization': `Token ${token}`,
-        },
-        data: JSON.stringify({
-            bookId: bookId,
-            categories: [],
-            stack: stackId
-        })
-    });
-    yield put(addBookActions.addBook(bookId, stackId));
-    yield put(addBookActions.clearSelected());
-    yield put(stackDetailActions.toggleEditing())
-}
-
-export function* addNewBook({book}) {
+export function* addBook({book}) {
     let {apiUrl, token} = yield select(getCredentials);
     yield call(axios, {
         url: `${apiUrl}/api/book/`,
-        contentType: 'application/json',
-        type: 'json',
         method: 'POST',
         headers: {
-            'Authorization': 'Token ' + token,
+            'Content-Type': 'application/json',
+            Authorization: `Token ${token}`,
         },
         data: book.toJS(),
     });
@@ -66,24 +40,19 @@ export function* addNewBook({book}) {
 }
 
 function* watchBookSearch() {
-    yield takeEvery(addBookActions.ADD_BOOK_SEARCH, searchBooks)
+    yield takeEvery(addBookActions.SEARCH_BOOK.REQUEST, searchBooks)
 }
 
-function* watchSelectBook() {
-    yield takeEvery(addBookActions.ADD_BOOK_ADD_SELECTED_BOOK, selectBook)
+function* watchGetBook() {
+    yield takeEvery(addBookActions.GET_BOOK.REQUEST, getBook)
 }
 
 function* watchAddBook() {
-    yield takeEvery(addBookActions.ADD_BOOK, addBook)
-}
-
-function* watchAddNewBook() {
-    yield takeEvery(addBookActions.ADD_BOOK_ADD_NEW_BOOK, addNewBook)
+    yield takeEvery(addBookActions.ADD_BOOK.REQUEST, addBook)
 }
 
 export default [
     watchBookSearch,
-    watchSelectBook,
+    watchGetBook,
     watchAddBook,
-    watchAddNewBook,
 ];

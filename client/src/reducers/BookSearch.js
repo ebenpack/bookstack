@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 
-import * as bookSearchActions from '../actions/BookSearch';
+import {BOOK_SEARCH} from '../actions/BookSearch';
 
 const defaultState = Immutable.fromJS({
     books: [],
@@ -10,9 +10,9 @@ const defaultState = Immutable.fromJS({
 
 export default function BookSearchReducer(state = defaultState, action) {
     switch (action.type) {
-        case bookSearchActions.BOOK_SEARCH_SET_BOOKS:
+        case BOOK_SEARCH.SUCCESS:
             return Immutable.fromJS({books: action.books});
-        case bookSearchActions.BOOK_SEARCH_CLEAR_BOOKS:
+        case BOOK_SEARCH.CLEAR:
             return Immutable.fromJS({books: []});
         default:
             return state;

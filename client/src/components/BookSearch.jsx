@@ -3,20 +3,18 @@ import {connect} from 'react-redux';
 
 import Book from '../components/Book.jsx';
 
-import {bookSearch} from '../actions/BookSearch';
+import {bookSearch as bookSearchActions} from '../actions/BookSearch';
 import {addBook} from '../actions/AddBook';
 
 function mapDispatchToProps(dispatch) {
     return {
-        bookSearch: query => dispatch(bookSearch(query)),
-        addBook: book => dispatch(addBook(book))
+        bookSearch: query => dispatch(bookSearchActions.request(query)),
+        addBook: book => dispatch(addBook.request(book))
     };
 }
 
 function mapStateToProps(state) {
     return {
-        apiUrl: state.appStore.get('apiUrl'),
-        token: state.appStore.get('token'),
         books: state.bookSearchStore.get('books'),
     }
 }
@@ -50,13 +48,11 @@ class BookSearch extends React.Component {
         this.props.bookSearch(query);
     }
 
-    handleSubmit(apiUrl, token, book) {
-        this.props.addBook(apiUrl, token, book);
+    handleSubmit(book) {
+        this.props.addBook(book);
     }
 
     render() {
-        let apiUrl = this.props.apiUrl;
-        let token = this.props.token;
         return (
             <div className="bookSearch">
                 <label>Search
@@ -71,7 +67,7 @@ class BookSearch extends React.Component {
                         <div key={key} className="four columns">
                             <Book book={book} className=""/>
                             <button
-                                onClick={() => this.handleSubmit(apiUrl, token, book)}
+                                onClick={() => this.handleSubmit(book)}
                             >
                                 Add Book
                             </button>

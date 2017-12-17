@@ -34,8 +34,9 @@ export function* login({user, pass, save}) {
             username: user,
             password: pass,
         },
-        contentType: 'application/json',
-        type: 'json'
+        headers: {
+            'Content-Type': 'application/json',
+        }
     });
     let login = response.data;
     let token = login.token;

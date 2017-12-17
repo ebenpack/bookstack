@@ -1,10 +1,8 @@
-import {makeAction} from './utils';
+import {makeAction, createRequestTypes} from './utils';
 
-export const AUTHOR_LOAD = 'AUTHOR_LOAD';
-export const AUTHOR_SET = 'AUTHOR_SET';
+export const AUTHOR = createRequestTypes('AUTHOR', 'AUTHOR');
 
-export const setAuthor = author =>
-    makeAction(AUTHOR_SET, {author});
-
-export const loadAuthor = id =>
-    makeAction(AUTHOR_LOAD, {id});
+export const author = {
+    request: id => makeAction(AUTHOR.REQUEST, {id}),
+    success: author => makeAction(AUTHOR.SUCCESS, {author}),
+};

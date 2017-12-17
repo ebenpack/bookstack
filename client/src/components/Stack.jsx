@@ -2,8 +2,6 @@ import React from 'react';
 
 import {Link} from 'react-router';
 
-
-
 export default function Stack(props) {
     let id = props.stack.get('id');
     let name = props.stack.get('name');

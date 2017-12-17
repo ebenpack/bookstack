@@ -59,7 +59,6 @@ class BookViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter, )
     search_fields = ('title', )
 
-
 class BookStackViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows books within stacks to be viewed or edited.
@@ -147,10 +146,7 @@ class BookStackCategoryViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows categories to be viewed or edited.
     """
-    queryset = models.BookStackCategory.objects.prefetch_related(
-        'bookstack__categories',
-        # 'category__bookstack_set__category'
-    )
+    queryset = models.BookStackCategory.objects
     serializer_class = serializers.BookStackCategorySerializer
     permission_classes = (IsAuthenticatedOrReadOnly, )
 

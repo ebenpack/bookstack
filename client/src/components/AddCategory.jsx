@@ -4,11 +4,9 @@ import {connect} from 'react-redux';
 import Autocomplete from './Autocomplete.jsx';
 
 import {
-    addCategory,
-    addNewCategory,
-    setAutoSuggestCategories,
-    clearAutoSuggestCategories
+    categorySearch
 } from '../actions/AddCategory';
+import {addCategory, addNewCategory} from '../actions/StackDetail';
 
 function mapStateToProps(state) {
     return {
@@ -19,13 +17,13 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         addCategory: (bookstackId, categoryId) =>
-            dispatch(addCategory(bookstackId, categoryId)),
-        addNewCategory: (category, bookstackId) =>
-            dispatch(addNewCategory(category, bookstackId)),
+            dispatch(addCategory.request(bookstackId, categoryId)),
+        addNewCategory: (bookstackId, category) =>
+            dispatch(addNewCategory.request(bookstackId, category)),
         setAutoSuggestCategories: query =>
-            dispatch(setAutoSuggestCategories(query)),
+            dispatch(categorySearch.request(query)),
         clearAutoSuggestCategories: () =>
-            dispatch(clearAutoSuggestCategories())
+            dispatch(categorySearch.clear())
     }
 }
 
@@ -59,7 +57,7 @@ class AddCategory extends React.Component {
         if (e.key === 'Enter') {
             let bookstackId = this.props.id;
             let category = this.state.category;
-            this.props.addNewCategory(category, bookstackId);
+            this.props.addNewCategory(bookstackId, category);
             this.clearAutocomplete();
         }
     }

@@ -1,14 +1,9 @@
-import {makeAction} from './utils';
+import {makeAction, createRequestTypes, REQUEST, SUCCESS, FAILURE, CLEAR} from './utils';
 
-export const STACK_LOAD = 'STACK_LOAD';
-export const STACK_UNLOAD = 'STACK_UNLOAD';
-export const STACK_SET = 'STACK_SET';
+export const STACK = createRequestTypes('STACK', 'STACK', [REQUEST, SUCCESS, FAILURE, CLEAR]);
 
-export const loadStackList = () =>
-    makeAction(STACK_LOAD);
-
-export const unloadStackList = () =>
-    makeAction(STACK_UNLOAD);
-
-export const setStack = stack =>
-    makeAction(STACK_SET, {stack});
+export const stack = {
+    request: () => makeAction(STACK.REQUEST),
+    success: stack => makeAction(STACK.SUCCESS, {stack}),
+    clear: () => makeAction(STACK.CLEAR),
+};

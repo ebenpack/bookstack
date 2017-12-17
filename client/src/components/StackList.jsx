@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
-import {loadStackList, unloadStackList} from '../actions/StackList';
+import {stack} from '../actions/StackList';
 
 import Stack from './Stack.jsx';
 
@@ -15,8 +15,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        loadStackList: () => dispatch(loadStackList()),
-        unloadStackList: () => dispatch(unloadStackList()),
+        loadStackList: () => dispatch(stack.request()),
+        unloadStackList: () => dispatch(stack.clear()),
     }
 }
 

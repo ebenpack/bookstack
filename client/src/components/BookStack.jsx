@@ -113,7 +113,7 @@ class BookStack extends React.Component {
 
     removeCategory(categoryId) {
         let bookstackId = this.props.bookStack.get('id');
-        this.props.deleteCategory(bookstackId, categoryId);
+        this.props.removeCategory(bookstackId, categoryId);
     }
 
     render() {
@@ -203,7 +203,7 @@ class BookStack extends React.Component {
                             {this.props.bookStack.get('categories').map((category) =>
                                 <li key={category.get('id')}>
                                     {category.getIn(['detail', 'category'])} -
-                                    <span onClick={e => this.deleteCategory(category.get('id'))}>
+                                    <span onClick={e => this.removeCategory(category.get('id'))}>
                                             Remove
                                         </span>
                                 </li>

@@ -1,11 +1,11 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Book from '../components/Book.jsx';
-import {loadAuthor} from '../actions/AuthorDetail';
+import {author} from '../actions/AuthorDetail';
 
 function mapDispatchToProps(dispatch) {
     return {
-        loadAuthor: id => dispatch(loadAuthor(id)),
+        loadAuthor: id => dispatch(author.request(id)),
     };
 }
 

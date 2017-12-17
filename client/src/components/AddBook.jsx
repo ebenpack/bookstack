@@ -4,7 +4,8 @@ import {connect} from 'react-redux';
 import Book from '../components/Book.jsx';
 import Autocomplete from '../components/Autocomplete.jsx';
 
-import {addBook, searchBooks, selectBook, clearSelected} from '../actions/AddBook';
+import {searchBooks, getBook, selectBook} from '../actions/AddBook';
+import {addBook} from '../actions/StackDetail';
 
 
 function mapStateToProps(state) {
@@ -18,32 +19,33 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        addBook: (bookId, stackId) => dispatch(addBook(bookId, stackId)),
-        searchBooks: query => dispatch(searchBooks(query)),
-        selectBook: bookId => dispatch(selectBook(bookId)),
-        clearSelected: () => dispatch(clearSelected())
+        addBook: (bookId, stackId) => dispatch(addBook.request(bookId, stackId)),
+        searchBooks: query => dispatch(searchBooks.request(query)),
+        getBook: bookId => dispatch(getBook.request(bookId)),
+        clearSelected: () => dispatch(selectBook.clear())
     };
 }
 
-const AddBook = ({booksAutocomplete, selectBook, clearSelected, selectedBook, addBook, searchBooks, title, stackId}) => {
+const AddBook = ({booksAutocomplete, getBook, clearSelected, selectedBook, addBook, searchBooks, title, stackId}) => {
     let autocompleteResults = "";
     if (booksAutocomplete.size > 0) {
         autocompleteResults = (
             <Autocomplete
                 suggestions={booksAutocomplete}
                 displayProperty={'title'}
-                onClick={bookId => selectBook(bookId)}
+                onClick={bookId => getBook(bookId)}
             />
         );
     }
-    if (selectedBook.get('id')) {
+    let bookId = selectedBook.get('id');
+    if (bookId && bookId !== '') {
         autocompleteResults = (
             <div className="select">
                 <div>
                     <a title="Close" className="close" onClick={clearSelected}>X</a>
                     <Book className="" book={selectedBook}/>
                     <button onClick={e => addBook(
-                        selectedBook.get('id'),
+                        bookId,
                         stackId
                     )}>
                         Add Book

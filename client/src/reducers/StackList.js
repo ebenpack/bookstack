@@ -1,12 +1,12 @@
 import Immutable from 'immutable';
 
-import * as stackListActions from '../actions/StackList';
+import {STACK} from '../actions/StackList';
 
 export default function stackListReducer(state = Immutable.List(), action) {
     switch (action.type) {
-        case stackListActions.STACK_SET:
+        case STACK.SUCCESS:
             return Immutable.fromJS(action.stack);
-        case stackListActions.STACK_UNLOAD:
+        case STACK.CLEAR:
             return Immutable.List();
         default:
             return state;

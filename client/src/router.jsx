@@ -9,8 +9,6 @@ import Immutable from 'immutable';
 
 import '../sass/react.scss';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
 import App from './components/App.jsx';
 import StackList from './components/StackList.jsx';
 import StackDetail from './components/StackDetail.jsx';
@@ -21,6 +19,8 @@ import Login from './components/Login.jsx';
 
 import reducers from './reducers/index';
 import sagas from './sagas/index';
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const sagaMiddleware = createSagaMiddleware();
 

@@ -1,6 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-var DashboardPlugin = require('webpack-dashboard/plugin');
+const DashboardPlugin = require('webpack-dashboard/plugin');
 
 module.exports = {
     entry: ['./src/main.js'],
@@ -50,4 +50,4 @@ module.exports = {
             }
         ]
     }
-}
+};

@@ -1,11 +1,16 @@
 import {makeAction} from './utils';
 
-export const APP_INITIALIZE = 'APP_INITIALIZE';
-export const APP_SET_API_URL = 'APP_SET_API_URL';
-export const APP_SET_TOKEN = 'APP_SET_TOKEN';
-export const APP_DELETE_TOKEN = 'APP_DELETE_TOKEN';
-export const APP_LOGIN = 'APP_LOGIN';
-export const APP_LOGOFF = 'APP_LOGOFF';
+export const APP_INITIALIZE = 'APP_INITIALIZE'; // request
+
+export const APP_SET_API_URL = 'APP_SET_API_URL'; // set state
+
+export const APP_SET_TOKEN = 'APP_SET_TOKEN'; // set state
+
+export const APP_DELETE_TOKEN = 'APP_DELETE_TOKEN'; // set state
+
+export const APP_LOGIN = 'APP_LOGIN'; // request
+
+export const APP_LOGOFF = 'APP_LOGOFF'; // request
 
 export const initialize = () =>
     makeAction(APP_INITIALIZE);

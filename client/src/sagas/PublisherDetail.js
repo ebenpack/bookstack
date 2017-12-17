@@ -4,7 +4,7 @@ import {put, call, select, takeEvery} from 'redux-saga/effects';
 
 import {getCredentials} from './utils';
 
-import * as publisherDetailActions from '../actions/PublisherDetail';
+import {PUBLISHER, publisher as publisherActions} from '../actions/PublisherDetail';
 
 
 export function* loadPublisher({id}) {
@@ -12,14 +12,12 @@ export function* loadPublisher({id}) {
     let publisher = yield call(axios, {
         method: 'GET',
         url: `${apiUrl}/api/publisher/${id}/`,
-        contentType: 'application/json',
-        type: 'json',
     });
-    yield put(publisherDetailActions.setPublisher(publisher.data));
+    yield put(publisherActions.success(publisher.data));
 }
 
 function* watchLoadPublisher() {
-    yield takeEvery(publisherDetailActions.PUBLISHER_LOAD, loadPublisher)
+    yield takeEvery(PUBLISHER.REQUEST, loadPublisher)
 }
 
 export default [

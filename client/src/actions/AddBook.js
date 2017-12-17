@@ -1,27 +1,31 @@
-import {makeAction} from './utils';
+import {makeAction, createRequestTypes, REQUEST, SUCCESS, FAILURE, CLEAR} from './utils';
 
-export const ADD_BOOK = 'ADD_BOOK';
-export const ADD_BOOK_ADD_NEW_BOOK = 'ADD_BOOK_ADD_NEW_BOOK';
-export const ADD_BOOK_SEARCH = 'ADD_BOOK_SEARCH';
-export const ADD_BOOK_AUTOCOMPLETE_SUGGESTIONS = 'ADD_BOOK_AUTOCOMPLETE_SUGGESTIONS';
-export const ADD_BOOK_SELECT_BOOK = 'ADD_BOOK_SELECT_BOOK';
-export const ADD_BOOK_ADD_SELECTED_BOOK = 'ADD_BOOK_ADD_SELECTED_BOOK';
-export const ADD_BOOK_CLEAR_SELECTED = 'ADD_BOOK_CLEAR_SELECTED';
+export const ADD_BOOK = createRequestTypes('ADD_BOOK', 'ADD_BOOK');
+export const GET_BOOK = createRequestTypes('ADD_BOOK', 'GET_BOOK');
+export const SEARCH_BOOK = createRequestTypes('ADD_BOOK', 'SEARCH_BOOK', [REQUEST, SUCCESS, FAILURE, CLEAR]);
+export const SELECT_BOOK = createRequestTypes('ADD_BOOK', 'SELECT_BOOK', [REQUEST, SUCCESS, FAILURE, CLEAR]);
 
-export const addBook = book =>
-    makeAction(ADD_BOOK, {book});
+export const addBook = {
+    request: book => makeAction(ADD_BOOK.REQUEST, {book}),
+    // TODO: We probably don't need to do anything on success
+    // success: () => {},
+};
 
-export const addNewBook = book =>
-    makeAction(ADD_BOOK_ADD_NEW_BOOK, {book});
+export const getBook = {
+    request: id => makeAction(GET_BOOK.REQUEST, {id}),
+    // TODO: What do we do on success
+    // success: () => {},
+};
 
-export const searchBooks = query =>
-    makeAction(ADD_BOOK_SEARCH, {query});
+export const searchBooks = {
+    request: query => makeAction(SEARCH_BOOK.REQUEST, {query}),
+    success: books => makeAction(SEARCH_BOOK.SUCCESS, {books}),
+    clear: () => makeAction(SEARCH_BOOK.CLEAR),
+};
 
-export const addAutocompleteSuggestions = suggestions =>
-    makeAction(ADD_BOOK_AUTOCOMPLETE_SUGGESTIONS, {suggestions});
-
-export const selectBook = book =>
-    makeAction(ADD_BOOK_SELECT_BOOK, {book});
-
-export const clearSelected = () =>
-    makeAction(ADD_BOOK_CLEAR_SELECTED);
+// TODO: Does select need to be a thing?
+export const selectBook = {
+    // request: ()=>{}, TODO: NO REQUEST??
+    success: book => makeAction(SELECT_BOOK.SUCCESS, {book}),
+    clear: () => makeAction(SELECT_BOOK.CLEAR),
+};

@@ -3,7 +3,7 @@ import axios from 'axios';
 import {delay} from 'redux-saga';
 import {put, call, take, fork, cancel} from 'redux-saga/effects';
 
-import * as bookSearchActions from '../actions/BookSearch';
+import {BOOK_SEARCH, bookSearch as bookSearchActions} from '../actions/BookSearch';
 
 function formatBook(book) {
     // TODO: Revisit this...
@@ -46,25 +46,23 @@ export function* bookSearch(query) {
     let response = yield call(axios, {
         method: 'GET',
         url: googleBooksUrl,
-        contentType: 'application/json',
-        type: 'json',
     });
     let results = response.data;
     let books = results.totalItems ? results.items.map(formatBook) : [];
-    yield put(bookSearchActions.bookSearchSetResults(books));
+    yield put(bookSearchActions.success(books));
 }
 
 function* watchBookSearch() {
     let search;
     while (true) {
-        let {query} = yield take(bookSearchActions.BOOK_SEARCH);
+        let {query} = yield take(BOOK_SEARCH.REQUEST);
         if (search) {
             yield cancel(search);
         }
         if (query) {
             search = yield fork(bookSearch, query);
         } else {
-            yield put(bookSearchActions.bookSearchClearResults());
+            yield put(bookSearchActions.clear());
         }
     }
 }

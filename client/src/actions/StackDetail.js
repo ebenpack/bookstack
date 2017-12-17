@@ -1,66 +1,62 @@
-import {makeAction} from './utils';
+import {makeAction, createRequestTypes, REQUEST, SUCCESS, FAILURE, CLEAR, EDITING} from './utils';
 
-export const STACK_DETAIL_LOAD = 'STACK_DETAIL_LOAD';
-export const STACK_DETAIL_UNLOAD = 'STACK_DETAIL_UNLOAD';
-export const STACK_DETAIL_SET = 'STACK_DETAIL_SET';
-export const STACK_DETAIL_SET_EDITING_STATE = 'STACK_DETAIL_SET_EDITING_STATE';
-export const STACK_DETAIL_SET_POSITION = 'STACK_DETAIL_SET_POSITION';
-export const STACK_DETAIL_UPDATE_POSITION = 'STACK_DETAIL_UPDATE_POSITION';
-export const STACK_DETAIL_SET_READ_STATE = 'STACK_DETAIL_SET_READ_STATE';
-export const STACK_DETAIL_UPDATE_READ_STATE = 'STACK_DETAIL_UPDATE_READ_STATE';
-export const STACK_DETAIL_REMOVE_BOOK = 'STACK_DETAIL_REMOVE_BOOK';
-export const STACK_DETAIL_DELETE_BOOK = 'STACK_DETAIL_DELETE_BOOK';
-export const STACK_DETAIL_SET_BOOK = 'STACK_DETAIL_SET_BOOK';
-export const STACK_DETAIL_UPDATE_BOOK = 'STACK_DETAIL_UPDATE_BOOK';
-export const STACK_DETAIL_SET_CATEGORY = 'STACK_DETAIL_SET_CATEGORY';
-export const STACK_DETAIL_UPDATE_CATEGORY = 'STACK_DETAIL_UPDATE_CATEGORY';
-export const STACK_DETAIL_REMOVE_CATEGORY = 'STACK_DETAIL_REMOVE_CATEGORY';
-export const STACK_DETAIL_DELETE_CATEGORY = 'STACK_DETAIL_DELETE_CATEGORY';
+export const STACK_DETAIL = createRequestTypes('STACK_DETAIL', 'STACK_DETAIL',
+    [REQUEST, SUCCESS, FAILURE, CLEAR, EDITING]);
 
-export const loadStack = id =>
-    makeAction(STACK_DETAIL_LOAD, {id});
 
-export const setStack = stack =>
-    makeAction(STACK_DETAIL_SET, {stack});
+export const POSITION = createRequestTypes('STACK_DETAIL', 'POSITION');
 
-export const unloadStack = () =>
-    makeAction(STACK_DETAIL_UNLOAD);
+export const READ_STATE = createRequestTypes('STACK_DETAIL', 'READ_STATE');
 
-export const toggleEditing = () =>
-    makeAction(STACK_DETAIL_SET_EDITING_STATE);
+export const ADD_BOOK = createRequestTypes('STACK_DETAIL', 'ADD_BOOK');
 
-export const updateReadState = (bookId, readState) =>
-    makeAction(STACK_DETAIL_UPDATE_READ_STATE, {bookId, readState});
+export const REMOVE_BOOK = createRequestTypes('STACK_DETAIL', 'REMOVE_BOOK');
 
-export const setReadState = (bookId, readState) =>
-    makeAction(STACK_DETAIL_SET_READ_STATE, {bookId, readState});
+export const ADD_CATEGORY = createRequestTypes('STACK_DETAIL', 'ADD_CATEGORY');
 
-export const updatePosition = (id, from, to) =>
-    makeAction(STACK_DETAIL_UPDATE_POSITION, {id, from, to});
+export const ADD_NEW_CATEGORY = createRequestTypes('STACK_DETAIL', 'ADD_NEW_CATEGORY');
 
-export const setPosition = (id, from, to) =>
-    makeAction(STACK_DETAIL_SET_POSITION, {id, from, to});
+export const REMOVE_CATEGORY = createRequestTypes('STACK_DETAIL', 'REMOVE_CATEGORY');
 
-export const setBook = (bookId, stackId) =>
-    makeAction(STACK_DETAIL_SET_BOOK, {bookId, stackId});
+export const stackDetail = {
+    request: id => makeAction(STACK_DETAIL.REQUEST, {id}),
+    success: stack => makeAction(STACK_DETAIL.SUCCESS, {stack}),
+    clear: () => makeAction(STACK_DETAIL.CLEAR),
+    editing: () => makeAction(STACK_DETAIL.EDITING),
+};
 
-export const updateBook = (bookId, stackId) =>
-    makeAction(STACK_DETAIL_UPDATE_BOOK, {bookId, stackId});
 
-export const deleteBook = id =>
-    makeAction(STACK_DETAIL_DELETE_BOOK, {id});
+export const position = {
+    request: (id, from, to) => makeAction(POSITION.REQUEST, {id, from, to}),
+    success: (id, from, to) => makeAction(POSITION.SUCCESS, {id, from, to}),
+};
 
-export const removeBook = id =>
-    makeAction(STACK_DETAIL_REMOVE_BOOK, {id});
+export const readState = {
+    request: (bookId, readState) => makeAction(READ_STATE.REQUEST, {bookId, readState}),
+    success: (bookId, readState) => makeAction(READ_STATE.SUCCESS, {bookId, readState}),
+};
 
-export const updateCategory = (bookstackId, categoryId) =>
-    makeAction(STACK_DETAIL_UPDATE_CATEGORY, {bookstackId, categoryId});
+export const addBook = {
+    request: (bookId, stackId) => makeAction(ADD_BOOK.REQUEST, {bookId, stackId}),
+    success: () => {/*TODO*/
+    },
+};
 
-export const setCategory = category =>
-    makeAction(STACK_DETAIL_SET_CATEGORY, {category});
+export const removeBook = {
+    request: id => makeAction(REMOVE_BOOK.REQUEST, {id}),
+    success: id => makeAction(REMOVE_BOOK.SUCCESS, {id}),
+};
 
-export const removeCategory = (bookstackId, categoryId) =>
-    makeAction(STACK_DETAIL_REMOVE_CATEGORY, {bookstackId, categoryId});
+export const addCategory = {
+    request: (bookstackId, categoryId) => makeAction(ADD_CATEGORY.REQUEST, {bookstackId, categoryId}),
+    success: (bookstackId, category) => makeAction(ADD_CATEGORY.SUCCESS, {bookstackId, category}),
+};
 
-export const deleteCategory = (bookstackId, categoryId) =>
-    makeAction(STACK_DETAIL_DELETE_CATEGORY, {bookstackId, categoryId});
+export const addNewCategory = {
+    request: (bookstackId, category) => makeAction(ADD_NEW_CATEGORY.REQUEST, {bookstackId, category})
+};
+
+export const removeCategory = {
+    request: (bookstackId, categoryId) => makeAction(REMOVE_CATEGORY.REQUEST, {bookstackId, categoryId}),
+    success: (bookstackId, categoryId) => makeAction(REMOVE_CATEGORY.SUCCESS, {bookstackId, categoryId}),
+};

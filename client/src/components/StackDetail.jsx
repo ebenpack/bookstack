@@ -5,13 +5,13 @@ import BookStack from './BookStack.jsx';
 import AddBook from './AddBook.jsx';
 
 import {
-    loadStack,
-    unloadStack,
-    toggleEditing,
-    updateReadState,
-    updatePosition,
-    deleteBook,
-    deleteCategory,
+    stackDetail,
+    position,
+    readState,
+    addBook,
+    removeBook,
+    addCategory,
+    removeCategory,
 } from '../actions/StackDetail';
 
 function mapStateToProps(state) {
@@ -24,13 +24,13 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        loadStack: id => dispatch(loadStack(id)),
-        unloadStack: () => dispatch(unloadStack()),
-        toggleEditing: () => dispatch(toggleEditing()),
-        updateReadState: (id, checked) => dispatch(updateReadState(id, checked)),
-        deleteBook: id => dispatch(deleteBook(id)),
-        deleteCategory: (bookstackId, categoryId) => dispatch(deleteCategory(bookstackId, categoryId)),
-        updatePosition: (id, from, to) => dispatch(updatePosition(id, from, to)),
+        loadStack: id => dispatch(stackDetail.request(id)),
+        unloadStack: () => dispatch(stackDetail.clear()),
+        toggleEditing: () => dispatch(stackDetail.editing()),
+        updateReadState: (id, checked) => dispatch(readState.request(id, checked)),
+        deleteBook: id => dispatch(removeBook.request(id)),
+        deleteCategory: (bookstackId, categoryId) => dispatch(removeCategory.request(bookstackId, categoryId)),
+        updatePosition: (id, from, to) => dispatch(position.request(id, from, to)),
     }
 }
 
@@ -44,20 +44,16 @@ class StackDetail extends React.Component {
         this.props.unloadStack();
     }
 
-    toggleEditing() {
-        this.props.toggleEditing();
-    }
-
     render() {
         let staticPath = this.props.route.staticPath;
         let id = this.props.params.id;
         let addBook = this.props.editing ?
             (<div>
-                <div onClick={this.toggleEditing}>Close -</div>
+                <div onClick={this.props.toggleEditing}>Close -</div>
                 <AddBook stackId={id}/>
             </div>) :
             (<div>
-                <div onClick={this.toggleEditing}>Add book +</div>
+                <div onClick={this.props.toggleEditing}>Add book +</div>
             </div>);
         return (
             <div className="stack row">
@@ -73,7 +69,7 @@ class StackDetail extends React.Component {
                         bookStack={bookStack}
                         staticPath={staticPath}
                         setReadState={this.props.updateReadState}
-                        removeBook={this.props.deleteBook}
+                        deleteBook={this.props.deleteBook}
                         removeCategory={this.props.deleteCategory}
                         updatePosition={this.props.updatePosition}
                     />

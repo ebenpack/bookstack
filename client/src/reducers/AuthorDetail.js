@@ -1,6 +1,6 @@
 import Immutable from 'immutable';
 
-import * as authorDetailActions from '../actions/AuthorDetail';
+import {AUTHOR} from '../actions/AuthorDetail';
 
 const defaultState = Immutable.fromJS({
     books: [],
@@ -9,7 +9,7 @@ const defaultState = Immutable.fromJS({
 
 export default function AuthorDetailReducer(state = defaultState, action) {
     switch (action.type) {
-        case authorDetailActions.AUTHOR_SET:
+        case AUTHOR.SUCCESS:
             return Immutable.fromJS(action.author);
         default:
             return state;
