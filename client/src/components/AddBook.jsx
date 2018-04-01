@@ -72,7 +72,7 @@ AddBook.propTypes = {
     booksAutocomplete: immutablePropTypes.list.isRequired,
     getBook: propTypes.func.isRequired,
     clearSelected: propTypes.func.isRequired,
-    selectedBook: propTypes.map.isRequired,
+    selectedBook: immutablePropTypes.map.isRequired,
     addBook: propTypes.func.isRequired,
     searchBooks: propTypes.func.isRequired,
     title: propTypes.string.isRequired,

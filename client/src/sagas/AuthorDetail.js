@@ -4,9 +4,7 @@ import { put, call, select, takeEvery } from 'redux-saga/effects';
 
 import { getCredentials } from './utils';
 
-import * as authorDetailActions from '../actions/AuthorDetail';
-
-const { AUTHOR } = authorDetailActions;
+import { AUTHOR, author as authorActions } from '../actions/AuthorDetail';
 
 export function* loadAuthor({ id }) {
     const { apiUrl } = yield select(getCredentials);
@@ -14,15 +12,13 @@ export function* loadAuthor({ id }) {
         method: 'GET',
         url: `${apiUrl}/api/author/${id}/`,
     });
-    yield put(authorDetailActions.setAuthor(author.data));
+    yield put(authorActions.success(author.data));
 }
 
 function* watchLoadAuthor() {
     yield takeEvery(AUTHOR.REQUEST, loadAuthor);
 }
 
-export default function* rootSaga() {
-    yield [
-        watchLoadAuthor,
-    ];
-}
+export default [
+    watchLoadAuthor,
+];

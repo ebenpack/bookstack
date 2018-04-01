@@ -23,7 +23,7 @@ function mapStateToProps(state) {
 
 // TODO: Make pure?
 class AuthorDetail extends React.Component {
-    componentDidMount() {
+    componentWillMount() {
         if (this.props.params.id) {
             this.props.loadAuthor(this.props.params.id);
         }

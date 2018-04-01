@@ -195,7 +195,8 @@ class BookStack extends React.Component {
                         <ul>
                             {this.props.bookStack.get('categories').map(category =>
                                 (
-                                    <li key={category.get('id')}>
+                                    <li
+                                        key={category.get('id')}>
                                         {category.getIn(['detail', 'category'])} -
                                         <span onClick={() => this.removeCategory(category.get('id'))}>
                                             Remove
@@ -220,13 +221,18 @@ class BookStack extends React.Component {
     }
 }
 
+BookStack.defaultProps = {
+    updateReadState: () => {},
+    staticPath: '',
+};
+
 BookStack.propTypes = {
-    updateReadState: propTypes.func.isRequired,
+    updateReadState: propTypes.func,
     bookStack: immutablePropTypes.map.isRequired,
     updatePosition: propTypes.func.isRequired,
     deleteBook: propTypes.func.isRequired,
     removeCategory: propTypes.func.isRequired,
-    staticPath: propTypes.string.isRequired,
+    staticPath: propTypes.string,
 };
 
 export default BookStack;

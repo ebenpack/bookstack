@@ -14,25 +14,22 @@ import {
     removeCategory,
 } from '../actions/StackDetail';
 
-function mapStateToProps(state) {
-    return {
-        stackDetail: state.stackDetailStore.get('stackDetail'),
-        books: state.stackDetailStore.getIn(['stackDetail', 'books']),
-        editing: state.stackDetailStore.get('editing'),
-    };
-}
+const mapStateToProps = state => ({
+    staticPath: state.appStore.get('staticPath'),
+    stackDetail: state.stackDetailStore.get('stackDetail'),
+    books: state.stackDetailStore.getIn(['stackDetail', 'books']),
+    editing: state.stackDetailStore.get('editing'),
+});
 
-function mapDispatchToProps(dispatch) {
-    return {
-        loadStack: id => dispatch(stackDetail.request(id)),
-        unloadStack: () => dispatch(stackDetail.clear()),
-        toggleEditing: () => dispatch(stackDetail.editing()),
-        updateReadState: (id, checked) => dispatch(readState.request(id, checked)),
-        deleteBook: id => dispatch(removeBook.request(id)),
-        deleteCategory: (bookstackId, categoryId) => dispatch(removeCategory.request(bookstackId, categoryId)),
-        updatePosition: (id, from, to) => dispatch(position.request(id, from, to)),
-    };
-}
+const mapDispatchToProps = {
+    loadStack: stackDetail.request,
+    unloadStack: stackDetail.clear,
+    toggleEditing: stackDetail.editing,
+    updateReadState: readState.request,
+    deleteBook: removeBook.request,
+    deleteCategory: removeCategory.request,
+    updatePosition: position.request,
+};
 
 class StackDetail extends React.Component {
     componentDidMount() {

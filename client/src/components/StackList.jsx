@@ -9,19 +9,16 @@ import { stack } from '../actions/StackList';
 import Stack from './Stack';
 
 
-function mapStateToProps(state) {
-    return {
-        stackList: state.stackListStore,
-        apiUrl: state.appStore.get('apiUrl'),
-    };
-}
+const mapStateToProps = state => ({
+    stackList: state.stackListStore,
+    apiUrl: state.appStore.get('apiUrl'),
+    staticPath: state.appStore.get('staticPath'),
+});
 
-function mapDispatchToProps(dispatch) {
-    return {
-        loadStackList: () => dispatch(stack.request()),
-        unloadStackList: () => dispatch(stack.clear()),
-    };
-}
+const mapDispatchToProps = {
+    loadStackList: stack.request,
+    unloadStackList: stack.clear,
+};
 
 class StackList extends React.Component {
     componentDidMount() {

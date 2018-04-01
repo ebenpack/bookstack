@@ -9,7 +9,7 @@ import StackDetailSaga from './StackDetail';
 import StackListSaga from './StackList';
 
 
-const sagas = [
+export default [
     ...AddBookSaga,
     ...AddCategorySaga,
     ...AppSaga,
@@ -19,7 +19,3 @@ const sagas = [
     ...StackDetailSaga,
     ...StackListSaga,
 ];
-
-export default function* rootSaga() {
-    yield sagas.map(saga => fork(saga));
-}

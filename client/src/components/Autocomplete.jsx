@@ -4,17 +4,14 @@ import immutablePropTypes from 'react-immutable-proptypes';
 
 const Autocomplete = ({ onClick, suggestions, displayProperty }) => (
     <ul className="autocomplete">
-        {suggestions.map((suggestion) => {
-            const id = suggestion.get('id');
-            return (
-                <li
-                    key={id}
-                    onClick={() => onClick(id)}
-                >
-                    {suggestion.get(displayProperty)}
-                </li>
-            );
-        }, this)}
+        {suggestions.map(suggestion => (
+            <li
+                key={suggestion.get('id')}
+                onClick={() => onClick(suggestion.get('id'))}
+            >
+                {suggestion.get(displayProperty)}
+            </li>
+        ))}
     </ul>
 );
 

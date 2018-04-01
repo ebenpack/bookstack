@@ -31,7 +31,7 @@ class PublisherDetail extends React.Component {
         return (
             <div className="author">
                 <h2>{this.props.name}</h2>
-                {this.props.books.map(book => (<Book key={book.id} book={book} />))}
+                {this.props.books.map(book => (<Book key={book.get('id')} book={book} />))}
             </div>
         );
     }
