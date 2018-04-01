@@ -17,7 +17,7 @@ class StackManager(models.Manager):
 class Stack(models.Model):
     name = models.CharField(max_length=200)
     private = models.BooleanField(default=True)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
     creation_date = models.DateTimeField(
         auto_now_add=True
     )
@@ -83,8 +83,8 @@ class BookStack(models.Model):
     class Meta:
         ordering = ['position']
 
-    stack = models.ForeignKey(Stack)
-    book = models.ForeignKey(Book)
+    stack = models.ForeignKey(Stack, on_delete=models.PROTECT)
+    book = models.ForeignKey(Book, on_delete=models.PROTECT)
     read = models.BooleanField(default=False)
     categories = models.ManyToManyField(
         'Category',
@@ -166,8 +166,8 @@ class BookStackCategoryManager(models.Manager):
 
 
 class BookStackCategory(models.Model):
-    bookstack = models.ForeignKey(BookStack)
-    category = models.ForeignKey(Category)
+    bookstack = models.ForeignKey(BookStack, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
 
     objects = BookStackCategoryManager()
 

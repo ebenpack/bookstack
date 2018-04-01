@@ -4,9 +4,11 @@ from django.conf.urls import include, url
 from django.contrib import admin
 admin.autodiscover()
 
+app_name = 'booklist'
+
 urlpatterns = [
-    url(r'^', include('bookstack.urls', namespace='bookstack')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include('bookstack.urls')),
+    url(r'^admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:

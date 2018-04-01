@@ -5,6 +5,8 @@ from rest_framework_swagger.views import get_swagger_view
 
 from bookstack import views
 
+app_name = 'bookstack'
+
 schema_view = get_swagger_view(title="Bookstack API")
 
 router = routers.DefaultRouter()
