@@ -1,18 +1,17 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import propTypes from 'prop-types';
-import immutablePropTypes from 'react-immutable-proptypes';
 import { Router, Route } from 'react-router';
 
 import '../sass/react.scss';
 
-import App from './components/App';
-import StackList from './components/StackList';
-import StackDetail from './components/StackDetail';
-import AuthorDetail from './components/AuthorDetail';
-import PublisherDetail from './components/PublisherDetail';
-import BookSearch from './components/BookSearch';
-import Login from './components/Login';
+import App from './App/App';
+import StackList from './StackList/StackList';
+import StackDetail from './StackDetail/StackDetail';
+import AuthorDetail from './AuthorDetail/AuthorDetail';
+import PublisherDetail from './PublisherDetail/PublisherDetail';
+import BookSearch from './BookSearch/BookSearch';
+import Login from './Login/Login';
 
 const AppRouter = ({ store, history }) => (
     <Provider store={store}>
