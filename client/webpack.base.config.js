@@ -1,6 +1,5 @@
 const path = require('path');
 const webpack = require('webpack');
-const DashboardPlugin = require('webpack-dashboard/plugin');
 
 module.exports = {
     entry: ['./src/main.js'],
@@ -10,16 +9,6 @@ module.exports = {
         publicPath: '/assets/',
         filename: 'bundle.js',
     },
-
-    devtool: 'source-map',
-
-    plugins: process.env.NODE_ENV === 'production' ? [
-        new webpack.optimize.DedupePlugin(),
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin()
-    ] : [
-        new DashboardPlugin()
-    ],
 
     module: {
         rules: [
@@ -39,7 +28,7 @@ module.exports = {
                 use: [{
                     loader: "style-loader"
                 }, {
-                    loader:  "css-loader"
+                    loader: "css-loader"
                 }, {
                     loader: "sass-loader",
                     options: {
