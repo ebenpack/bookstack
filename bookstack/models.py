@@ -99,16 +99,16 @@ class BookStack(models.Model):
         return self.stack.bookstack_set.count()
 
     def renumber(self, position):
-        '''Re-number book positions in the stack. After this method is executed,
+        """Re-number book positions in the stack. After this method is executed,
         all books in a stack will be numbered sequentially from 1-n, where n is
         the number of books in the stack, and each book will have a unique position.
-        '''
+        """
         from_position = self.position
         to_position = position
         bookstack_set = self.stack.bookstack_set
         max_position = self.max_position()
 
-        if  to_position < 0 or to_position > max_position:
+        if to_position < 0 or to_position > max_position:
             raise IndexError
 
         start = min(from_position, to_position)
@@ -172,7 +172,7 @@ class BookStackCategory(models.Model):
     objects = BookStackCategoryManager()
 
     class Meta:
-        unique_together = (('category', 'bookstack'))
+        unique_together = ('category', 'bookstack')
 
 
 class Author(models.Model):

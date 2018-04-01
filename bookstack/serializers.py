@@ -11,35 +11,30 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Group
         fields = ('url', 'name')
 
 
 class CategorySerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Category
         fields = ('category', 'id')
 
 
 class AuthorSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Author
         fields = ('name', 'id')
 
 
 class PublisherSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Publisher
         fields = ('name', 'id')
 
 
 class BookSerializer(serializers.ModelSerializer):
-
     authors = AuthorSerializer(many=True, read_only=True)
     publishers = PublisherSerializer(many=True, read_only=True)
     depth = 3
@@ -78,8 +73,8 @@ class BookSerializer(serializers.ModelSerializer):
 
         return book
 
-class PublisherDetailSerializer(serializers.ModelSerializer):
 
+class PublisherDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Publisher
         fields = ('name', 'books', 'id')
@@ -96,8 +91,7 @@ class AuthorDetailSerializer(serializers.ModelSerializer):
 
 
 class BookStackCategorySerializer(serializers.ModelSerializer):
-
-    bookstack= serializers.PrimaryKeyRelatedField(read_only=False, queryset=BookStack.objects.all())
+    bookstack = serializers.PrimaryKeyRelatedField(read_only=False, queryset=BookStack.objects.all())
     detail = CategorySerializer(read_only=True, source='category')
     category = serializers.PrimaryKeyRelatedField(
         write_only=True,
@@ -107,7 +101,6 @@ class BookStackCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = BookStackCategory
         fields = ('bookstack', 'category', 'detail', 'id')
-
 
 
 class BookStackSerializer(serializers.ModelSerializer):
@@ -141,7 +134,6 @@ class BookStackSerializer(serializers.ModelSerializer):
 
 
 class StackListSerializer(serializers.ModelSerializer):
-
     user = serializers.StringRelatedField()
 
     class Meta:
@@ -150,7 +142,6 @@ class StackListSerializer(serializers.ModelSerializer):
 
 
 class StackSerializer(serializers.ModelSerializer):
-
     user = serializers.StringRelatedField()
     books = BookStackSerializer(many=True, source='bookstack_set')
 

@@ -15,7 +15,7 @@ class UserViewSet(viewsets.ModelViewSet):
     """
     queryset = User.objects
     serializer_class = serializers.UserSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -24,7 +24,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects
     serializer_class = serializers.GroupSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class StackViewSet(viewsets.ModelViewSet):
@@ -38,7 +38,7 @@ class StackViewSet(viewsets.ModelViewSet):
         # 'bookstack_set__user'
     ).select_related('user')
     serializer_class = serializers.StackSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def list(self, request):
         queryset = models.Stack.objects.select_related('user')
@@ -55,9 +55,10 @@ class BookViewSet(viewsets.ModelViewSet):
         'publishers'
     )
     serializer_class = serializers.BookSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
-    filter_backends = (filters.SearchFilter, )
-    search_fields = ('title', )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('title',)
+
 
 class BookStackViewSet(viewsets.ModelViewSet):
     """
@@ -73,7 +74,7 @@ class BookStackViewSet(viewsets.ModelViewSet):
         'position'
     )
     serializer_class = serializers.BookStackSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def list(self, request):
         queryset = models.BookStack.objects.prefetch_related(
@@ -137,9 +138,9 @@ class CategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Category.objects
     serializer_class = serializers.CategorySerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
-    filter_backends = (filters.SearchFilter, )
-    search_fields = ('category', )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('category',)
 
 
 class BookStackCategoryViewSet(viewsets.ModelViewSet):
@@ -148,7 +149,7 @@ class BookStackCategoryViewSet(viewsets.ModelViewSet):
     """
     queryset = models.BookStackCategory.objects
     serializer_class = serializers.BookStackCategorySerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class AuthorViewSet(viewsets.ModelViewSet):
@@ -157,10 +158,10 @@ class AuthorViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Author.objects.prefetch_related('book_set')
     serializer_class = serializers.AuthorSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    filter_backends = (filters.SearchFilter, )
-    search_fields = ('name', )
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
 
     def list(self, request):
         queryset = models.Author.objects
@@ -184,10 +185,10 @@ class PublisherViewSet(viewsets.ModelViewSet):
     """
     queryset = models.Publisher.objects.prefetch_related('book_set')
     serializer_class = serializers.PublisherSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, )
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    filter_backends = (filters.SearchFilter, )
-    search_fields = ('name', )
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('name',)
 
     def list(self, request):
         queryset = models.Publisher.objects
@@ -203,6 +204,7 @@ class PublisherViewSet(viewsets.ModelViewSet):
         publisher_detail = get_object_or_404(queryset, pk=pk)
         serializer = serializers.PublisherDetailSerializer(publisher_detail)
         return Response(serializer.data)
+
 
 def app_view(request):
     return render(request, 'bookstack_react.html')

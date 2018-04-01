@@ -20,7 +20,6 @@ router.register(r'category', views.CategoryViewSet)
 router.register(r'user', views.UserViewSet)
 router.register(r'group', views.GroupViewSet)
 
-
 urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

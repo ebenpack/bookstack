@@ -1,19 +1,17 @@
 import requests
-import json
 
 
 def parse_book(book):
     books = []
-    # from pudb import set_trace; set_trace()
     for b in book["items"]:
         newb = {'title': '', 'authors': [], 'publisher': '',
-        'pages': 0, 'img': '', 'categories': [], 'isbn': ''}
+                'pages': 0, 'img': '', 'categories': [], 'isbn': ''}
         for info in b["volumeInfo"]:
             if info in ['title', 'authors', 'publisher', 'pageCount']:
                 newb[info] = b["volumeInfo"][info]
         if "imageLinks" in b["volumeInfo"]:
             newb["img"] = b["volumeInfo"]["imageLinks"]["smallThumbnail"]
-        if "pageCount" in  newb:
+        if "pageCount" in newb:
             newb["pages"] = newb["pageCount"]
             del newb["pageCount"]
         if "industryIdentifiers" in b["volumeInfo"]:
