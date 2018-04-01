@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-import {delay} from 'redux-saga';
-import {put, call, take, fork, cancel} from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import { put, call, take, fork, cancel } from 'redux-saga/effects';
 
-import {BOOK_SEARCH, bookSearch as bookSearchActions} from '../actions/BookSearch';
+import { BOOK_SEARCH, bookSearch as bookSearchActions } from '../actions/BookSearch';
 
 function formatBook(book) {
     // TODO: Revisit this...
@@ -11,20 +11,17 @@ function formatBook(book) {
         title: book.volumeInfo.title,
         pages: book.volumeInfo.pageCount,
         isbn: (book.volumeInfo.industryIdentifiers) ?
-            book.volumeInfo.industryIdentifiers.reduce(function (prev, ident) {
-                if (ident.type === "ISBN_10") {
+            book.volumeInfo.industryIdentifiers.reduce((prev, ident) => {
+                if (ident.type === 'ISBN_10') {
                     return ident.identifier;
-                } else if (!prev && ident.type === "ISBN_13") {
+                } else if (!prev && ident.type === 'ISBN_13') {
                     return ident.identifier;
-                } else {
-                    return prev;
                 }
+                return prev;
             }, '') : undefined,
-        authors: book.volumeInfo.authors ? book.volumeInfo.authors.map(function (author) {
-            return {
-                name: author,
-            };
-        }) : [],
+        authors: book.volumeInfo.authors ? book.volumeInfo.authors.map(author => ({
+            name: author,
+        })) : [],
         img: (
             book.volumeInfo.imageLinks &&
             book.volumeInfo.imageLinks.smallThumbnail
@@ -34,28 +31,26 @@ function formatBook(book) {
             Array.isArray(book.volumeInfo.publisher) ?
                 book.volumeInfo.publisher :
                 [book.volumeInfo.publisher]
-        ).map(function (publisher) {
-            return {name: publisher}
-        }),
+        ).map(publisher => ({ name: publisher })),
     };
 }
 
 export function* bookSearch(query) {
     yield call(delay, 500);
-    let googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
-    let response = yield call(axios, {
+    const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
+    const response = yield call(axios, {
         method: 'GET',
         url: googleBooksUrl,
     });
-    let results = response.data;
-    let books = results.totalItems ? results.items.map(formatBook) : [];
+    const results = response.data;
+    const books = results.totalItems ? results.items.map(formatBook) : [];
     yield put(bookSearchActions.success(books));
 }
 
 function* watchBookSearch() {
     let search;
     while (true) {
-        let {query} = yield take(BOOK_SEARCH.REQUEST);
+        const { query } = yield take(BOOK_SEARCH.REQUEST);
         if (search) {
             yield cancel(search);
         }

@@ -1,14 +1,14 @@
 import axios from 'axios';
 
-import {put, call, select, takeEvery} from 'redux-saga/effects';
+import { put, call, select, takeEvery } from 'redux-saga/effects';
 
-import {getCredentials} from './utils';
+import { getCredentials } from './utils';
 
-import {STACK, stack as stackActions} from '../actions/StackList';
+import { STACK, stack as stackActions } from '../actions/StackList';
 
 export function* loadStackList() {
-    let {apiUrl} = yield select(getCredentials);
-    let stack = yield call(axios, {
+    const { apiUrl } = yield select(getCredentials);
+    const stack = yield call(axios, {
         method: 'GET',
         url: `${apiUrl}/api/stack/`,
     });
@@ -16,7 +16,7 @@ export function* loadStackList() {
 }
 
 function* watchLoadStacklist() {
-    yield takeEvery(STACK.REQUEST, loadStackList)
+    yield takeEvery(STACK.REQUEST, loadStackList);
 }
 
 export default [

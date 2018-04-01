@@ -1,11 +1,11 @@
-import "babel-polyfill";
-import {start} from './router.jsx';
+import 'babel-polyfill';
+import start from './router';
 
 window.MyApp = {
-    init: function (opts) {
+    init(opts) {
         start(
             opts.el,
-            opts.apiUrl
+            opts.apiUrl,
         );
-    }
+    },
 };

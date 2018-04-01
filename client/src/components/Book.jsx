@@ -1,31 +1,43 @@
 import React from 'react';
+import propTypes from 'prop-types';
+import immutablePropTypes from 'react-immutable-proptypes';
 
-import Author from './Author.jsx';
-import Publisher from './Publisher.jsx';
+import Author from './Author';
+import Publisher from './Publisher';
 
-export default function Book({staticPath, className, book}) {
-    className = (className === undefined) ?
-        "book four columns" :
-        className;
-    return (
-        <div className={className}>
-            <img src={
+const Book = ({ staticPath, className, book }) => (
+    <div className={className}>
+        <img
+            src={
                 book.has('img') ?
                     book.get('img') :
-                    staticPath + 'bookstack/images/defaultbook.jpg'}
-            />
-            <div className="info">
-                <div className="title">{book.get('title')}</div>
-                By:
-                <ul className="authors">{book.get('authors').map(function (author, i) {
-                    return (<Author key={i} author={author}/>);
-                })}</ul>
-                {book.get('publishers').map(function (publisher, i) {
-                    return (<Publisher key={i} publisher={publisher}/>);
-                })}
-                <div className="pages">{book.get('pages')} pages</div>
-                <div className="isbn">ISBN: {book.get('isbn')}</div>
-            </div>
+                    `${staticPath}bookstack/images/defaultbook.jpg`}
+            alt={`${book.get('title')} Cover`}
+        />
+        <div className="info">
+            <div className="title">{book.get('title')}</div>
+            By:
+            <ul className="authors">{book.get('authors').map(author =>
+                (<Author key={author.get('id')} author={author} />))}
+            </ul>
+            {book.get('publishers').map(publisher => (
+                <Publisher key={publisher.get('id')} publisher={publisher} />
+            ))}
+            <div className="pages">{book.get('pages')} pages</div>
+            <div className="isbn">ISBN: {book.get('isbn')}</div>
         </div>
-    )
+    </div>
+);
+
+Book.defaultProps = {
+    staticPath: '',
+    className: 'book four columns',
 };
+
+Book.propTypes = {
+    staticPath: propTypes.string,
+    className: propTypes.string,
+    book: immutablePropTypes.map.isRequired,
+};
+
+export default Book;

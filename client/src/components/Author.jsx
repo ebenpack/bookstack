@@ -1,13 +1,14 @@
 import React from 'react';
-import {Link} from 'react-router';
+import { Link } from 'react-router';
+import immutablePropTypes from 'react-immutable-proptypes';
 
-export default function Author(props) {
+const Author = (props) => {
     const id = props.author.get('id');
     const name = props.author.get('name');
-    const author = id ?
-        <Link to={"/author/" + id}>
+    const author = id ? (
+        <Link to={`/author/${id}`}>
             {name}
-        </Link> :
+        </Link>) :
         name;
     return (
         <li className="author">
@@ -15,3 +16,9 @@ export default function Author(props) {
         </li>
     );
 };
+
+Author.propTypes = {
+    author: immutablePropTypes.map.isRequired,
+};
+
+export default Author;

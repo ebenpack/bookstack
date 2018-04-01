@@ -1,22 +1,24 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
+import immutablePropTypes from 'react-immutable-proptypes';
 
-import Book from '../components/Book.jsx';
+import Book from '../components/Book';
 
-import {bookSearch as bookSearchActions} from '../actions/BookSearch';
-import {addBook} from '../actions/AddBook';
+import { bookSearch as bookSearchActions } from '../actions/BookSearch';
+import { addBook } from '../actions/AddBook';
 
 function mapDispatchToProps(dispatch) {
     return {
         bookSearch: query => dispatch(bookSearchActions.request(query)),
-        addBook: book => dispatch(addBook.request(book))
+        addBook: book => dispatch(addBook.request(book)),
     };
 }
 
 function mapStateToProps(state) {
     return {
         books: state.bookSearchStore.get('books'),
-    }
+    };
 }
 
 class BookSearch extends React.Component {
@@ -27,13 +29,13 @@ class BookSearch extends React.Component {
         };
     }
 
-    componentDidMount() {
+    componentWillMount() {
         if (this.props.location && this.props.location.search) {
-            let match = this.props.location.search.match(/\?search=([^&]*)/);
-            let query = match && match[1] ? match[1] : '';
+            const match = this.props.location.search.match(/\?search=([^&]*)/);
+            const query = match && match[1] ? match[1] : '';
             if (query) {
                 this.setState({
-                    query: query,
+                    query,
                 });
                 this.props.bookSearch(query);
             }
@@ -41,9 +43,9 @@ class BookSearch extends React.Component {
     }
 
     handleSearchChange(e) {
-        let query = e.target.value;
+        const query = e.target.value;
         this.setState({
-            query: query
+            query,
         });
         this.props.bookSearch(query);
     }
@@ -59,13 +61,14 @@ class BookSearch extends React.Component {
                     <input
                         type="text"
                         value={this.state.query}
-                        onChange={e => this.handleSearchChange(e)}/>
+                        onChange={e => this.handleSearchChange(e)}
+                    />
                 </label>
-                {this.props.books.map(function (book, idx) {
-                    let key = book.get('isbn') || idx;
+                {this.props.books.map((book, idx) => {
+                    const key = book.get('isbn') || idx;
                     return (
                         <div key={key} className="four columns">
-                            <Book book={book} className=""/>
+                            <Book book={book} className="" />
                             <button
                                 onClick={() => this.handleSubmit(book)}
                             >
@@ -79,7 +82,22 @@ class BookSearch extends React.Component {
     }
 }
 
+BookSearch.defaultProps = {
+    location: {
+        search: '',
+    },
+};
+
+BookSearch.propTypes = {
+    books: immutablePropTypes.list.isRequired,
+    bookSearch: propTypes.func.isRequired,
+    addBook: propTypes.func.isRequired,
+    location: propTypes.shape({
+        search: propTypes.string,
+    }),
+};
+
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(BookSearch);

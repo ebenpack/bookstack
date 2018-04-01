@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-import {put, call, select, takeEvery} from 'redux-saga/effects';
+import { put, call, select, takeEvery } from 'redux-saga/effects';
 
-import {getCredentials} from './utils';
+import { getCredentials } from './utils';
 
-import {PUBLISHER, publisher as publisherActions} from '../actions/PublisherDetail';
+import { PUBLISHER, publisher as publisherActions } from '../actions/PublisherDetail';
 
 
-export function* loadPublisher({id}) {
-    let {apiUrl} = yield select(getCredentials);
-    let publisher = yield call(axios, {
+export function* loadPublisher({ id }) {
+    const { apiUrl } = yield select(getCredentials);
+    const publisher = yield call(axios, {
         method: 'GET',
         url: `${apiUrl}/api/publisher/${id}/`,
     });
@@ -17,7 +17,7 @@ export function* loadPublisher({id}) {
 }
 
 function* watchLoadPublisher() {
-    yield takeEvery(PUBLISHER.REQUEST, loadPublisher)
+    yield takeEvery(PUBLISHER.REQUEST, loadPublisher);
 }
 
 export default [

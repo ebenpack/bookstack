@@ -1,7 +1,10 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import Book from '../components/Book.jsx';
-import {publisher as publisherActions} from '../actions/PublisherDetail';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
+import immutablePropTypes from 'react-immutable-proptypes';
+
+import Book from '../components/Book';
+import { publisher as publisherActions } from '../actions/PublisherDetail';
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -14,7 +17,7 @@ function mapStateToProps(state) {
         name: state.publisherDetailStore.get('name'),
         id: state.publisherDetailStore.get('id'),
         books: state.publisherDetailStore.get('books'),
-    }
+    };
 }
 
 class PublisherDetail extends React.Component {
@@ -28,15 +31,22 @@ class PublisherDetail extends React.Component {
         return (
             <div className="author">
                 <h2>{this.props.name}</h2>
-                {this.props.books.map(function (book) {
-                    return (<Book key={book.id} book={book}/>);
-                })}
+                {this.props.books.map(book => (<Book key={book.id} book={book} />))}
             </div>
         );
     }
 }
 
+PublisherDetail.propTypes = {
+    params: propTypes.shape({
+        id: propTypes.string,
+    }).isRequired,
+    loadPublisher: propTypes.func.isRequired,
+    name: propTypes.string.isRequired,
+    books: immutablePropTypes.list.isRequired,
+};
+
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(PublisherDetail);

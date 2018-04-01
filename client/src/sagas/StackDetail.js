@@ -1,14 +1,15 @@
 import axios from 'axios';
 
-import {delay} from 'redux-saga';
-import {put, call, select, take, takeEvery, race} from 'redux-saga/effects';
+import { delay } from 'redux-saga';
+import { put, call, select, take, takeEvery, race } from 'redux-saga/effects';
 
-import {getCredentials, getCurrentTime} from './utils';
+import { getCredentials, getCurrentTime } from './utils';
 
-import {ADD} from '../actions/AddCategory';
 import * as categoryActions from '../actions/AddCategory';
+import * as stackDetailActions from '../actions/StackDetail';
 
-import  {
+const { ADD } = categoryActions;
+const {
     STACK_DETAIL,
     POSITION,
     READ_STATE,
@@ -21,22 +22,20 @@ import  {
     position,
     removeBook,
     removeCategory,
-}  from '../actions/StackDetail';
+} = stackDetailActions;
 
-import * as stackDetailActions from '../actions/StackDetail';
-
-export function* loadStack({id}) {
-    let {apiUrl} = yield select(getCredentials);
-    let stack = yield call(axios, {
+export function* loadStack({ id }) {
+    const { apiUrl } = yield select(getCredentials);
+    const stack = yield call(axios, {
         method: 'GET',
         url: `${apiUrl}/api/stack/${id}/`,
     });
     yield put(stackDetail.success(stack.data));
 }
 
-export function* updateReadState({bookId, readState}) {
-    let {apiUrl, token} = yield select(getCredentials);
-    let response = yield call(axios, {
+export function* updateReadState({ bookId, readState }) {
+    const { apiUrl, token } = yield select(getCredentials);
+    const response = yield call(axios, {
         method: 'PATCH',
         url: `${apiUrl}/api/bookset/${bookId}/`,
         data: {
@@ -44,18 +43,16 @@ export function* updateReadState({bookId, readState}) {
         },
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`,
+            Authorization: `Token ${token}`,
         },
     });
-    let {id, read} = response.data;
+    const { id, read } = response.data;
     yield put(readState.success(id, read));
 }
 
-export function* updatePosition({id, from, to}) {
-    let {apiUrl, token} = yield select(getCredentials);
-    let stackLength = yield select(
-        store => store.stackDetailStore.getIn(['stackDetail', 'books']).size
-    );
+export function* updatePosition({ id, from, to }) {
+    const { apiUrl, token } = yield select(getCredentials);
+    const stackLength = yield select(store => store.stackDetailStore.getIn(['stackDetail', 'books']).size);
     if (to > 0 && to <= stackLength) {
         yield call(axios, {
             method: 'PATCH',
@@ -65,103 +62,97 @@ export function* updatePosition({id, from, to}) {
             },
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`,
+                Authorization: `Token ${token}`,
             },
-        })
+        });
     }
     yield put(position.success(id, from, to));
 }
 
-export function* deleteBook({id}) {
-    let {apiUrl, token} = yield select(getCredentials);
+export function* deleteBook({ id }) {
+    const { apiUrl, token } = yield select(getCredentials);
     yield call(axios, {
         method: 'DELETE',
         url: `${apiUrl}/api/bookset/${id}/`,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`,
+            Authorization: `Token ${token}`,
         },
     });
     yield put(removeBook.success(id));
-
 }
 
-export function* addNewCategory({bookstackId, category}){
+export function* addNewCategory({ bookstackId, category }) {
     yield put(categoryActions.addCategory.request(category));
     let now = yield call(getCurrentTime);
-    let waitUntil = now + 2500;
+    const waitUntil = now + 2500;
     while (true) {
-        debugger
-        let now = yield call(getCurrentTime);
-        let {action, timeout} = yield race({
+        now = yield call(getCurrentTime);
+        const { action, timeout } = yield race({
             action: yield take(ADD.SUCCESS),
-            timeout: yield delay(waitUntil - now)
+            timeout: yield delay(waitUntil - now),
         });
-        debugger
-        console.log('CATEGORY', category)
-        console.log('ADDED', action)
+
         if (timeout) {
             break;
         } else if (action.category.category === category) {
-            debugger
             yield put(stackDetailActions.addCategory.request(bookstackId, action.category.id));
             break;
         }
-
     }
 }
 
-export function* addCategory({bookstackId, categoryId}) {
-    let {apiUrl, token} = yield select(getCredentials);
-    let response = yield call(axios, {
+export function* addCategory({ bookstackId, categoryId }) {
+    const { apiUrl, token } = yield select(getCredentials);
+    const response = yield call(axios, {
         method: 'POST',
         url: `${apiUrl}/api/booksetcategory/`,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`,
+            Authorization: `Token ${token}`,
         },
         data: {
             bookstack: bookstackId,
             category: categoryId,
-        }
+        },
     });
-    debugger
+
     yield put(stackDetailActions.addCategory.success(response.data.bookstack, response.data));
 }
 
-export function* deleteCategory({bookstackId, categoryId}) {
-    let {apiUrl, token} = yield select(getCredentials);
+export function* deleteCategory({ bookstackId, categoryId }) {
+    const { apiUrl, token } = yield select(getCredentials);
     yield call(axios, {
         method: 'DELETE',
         url: `${apiUrl}/api/booksetcategory/${categoryId}/`,
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`,
+            Authorization: `Token ${token}`,
         },
     });
     yield put(removeCategory.success(bookstackId, categoryId));
 }
 
-export function* addBook({bookId, stackId}) {
-    let {apiUrl, token} = yield select(getCredentials);
+export function* addBook({ bookId, stackId }) {
+    const { apiUrl, token } = yield select(getCredentials);
     yield call(axios, {
         url: `${apiUrl}/api/bookset/`,
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`,
+            Authorization: `Token ${token}`,
         },
         data: {
             categories: [],
             bookId,
-            stackId
-        }
+            stackId,
+        },
     });
     // TODO: FIIIIIXXXX!
     // yield put(addBookActions.addNewBook(bookId, stackId)); WTF?
     // TODO: FIX
-    //yield put(addBookActions.clearSelected());
-    yield put(stackDetail.editing())
+    // yield put(addBookActions.clearSelected());
+    yield put(stackDetail.editing());
 }
 
 
@@ -182,7 +173,7 @@ function* watchDeleteBook() {
 }
 
 function* watchAddCategory() {
-    yield takeEvery(ADD_CATEGORY.REQUEST, addCategory)
+    yield takeEvery(ADD_CATEGORY.REQUEST, addCategory);
 }
 
 function* watchAddNewCategory() {
@@ -194,7 +185,7 @@ function* watchDeleteCategory() {
 }
 
 function* watchAddBook() {
-    yield takeEvery(ADD_BOOK.REQUEST, addBook)
+    yield takeEvery(ADD_BOOK.REQUEST, addBook);
 }
 
 export default [
@@ -205,5 +196,5 @@ export default [
     watchAddCategory,
     watchAddNewCategory,
     watchDeleteCategory,
-    watchAddBook
+    watchAddBook,
 ];

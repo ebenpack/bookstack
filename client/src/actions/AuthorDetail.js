@@ -1,8 +1,8 @@
-import {makeAction, createRequestTypes} from './utils';
+import { makeAction, createRequestTypes } from './utils';
 
 export const AUTHOR = createRequestTypes('AUTHOR', 'AUTHOR');
 
 export const author = {
-    request: id => makeAction(AUTHOR.REQUEST, {id}),
-    success: author => makeAction(AUTHOR.SUCCESS, {author}),
+    request: id => makeAction(AUTHOR.REQUEST, { id }),
+    success: auth => makeAction(AUTHOR.SUCCESS, { author: auth }),
 };

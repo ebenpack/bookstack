@@ -1,22 +1,26 @@
 import React from 'react';
+import propTypes from 'prop-types';
+import immutablePropTypes from 'react-immutable-proptypes';
 
-//import Autocomplete from './Autocomplete.jsx';
-import Book from './Book.jsx';
-import AddCategory from './AddCategory.jsx';
+import Book from './Book';
+import AddCategory from './AddCategory';
 
 class BookStack extends React.Component {
+    static handleDragOver(e) {
+        e.preventDefault();
+    }
+
+    static handleDragEnd(e) {
+        e.preventDefault();
+    }
+
     constructor() {
         super();
         this.state = {
             editing: false,
             removeConfirm: false,
-            category: "",
             addingCategory: false,
         };
-    }
-
-    toggleRead(e) {
-        this.props.updateReadState(this.props.bookStack.get('id'), e.target.checked);
     }
 
     setEditingStateOn() {
@@ -31,6 +35,10 @@ class BookStack extends React.Component {
         });
     }
 
+    toggleRead(e) {
+        this.props.updateReadState(this.props.bookStack.get('id'), e.target.checked);
+    }
+
     updatePosition(id, fromPosition, toPosition) {
         if (fromPosition !== toPosition) {
             this.props.updatePosition(id, fromPosition, toPosition);
@@ -38,25 +46,25 @@ class BookStack extends React.Component {
     }
 
     moveUp() {
-        let fromPosition = this.props.bookStack.get('position');
-        let toPosition = fromPosition - 1;
-        let id = this.props.bookStack.get('id');
+        const fromPosition = this.props.bookStack.get('position');
+        const toPosition = fromPosition - 1;
+        const id = this.props.bookStack.get('id');
         if (toPosition > 0) {
             this.updatePosition(id, fromPosition, toPosition);
         }
     }
 
     moveDown() {
-        let fromPosition = this.props.bookStack.get('position');
-        let toPosition = fromPosition + 1;
-        let id = this.props.bookStack.get('id');
+        const fromPosition = this.props.bookStack.get('position');
+        const toPosition = fromPosition + 1;
+        const id = this.props.bookStack.get('id');
         this.updatePosition(id, fromPosition, toPosition);
     }
 
     handleBlur(e) {
-        let toPosition = parseInt(e.target.value, 10);
-        let fromPosition = this.props.bookStack.get('position');
-        let id = this.props.bookStack.get('id');
+        const toPosition = parseInt(e.target.value, 10);
+        const fromPosition = this.props.bookStack.get('position');
+        const id = this.props.bookStack.get('id');
         this.setEditingStateOff();
         this.updatePosition(id, fromPosition, toPosition);
     }
@@ -64,23 +72,13 @@ class BookStack extends React.Component {
     handleDragStart(e) {
         e.dataTransfer.setData('text', JSON.stringify({
             id: this.props.bookStack.get('id'),
-            position: this.props.bookStack.get('position')
+            position: this.props.bookStack.get('position'),
         }));
     }
 
-    handleDragOver(e) {
-        e.preventDefault();
-    }
-
-    handleDragEnd(e) {
-        e.preventDefault();
-    }
-
     handleDrop(e) {
-        let dropped = JSON.parse(e.dataTransfer.getData('text'));
-        let id = dropped.id;
-        let fromPosition = dropped.position;
-        let toPosition = this.props.bookStack.get('position');
+        const { id, position: fromPosition } = JSON.parse(e.dataTransfer.getData('text'));
+        const toPosition = this.props.bookStack.get('position');
         this.updatePosition(id, fromPosition, toPosition);
     }
 
@@ -98,7 +96,7 @@ class BookStack extends React.Component {
     }
 
     handleConfirm() {
-        let id = this.props.bookStack.get('id');
+        const id = this.props.bookStack.get('id');
         this.props.deleteBook(id);
         this.setState({
             removeConfirm: false,
@@ -112,45 +110,39 @@ class BookStack extends React.Component {
     }
 
     removeCategory(categoryId) {
-        let bookstackId = this.props.bookStack.get('id');
+        const bookstackId = this.props.bookStack.get('id');
         this.props.removeCategory(bookstackId, categoryId);
     }
 
     render() {
-        let staticPath = this.props.staticPath;
+        const { staticPath } = this.props;
         let classString = 'bookstack row';
         if (this.props.bookStack.get('read')) {
             classString += ' isRead';
         }
-        let categories = (
-            this.props.bookStack.has('categories') &&
-            this.props.bookStack.get('categories').length > 0
-        );
-        let position = (
+        const position = (
             this.state.editing ?
                 (
                     <div>
                         <input
                             autoFocus
-                            ref={function (input) {
-                                if (input !== null) {
-                                    input.select();
-                                }
-                            }}
+                            ref={input => (input !== null) && input.select()}
                             className="position"
                             onBlur={e => this.handleBlur(e)}
                             defaultValue={this.props.bookStack.get('position')}
-                            onMouseOut={e => this.setEditingStateOff(e)}/>
+                            onMouseOut={e => this.setEditingStateOff(e)}
+                        />
                     </div>
                 ) :
                 (
                     <div
-                        onClick={e => this.setEditingStateOn(e)}>
+                        onClick={e => this.setEditingStateOn(e)}
+                    >
                         {this.props.bookStack.get('position')}
                     </div>
                 )
         );
-        let remove = (
+        const remove = (
             this.state.removeConfirm ?
                 (
                     <div className="remove">
@@ -164,7 +156,7 @@ class BookStack extends React.Component {
                     </div>
                 )
         );
-        let addCategory = (
+        const addCategory = (
             this.state.addingCategory ?
                 (
                     <div>
@@ -187,7 +179,8 @@ class BookStack extends React.Component {
                 onDragStart={e => this.handleDragStart(e)}
                 onDragEnd={e => this.handleDragEnd(e)}
                 onDrop={e => this.handleDrop(e)}
-                onDragOver={e => this.handleDragOver(e)}>
+                onDragOver={e => this.handleDragOver(e)}
+            >
                 <div className="position one column">
                     {position}
                 </div>
@@ -195,19 +188,20 @@ class BookStack extends React.Component {
                     <div className="moveArrow" onClick={e => this.moveUp(e)}>↑</div>
                     <div className="moveArrow" onClick={e => this.moveDown(e)}>↓</div>
                 </div>
-                <Book book={this.props.bookStack.get('book')} staticPath={staticPath}/>
+                <Book book={this.props.bookStack.get('book')} staticPath={staticPath} />
                 <div className="info seven columns">
                     <div className="categories">
                         <h5>Categories</h5>
                         <ul>
-                            {this.props.bookStack.get('categories').map((category) =>
-                                <li key={category.get('id')}>
-                                    {category.getIn(['detail', 'category'])} -
-                                    <span onClick={e => this.removeCategory(category.get('id'))}>
+                            {this.props.bookStack.get('categories').map(category =>
+                                (
+                                    <li key={category.get('id')}>
+                                        {category.getIn(['detail', 'category'])} -
+                                        <span onClick={() => this.removeCategory(category.get('id'))}>
                                             Remove
                                         </span>
-                                </li>
-                            )}
+                                    </li>
+                                ))}
                         </ul>
                         {addCategory}
                     </div>
@@ -225,5 +219,14 @@ class BookStack extends React.Component {
         );
     }
 }
+
+BookStack.propTypes = {
+    updateReadState: propTypes.func.isRequired,
+    bookStack: immutablePropTypes.map.isRequired,
+    updatePosition: propTypes.func.isRequired,
+    deleteBook: propTypes.func.isRequired,
+    removeCategory: propTypes.func.isRequired,
+    staticPath: propTypes.string.isRequired,
+};
 
 export default BookStack;

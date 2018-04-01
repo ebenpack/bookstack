@@ -1,12 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
 
-import {login} from '../actions/App.js';
-
-import {connect} from 'react-redux';
+import { login } from '../actions/App';
 
 function mapDispatchToProps(dispatch) {
     return {
-        login: (user, pass, save) => dispatch(login(user, pass, save))
+        login: (user, pass, save) => dispatch(login(user, pass, save)),
     };
 }
 
@@ -22,19 +22,19 @@ class Login extends React.Component {
 
     handleUserChange(e) {
         this.setState({
-            user: e.target.value
+            user: e.target.value,
         });
     }
 
     handlePassChange(e) {
         this.setState({
-            pass: e.target.value
+            pass: e.target.value,
         });
     }
 
     handleSaveChange(e) {
         this.setState({
-            save: e.target.checked
+            save: e.target.checked,
         });
     }
 
@@ -46,14 +46,17 @@ class Login extends React.Component {
         return (
             <div>
                 <div>Username:
-                    <input onChange={e => this.handleUserChange(e)} type='text' value={this.state.user}/>
+                    <input onChange={e => this.handleUserChange(e)} type="text" value={this.state.user} />
                 </div>
                 <div>Password:
-                    <input onChange={e => this.handlePassChange(e)} type='password' value={this.state.pass}/>
+                    <input onChange={e => this.handlePassChange(e)} type="password" value={this.state.pass} />
                 </div>
                 <div>Stay logged in:
-                    <input onChange={e => this.handleSaveChange(e)} type='checkbox'
-                           checked={this.state.save ? 'checked' : ''}/>
+                    <input
+                        onChange={e => this.handleSaveChange(e)}
+                        type="checkbox"
+                        checked={this.state.save ? 'checked' : ''}
+                    />
                 </div>
                 <button onClick={e => this.handleSubmit(e)}>Login</button>
             </div>
@@ -61,7 +64,11 @@ class Login extends React.Component {
     }
 }
 
+Login.propTypes = {
+    login: propTypes.func.isRequired,
+};
+
 export default connect(
     undefined,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(Login);

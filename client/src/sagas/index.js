@@ -1,4 +1,4 @@
-import {fork} from 'redux-saga/effects';
+import { fork } from 'redux-saga/effects';
 import AddBookSaga from './AddBook';
 import AddCategorySaga from './AddCategory';
 import AppSaga from './App';

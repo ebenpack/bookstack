@@ -1,11 +1,13 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
+import immutablePropTypes from 'react-immutable-proptypes';
 
-import Book from '../components/Book.jsx';
-import Autocomplete from '../components/Autocomplete.jsx';
+import Book from '../components/Book';
+import Autocomplete from '../components/Autocomplete';
 
-import {searchBooks, getBook, selectBook} from '../actions/AddBook';
-import {addBook} from '../actions/StackDetail';
+import * as addBookActions from '../actions/AddBook';
+import * as stackDetailActions from '../actions/StackDetail';
 
 
 function mapStateToProps(state) {
@@ -19,35 +21,34 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        addBook: (bookId, stackId) => dispatch(addBook.request(bookId, stackId)),
-        searchBooks: query => dispatch(searchBooks.request(query)),
-        getBook: bookId => dispatch(getBook.request(bookId)),
-        clearSelected: () => dispatch(selectBook.clear())
+        addBook: (bookId, stackId) => dispatch(stackDetailActions.addBook.request(bookId, stackId)),
+        searchBooks: query => dispatch(addBookActions.searchBooks.request(query)),
+        getBook: bookId => dispatch(addBookActions.getBook.request(bookId)),
+        clearSelected: () => dispatch(addBookActions.selectBook.clear()),
     };
 }
 
-const AddBook = ({booksAutocomplete, getBook, clearSelected, selectedBook, addBook, searchBooks, title, stackId}) => {
-    let autocompleteResults = "";
+const AddBook = ({
+    booksAutocomplete, getBook, clearSelected, selectedBook, addBook, searchBooks, title, stackId,
+}) => {
+    let autocompleteResults = '';
     if (booksAutocomplete.size > 0) {
         autocompleteResults = (
             <Autocomplete
                 suggestions={booksAutocomplete}
-                displayProperty={'title'}
+                displayProperty="title"
                 onClick={bookId => getBook(bookId)}
             />
         );
     }
-    let bookId = selectedBook.get('id');
+    const bookId = selectedBook.get('id');
     if (bookId && bookId !== '') {
         autocompleteResults = (
             <div className="select">
                 <div>
                     <a title="Close" className="close" onClick={clearSelected}>X</a>
-                    <Book className="" book={selectedBook}/>
-                    <button onClick={e => addBook(
-                        bookId,
-                        stackId
-                    )}>
+                    <Book className="" book={selectedBook} />
+                    <button onClick={() => addBook(bookId, stackId)}>
                         Add Book
                     </button>
                 </div>
@@ -56,9 +57,10 @@ const AddBook = ({booksAutocomplete, getBook, clearSelected, selectedBook, addBo
     }
     return (
         <div>
-            <input type="text"
-                   value={title}
-                   onChange={e => searchBooks(e.target.value)}
+            <input
+                type="text"
+                value={title}
+                onChange={e => searchBooks(e.target.value)}
             />
             {autocompleteResults}
             {selectedBook}
@@ -66,7 +68,18 @@ const AddBook = ({booksAutocomplete, getBook, clearSelected, selectedBook, addBo
     );
 };
 
+AddBook.propTypes = {
+    booksAutocomplete: immutablePropTypes.list.isRequired,
+    getBook: propTypes.func.isRequired,
+    clearSelected: propTypes.func.isRequired,
+    selectedBook: propTypes.map.isRequired,
+    addBook: propTypes.func.isRequired,
+    searchBooks: propTypes.func.isRequired,
+    title: propTypes.string.isRequired,
+    stackId: propTypes.number.isRequired,
+};
+
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(AddBook);

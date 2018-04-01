@@ -1,23 +1,26 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
+import immutablePropTypes from 'react-immutable-proptypes';
 
-import {stack} from '../actions/StackList';
 
-import Stack from './Stack.jsx';
+import { stack } from '../actions/StackList';
+
+import Stack from './Stack';
 
 
 function mapStateToProps(state) {
     return {
         stackList: state.stackListStore,
-        apiUrl: state.appStore.get('apiUrl')
-    }
+        apiUrl: state.appStore.get('apiUrl'),
+    };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         loadStackList: () => dispatch(stack.request()),
         unloadStackList: () => dispatch(stack.clear()),
-    }
+    };
 }
 
 class StackList extends React.Component {
@@ -30,17 +33,33 @@ class StackList extends React.Component {
     }
 
     render() {
-        const staticPath = this.props.staticPath;
+        const { staticPath, stackList } = this.props;
         return (
             <div className="stacklist">
-                {this.props.stackList.map((stack, i) =>
-                    <Stack key={i} stack={stack} staticPath={staticPath}/>
-                )}
+                {stackList.map(stck => (
+                    <Stack
+                        key={stck.get('id')}
+                        stack={stck}
+                        staticPath={staticPath}
+                    />
+                ))}
             </div>
         );
     }
 }
+
+StackList.defaultProps = {
+    staticPath: '',
+};
+
+StackList.propTypes = {
+    loadStackList: propTypes.func.isRequired,
+    unloadStackList: propTypes.func.isRequired,
+    staticPath: propTypes.string,
+    stackList: immutablePropTypes.list.isRequired,
+};
+
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(StackList);

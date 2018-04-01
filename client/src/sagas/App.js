@@ -1,33 +1,33 @@
 import axios from 'axios';
 
-import {put, call, select, takeEvery} from 'redux-saga/effects';
+import { put, call, select, takeEvery } from 'redux-saga/effects';
 
-import {getCredentials} from './utils';
+import { getCredentials } from './utils';
 
-import * as appActions from '../actions/App'
+import * as appActions from '../actions/App';
 
 function* getStoredToken() {
     // These thunks are required to prevent 'illegal invocation' error
-    let token = yield call(() => localStorage.getItem('token'));
+    const token = yield call(() => window.localStorage.getItem('token'));
     return token;
 }
 
 function* storeToken(token) {
-    yield call(() => localStorage.setItem('token', token));
+    yield call(() => window.localStorage.setItem('token', token));
 }
 
-function* removeToken(token) {
-    yield call(() => localStorage.removeItem('token'));
+function* removeToken() {
+    yield call(() => window.localStorage.removeItem('token'));
 }
 
 export function* initialize() {
-    let token = yield call(getStoredToken);
+    const token = yield call(getStoredToken);
     yield put(appActions.setToken(token));
 }
 
-export function* login({user, pass, save}) {
-    let {apiUrl} = yield select(getCredentials);
-    let response = yield call(axios, {
+export function* login({ user, pass, save }) {
+    const { apiUrl } = yield select(getCredentials);
+    const response = yield call(axios, {
         method: 'POST',
         url: `${apiUrl}/api-token-auth/`,
         data: {
@@ -36,10 +36,9 @@ export function* login({user, pass, save}) {
         },
         headers: {
             'Content-Type': 'application/json',
-        }
+        },
     });
-    let login = response.data;
-    let token = login.token;
+    const { token } = response.data;
     if (save) {
         yield call(storeToken, token);
     }
@@ -52,15 +51,15 @@ export function* logoff() {
 }
 
 function* watchInitialize() {
-    yield takeEvery(appActions.APP_INITIALIZE, initialize)
+    yield takeEvery(appActions.APP_INITIALIZE, initialize);
 }
 
 function* watchLogin() {
-    yield takeEvery(appActions.APP_LOGIN, login)
+    yield takeEvery(appActions.APP_LOGIN, login);
 }
 
 function* watchLogoff() {
-    yield takeEvery(appActions.APP_LOGOFF, logoff)
+    yield takeEvery(appActions.APP_LOGOFF, logoff);
 }
 
 export default [

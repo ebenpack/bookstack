@@ -14,5 +14,5 @@ export const createRequestTypes = (namespace, action, types = [REQUEST, SUCCESS,
 
 export const makeAction = (type, args) => ({
     type,
-    ...args
+    ...args,
 });

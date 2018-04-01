@@ -1,91 +1,69 @@
-import {render} from 'react-dom';
+import { render } from 'react-dom';
 import React from 'react';
-import {createStore, applyMiddleware, compose} from 'redux';
-import {Provider} from 'react-redux';
-import {Router, Route, hashHistory} from 'react-router';
-import {syncHistoryWithStore} from 'react-router-redux'
+import { createStore, applyMiddleware, compose } from 'redux';
+import { Provider } from 'react-redux';
+import propTypes from 'prop-types';
+import { Router, Route, hashHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import Immutable from 'immutable';
 
 import '../sass/react.scss';
 
-import App from './components/App.jsx';
-import StackList from './components/StackList.jsx';
-import StackDetail from './components/StackDetail.jsx';
-import AuthorDetail from './components/AuthorDetail.jsx';
-import PublisherDetail from './components/PublisherDetail.jsx';
-import BookSearch from './components/BookSearch.jsx';
-import Login from './components/Login.jsx';
+import App from './components/App';
+import StackList from './components/StackList';
+import StackDetail from './components/StackDetail';
+import AuthorDetail from './components/AuthorDetail';
+import PublisherDetail from './components/PublisherDetail';
+import BookSearch from './components/BookSearch';
+import Login from './components/Login';
 
 import reducers from './reducers/index';
 import sagas from './sagas/index';
 
+// eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const sagaMiddleware = createSagaMiddleware();
 
 function initializeStore(apiUrl) {
-    let store = createStore(
+    const store = createStore(
         reducers,
         {
-            appStore: Immutable.Map({apiUrl: apiUrl, token: ''})
+            appStore: Immutable.Map({ apiUrl, token: '' }),
         },
-        composeEnhancers(
-            applyMiddleware(sagaMiddleware)
-        ),
+        composeEnhancers(applyMiddleware(sagaMiddleware)),
     );
-    let history = syncHistoryWithStore(hashHistory, store);
+    const history = syncHistoryWithStore(hashHistory, store);
     sagaMiddleware.run(sagas);
     return {
         store,
-        history
-    }
+        history,
+    };
 }
 
-const AppRouter = (props) => {
-    let {store, history} = initializeStore(props.apiUrl);
+const AppRouter = ({ apiUrl }) => {
+    const { store, history } = initializeStore(apiUrl);
     return (
         <Provider store={store}>
             <Router history={history}>
-                <Route
-                    path="/"
-                    component={App}
-                >
-                    <Route
-                        path="list"
-                        component={StackList}
-                    />
-                    <Route
-                        path="list/:id"
-                        component={StackDetail}
-                    />
-                    <Route
-                        path="login"
-                        component={Login}
-                    />
-                    <Route
-                        path="author/:id"
-                        component={AuthorDetail}
-                    />
-                    <Route
-                        path="publisher/:id"
-                        component={PublisherDetail}
-                    />
-                    <Route
-                        path="booksearch"
-                        component={BookSearch}
-                    />
+                <Route path="/" component={App}>
+                    <Route path="list" component={StackList} />
+                    <Route path="list/:id" component={StackDetail} />
+                    <Route path="login" component={Login} />
+                    <Route path="author/:id" component={AuthorDetail} />
+                    <Route path="publisher/:id" component={PublisherDetail} />
+                    <Route path="booksearch" component={BookSearch} />
                 </Route>
             </Router>
         </Provider>
-    )
-};
-
-const start = function (el, apiUrl) {
-    render(
-        <AppRouter apiUrl={apiUrl}/>,
-        document.querySelector(el)
     );
 };
 
-export {start};
+AppRouter.propTypes = {
+    apiUrl: propTypes.string.isRequired,
+};
+
+const start = (el, apiUrl) => render(<AppRouter apiUrl={apiUrl} />, document.querySelector(el));
+
+export default start;

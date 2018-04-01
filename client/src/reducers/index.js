@@ -1,5 +1,5 @@
-import {combineReducers} from 'redux';
-import {routerReducer} from 'react-router-redux'
+import { combineReducers } from 'redux';
+import { routerReducer } from 'react-router-redux';
 
 import publisherDetailStore from './PublisherDetail';
 import bookSearchStore from './BookSearch';
@@ -19,5 +19,5 @@ export default combineReducers({
     bookSearchStore,
     addBookStore,
     addCategoryStore,
-    routing: routerReducer
+    routing: routerReducer,
 });

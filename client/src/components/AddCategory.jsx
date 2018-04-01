@@ -1,12 +1,12 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
+import propTypes from 'prop-types';
+import immutablePropTypes from 'react-immutable-proptypes';
 
-import Autocomplete from './Autocomplete.jsx';
+import Autocomplete from './Autocomplete';
 
-import {
-    categorySearch
-} from '../actions/AddCategory';
-import {addCategory, addNewCategory} from '../actions/StackDetail';
+import { categorySearch } from '../actions/AddCategory';
+import { addCategory, addNewCategory } from '../actions/StackDetail';
 
 function mapStateToProps(state) {
     return {
@@ -23,8 +23,8 @@ function mapDispatchToProps(dispatch) {
         setAutoSuggestCategories: query =>
             dispatch(categorySearch.request(query)),
         clearAutoSuggestCategories: () =>
-            dispatch(categorySearch.clear())
-    }
+            dispatch(categorySearch.clear()),
+    };
 }
 
 // TODO: Make pure, stateless render function?
@@ -32,7 +32,6 @@ class AddCategory extends React.Component {
     constructor() {
         super();
         this.state = {
-            addingCategory: false,
             category: '',
         };
     }
@@ -42,21 +41,21 @@ class AddCategory extends React.Component {
     }
 
     handleChange(e) {
-        let category = e.target.value;
+        const category = e.target.value;
         if (category) {
             this.props.setAutoSuggestCategories(category);
         } else {
             this.props.clearAutoSuggestCategories();
         }
         this.setState({
-            category: category,
+            category,
         });
     }
 
     handleAddCategoryKeyUp(e) {
         if (e.key === 'Enter') {
-            let bookstackId = this.props.id;
-            let category = this.state.category;
+            const bookstackId = this.props.id;
+            const { category } = this.state;
             this.props.addNewCategory(bookstackId, category);
             this.clearAutocomplete();
         }
@@ -64,14 +63,13 @@ class AddCategory extends React.Component {
 
     clearAutocomplete() {
         this.setState({
-            addingCategory: false,
-            category: "",
+            category: '',
         });
         this.props.clearAutoSuggestCategories();
     }
 
     addCategory(categoryId) {
-        let bookstackId = this.props.id;
+        const bookstackId = this.props.id;
         this.props.addCategory(bookstackId, categoryId);
     }
 
@@ -81,7 +79,7 @@ class AddCategory extends React.Component {
             autoSuggestCategories = (
                 <Autocomplete
                     suggestions={this.props.autoSuggestCategories}
-                    displayProperty={'category'}
+                    displayProperty="category"
                     onClick={e => this.addCategory(e)}
                 />
             );
@@ -93,14 +91,24 @@ class AddCategory extends React.Component {
                     value={this.state.category}
                     onChange={e => this.handleChange(e)}
                     onKeyUp={e => this.handleAddCategoryKeyUp(e)}
-                /></label>
+                />
+                </label>
                 {autoSuggestCategories}
             </div>
         );
     }
 }
 
+AddCategory.propTypes = {
+    addCategory: propTypes.func.isRequired,
+    clearAutoSuggestCategories: propTypes.func.isRequired,
+    setAutoSuggestCategories: propTypes.func.isRequired,
+    id: propTypes.number.isRequired,
+    addNewCategory: propTypes.func.isRequired,
+    autoSuggestCategories: immutablePropTypes.list.isRequired,
+};
+
 export default connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
 )(AddCategory);
