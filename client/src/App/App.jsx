@@ -6,20 +6,16 @@ import propTypes from 'prop-types';
 import { initialize, logoff } from './appModule';
 import { bookSearch } from '../BookSearch/bookSearchModule';
 
-function mapDispatchToProps(dispatch) {
-    return {
-        initialize: () => dispatch(initialize()),
-        logout: () => dispatch(logoff()),
-        bookSearch: query => dispatch(bookSearch(query)),
-    };
-}
+const mapStateToProps = state => ({
+    searchFocus: state.appStore.get('searchFocus'),
+    token: state.appStore.get('token'),
+});
 
-function mapStateToProps(state) {
-    return {
-        searchFocus: state.appStore.get('searchFocus'),
-        token: state.appStore.get('token'),
-    };
-}
+const mapDispatchToProps = {
+    initialize,
+    logoff,
+    bookSearch,
+};
 
 class App extends React.Component {
     componentDidMount() {
@@ -29,7 +25,7 @@ class App extends React.Component {
     render() {
         const login = (
             this.props.token ?
-                <li><a onClick={this.props.logout} href="#">Logoff</a></li> :
+                <li><a onClick={this.props.logoff} href="#">Logoff</a></li> :
                 <li><Link to="/login">Login</Link></li>
         );
         return (
@@ -48,7 +44,7 @@ class App extends React.Component {
 App.propTypes = {
     initialize: propTypes.func.isRequired,
     token: propTypes.string.isRequired,
-    logout: propTypes.func.isRequired,
+    logoff: propTypes.func.isRequired,
     children: propTypes.node.isRequired,
 };
 

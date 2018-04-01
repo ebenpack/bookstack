@@ -2,17 +2,17 @@ import React from 'react';
 import { Link } from 'react-router';
 import immutablePropTypes from 'react-immutable-proptypes';
 
-const Author = (props) => {
-    const id = props.author.get('id');
-    const name = props.author.get('name');
-    const author = id ? (
-        <Link to={`/author/${id}`}>
-            {name}
-        </Link>) :
-        name;
+const Author = ({ author }) => {
+    const id = author.get('id');
+    const name = author.get('name');
     return (
         <li className="author">
-            {author}
+            {id ? (
+                <Link to={`/author/${id}`}>
+                    {name}
+                </Link>) :
+                name
+            }
         </li>
     );
 };

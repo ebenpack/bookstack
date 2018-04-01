@@ -8,18 +8,14 @@ import Book from '../Book/Book';
 import { bookSearch as bookSearchActions } from '../BookSearch/bookSearchModule';
 import { addBook } from '../AddBook/addBookModule';
 
-function mapDispatchToProps(dispatch) {
-    return {
-        bookSearch: query => dispatch(bookSearchActions.request(query)),
-        addBook: book => dispatch(addBook.request(book)),
-    };
-}
+const mapStateToProps = state => ({
+    books: state.bookSearchStore.get('books'),
+});
 
-function mapStateToProps(state) {
-    return {
-        books: state.bookSearchStore.get('books'),
-    };
-}
+const mapDispatchToProps = {
+    bookSearch: bookSearchActions.request,
+    addBook: addBook.request,
+};
 
 class BookSearch extends React.Component {
     constructor() {

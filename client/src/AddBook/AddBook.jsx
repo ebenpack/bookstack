@@ -10,27 +10,30 @@ import * as addBookActions from './addBookModule';
 import * as stackDetailActions from '../StackDetail/stackDetailModule';
 
 
-function mapStateToProps(state) {
-    return {
-        state: state.addBookStore.get('state'),
-        booksAutocomplete: state.addBookStore.get('booksAutocomplete'),
-        selectedBook: state.addBookStore.get('selectedBook'),
+const mapStateToProps = state => ({
+    state: state.addBookStore.get('state'),
+    booksAutocomplete: state.addBookStore.get('booksAutocomplete'),
+    selectedBook: state.addBookStore.get('selectedBook'),
+});
 
-    };
-}
+const mapDispatchToProps = {
+    addBook: stackDetailActions.addBook.request,
+    searchBooks: addBookActions.searchBooks.request,
+    getBook: addBookActions.getBook.request,
+    clearSelected: addBookActions.selectBook.clear,
+};
 
-function mapDispatchToProps(dispatch) {
-    return {
-        addBook: (bookId, stackId) => dispatch(stackDetailActions.addBook.request(bookId, stackId)),
-        searchBooks: query => dispatch(addBookActions.searchBooks.request(query)),
-        getBook: bookId => dispatch(addBookActions.getBook.request(bookId)),
-        clearSelected: () => dispatch(addBookActions.selectBook.clear()),
-    };
-}
-
-const AddBook = ({
-    booksAutocomplete, getBook, clearSelected, selectedBook, addBook, searchBooks, title, stackId,
-}) => {
+const AddBook = (props) => {
+    const {
+        booksAutocomplete,
+        getBook,
+        clearSelected,
+        selectedBook,
+        addBook,
+        searchBooks,
+        title,
+        stackId,
+    } = props;
     let autocompleteResults = '';
     if (booksAutocomplete.size > 0) {
         autocompleteResults = (

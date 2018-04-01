@@ -4,11 +4,9 @@ import propTypes from 'prop-types';
 
 import { login } from '../App/appModule';
 
-function mapDispatchToProps(dispatch) {
-    return {
-        login: (user, pass, save) => dispatch(login(user, pass, save)),
-    };
-}
+const mapDispatchToProps = {
+    login,
+};
 
 class Login extends React.Component {
     constructor() {

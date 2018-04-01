@@ -6,19 +6,15 @@ import immutablePropTypes from 'react-immutable-proptypes';
 import Book from '../Book/Book';
 import { publisher as publisherActions } from '../PublisherDetail/publisherDetailModule';
 
-function mapDispatchToProps(dispatch) {
-    return {
-        loadPublisher: id => dispatch(publisherActions.request(id)),
-    };
-}
+const mapStateToProps = state => ({
+    name: state.publisherDetailStore.get('name'),
+    id: state.publisherDetailStore.get('id'),
+    books: state.publisherDetailStore.get('books'),
+});
 
-function mapStateToProps(state) {
-    return {
-        name: state.publisherDetailStore.get('name'),
-        id: state.publisherDetailStore.get('id'),
-        books: state.publisherDetailStore.get('books'),
-    };
-}
+const mapDispatchToProps = {
+    loadPublisher: publisherActions.request,
+};
 
 class PublisherDetail extends React.Component {
     componentDidMount() {

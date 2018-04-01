@@ -6,20 +6,15 @@ import immutablePropTypes from 'react-immutable-proptypes';
 import Book from '../Book/Book';
 import { author } from './authorDetailModule';
 
+const mapStateToProps = state => ({
+    apiUrl: state.appStore.get('apiUrl'),
+    name: state.authorDetailStore.get('name'),
+    books: state.authorDetailStore.get('books'),
+});
 
-function mapDispatchToProps(dispatch) {
-    return {
-        loadAuthor: id => dispatch(author.request(id)),
-    };
-}
-
-function mapStateToProps(state) {
-    return {
-        apiUrl: state.appStore.get('apiUrl'),
-        name: state.authorDetailStore.get('name'),
-        books: state.authorDetailStore.get('books'),
-    };
-}
+const mapDispatchToProps = {
+    loadAuthor: author.request,
+};
 
 // TODO: Make pure?
 class AuthorDetail extends React.Component {

@@ -8,7 +8,6 @@ import { stack } from './stackListModule';
 
 import Stack from '../Stack/Stack';
 
-
 const mapStateToProps = state => ({
     stackList: state.stackListStore,
     apiUrl: state.appStore.get('apiUrl'),

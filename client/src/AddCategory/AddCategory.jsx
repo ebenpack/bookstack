@@ -8,24 +8,16 @@ import Autocomplete from '../Autocomplete/Autocomplete';
 import { categorySearch } from './addCategoryModule';
 import { addCategory, addNewCategory } from '../StackDetail/stackDetailModule';
 
-function mapStateToProps(state) {
-    return {
-        autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories'),
-    };
-}
+const mapStateToProps = state => ({
+    autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories'),
+});
 
-function mapDispatchToProps(dispatch) {
-    return {
-        addCategory: (bookstackId, categoryId) =>
-            dispatch(addCategory.request(bookstackId, categoryId)),
-        addNewCategory: (bookstackId, category) =>
-            dispatch(addNewCategory.request(bookstackId, category)),
-        setAutoSuggestCategories: query =>
-            dispatch(categorySearch.request(query)),
-        clearAutoSuggestCategories: () =>
-            dispatch(categorySearch.clear()),
-    };
-}
+const mapDispatchToProps = {
+    addCategory: addCategory.request,
+    addNewCategory: addNewCategory.request,
+    setAutoSuggestCategories: categorySearch.request,
+    clearAutoSuggestCategories: categorySearch.clear,
+};
 
 // TODO: Make pure, stateless render function?
 class AddCategory extends React.Component {

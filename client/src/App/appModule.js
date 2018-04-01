@@ -5,15 +5,10 @@ import Immutable from 'immutable';
 import { makeAction } from '../utils/moduleUtils';
 
 export const APP_INITIALIZE = 'APP_INITIALIZE'; // request
-
 export const APP_SET_API_URL = 'APP_SET_API_URL'; // set state
-
 export const APP_SET_TOKEN = 'APP_SET_TOKEN'; // set state
-
 export const APP_DELETE_TOKEN = 'APP_DELETE_TOKEN'; // set state
-
 export const APP_LOGIN = 'APP_LOGIN'; // request
-
 export const APP_LOGOFF = 'APP_LOGOFF'; // request
 
 export const initialize = () =>
