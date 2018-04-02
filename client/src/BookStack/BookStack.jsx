@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import immutablePropTypes from 'react-immutable-proptypes';
 
-import * as bookStackActions from './bookStackModule';
+import * as stackDetailActions from '../StackDetail/stackDetailModule';
 import Book from '../Book/Book';
 import AddCategory from '../AddCategory/AddCategory';
 
@@ -18,32 +18,32 @@ const Position = ({
     move,
     setNewPosition,
 }) => (
-    editing === id ?
+    editing ?
         (
             <div>
                 <input
                     autoFocus
+                    type="text"
                     onChange={e =>
-                        e.target.value && setNewPosition(parseInt(e.target.value, 10))
+                        e.target.value && setNewPosition(id, parseInt(e.target.value, 10))
                     }
                     value={newPosition}
                     className="position"
                     onBlur={(e) => {
                         const toPosition = parseInt(e.target.value, 10);
-                        setEditing(null);
+                        setEditing(id, false);
                         move(id, fromPosition, toPosition);
-                        setNewPosition(null);
+                        setNewPosition(id, null);
                     }}
-                    defaultValue={fromPosition}
-                    onMouseOut={() => setEditing(null)}
+                    onMouseOut={() => setEditing(id, false)}
                 />
             </div>
         ) :
         (
             <div
                 onClick={() => {
-                    setNewPosition(fromPosition);
-                    setEditing(id);
+                    setNewPosition(id, fromPosition);
+                    setEditing(id, true);
                 }}
             >
                 {fromPosition}
@@ -52,14 +52,13 @@ const Position = ({
 );
 
 Position.defaultProps = {
-    newPosition: null,
-    editing: null,
+    newPosition: 0,
 };
 
 Position.propTypes = {
     id: propTypes.number.isRequired,
     fromPosition: propTypes.number.isRequired,
-    editing: propTypes.number,
+    editing: propTypes.bool.isRequired,
     setEditing: propTypes.func.isRequired,
     setNewPosition: propTypes.func.isRequired,
     move: propTypes.func.isRequired,
@@ -77,7 +76,7 @@ const RemoveBook = ({
             <div className="remove">
                 <button
                     className="cancel"
-                    onClick={() => setRemoveConfig(false)}
+                    onClick={() => setRemoveConfig(id, false)}
                 >
                     Cancel
                 </button>
@@ -85,7 +84,7 @@ const RemoveBook = ({
                     className="confirm"
                     onClick={() => {
                         deleteBook(id);
-                        setRemoveConfig(false);
+                        setRemoveConfig(id, false);
                     }}
                 >
                     Remove
@@ -94,7 +93,7 @@ const RemoveBook = ({
         ) :
         (
             <div className="remove">
-                <a onClick={() => setRemoveConfig(true)}>Remove</a>
+                <a onClick={() => setRemoveConfig(id, true)}>Remove</a>
             </div>
         )
 );
@@ -118,7 +117,7 @@ const AddNewCategory = ({
                 <div
                     className="addCategory"
                     onClick={() =>
-                        setAddingCategory(!addingCategory)}
+                        setAddingCategory(id, !addingCategory)}
                 >- Cancel
                 </div>
                 <AddCategory
@@ -130,7 +129,7 @@ const AddNewCategory = ({
             <div>
                 <div
                     className="addCategory"
-                    onClick={() => setAddingCategory(!addingCategory)}
+                    onClick={() => setAddingCategory(id, !addingCategory)}
                 >+ Add category
                 </div>
             </div>
@@ -143,36 +142,29 @@ AddNewCategory.propTypes = {
     setAddingCategory: propTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-    editing: state.bookStackStore.get('editing'),
-    removeConfirm: state.bookStackStore.get('removeConfirm'),
-    addingCategory: state.bookStackStore.get('addingCategory'),
-    newPosition: state.bookStackStore.get('newPosition'),
-});
-
 const mapDispatchToProps = {
-    setEditing: bookStackActions.setEditing,
-    setRemoveConfig: bookStackActions.setRemoveConfig,
-    setAddingCategory: bookStackActions.setAddingCategory,
-    setNewPosition: bookStackActions.setNewPosition,
+    setEditing: stackDetailActions.setEditing,
+    setRemoveConfig: stackDetailActions.setRemoveConfig,
+    setAddingCategory: stackDetailActions.setAddingCategory,
+    setNewPosition: stackDetailActions.setNewPosition,
 };
 
 const BookStack = ({
     bookStack,
     staticPath,
-    editing,
-    newPosition,
     setEditing,
     updatePosition,
     setNewPosition,
     removeCategory,
-    addingCategory,
     setAddingCategory,
-    removeConfirm,
     setRemoveConfig,
     deleteBook,
     setReadState,
 }) => {
+    const editing = bookStack.get('editing');
+    const removeConfirm = bookStack.get('removeConfirm');
+    const addingCategory = bookStack.get('addingCategory');
+    const newPosition = bookStack.get('newPosition');
     const position = bookStack.get('position');
     const id = bookStack.get('id');
     const move = (moveId, fromPosition, toPosition) => {
@@ -263,14 +255,9 @@ const BookStack = ({
 BookStack.defaultProps = {
     updateReadState: () => {},
     staticPath: '',
-    newPosition: null,
-    editing: null,
 };
 
 BookStack.propTypes = {
-    editing: propTypes.number,
-    removeConfirm: propTypes.bool.isRequired,
-    addingCategory: propTypes.bool.isRequired,
     setEditing: propTypes.func.isRequired,
     setNewPosition: propTypes.func.isRequired,
     setAddingCategory: propTypes.func.isRequired,
@@ -280,11 +267,10 @@ BookStack.propTypes = {
     removeCategory: propTypes.func.isRequired,
     setRemoveConfig: propTypes.func.isRequired,
     staticPath: propTypes.string,
-    newPosition: propTypes.number,
     setReadState: propTypes.func.isRequired,
 };
 
 export default connect(
-    mapStateToProps,
+    null,
     mapDispatchToProps,
 )(BookStack);
