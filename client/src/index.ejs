@@ -6,7 +6,7 @@
     <meta http-equiv='Content-type' content='text/html; charset=utf-8'>
     <link rel="icon" type="image/png" href="{% static "bookstack/images/favicon.png" %}">
     <title>BookStack</title>
-  <link href="/static/bookstack/dist/main.css" rel="stylesheet"></head>
+  </head>
   <body>
     <div id="stack"></div>
     <script>
@@ -16,5 +16,5 @@
             apiUrl: '{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}'
         };
     </script>
-  <script type="text/javascript" src="/static/bookstack/dist/bundle.js"></script></body>
+  </body>
 </html>

@@ -1,19 +1,14 @@
 <!DOCTYPE html>
 {% load i18n %}
+{% load staticfiles %}
 <html>
   <head>
     <meta http-equiv='Content-type' content='text/html; charset=utf-8'>
-    <title>{% block page_title %}{% endblock page_title %}</title>
-    {% load staticfiles %}
-    
-    {% block head %}
-    {% endblock head %}
-  </head>
+    <link rel="icon" type="image/png" href="{% static "bookstack/images/favicon.png" %}">
+    <title>BookStack</title>
+  <link href="/static/bookstack/js/main.css" rel="stylesheet"></head>
   <body>
-    {% block body %}
-    {% endblock body %}
-    {% block scripts %}
-    {% endblock scripts %}
+    <div id="stack"></div>
     <script>
       window.MyApp.init({
         el: '#stack',
@@ -21,5 +16,5 @@
         apiUrl: '{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}'
       });
     </script>
-  </body>
+  <script type="text/javascript" src="/static/bookstack/js/bundle.js"></script></body>
 </html>

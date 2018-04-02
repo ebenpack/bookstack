@@ -22,6 +22,7 @@ const Position = ({
         (
             <div>
                 <input
+                    className="input"
                     autoFocus
                     type="text"
                     onChange={e =>
@@ -75,13 +76,13 @@ const RemoveBook = ({
         (
             <div className="remove">
                 <button
-                    className="cancel"
+                    className="cancel button is-warning"
                     onClick={() => setRemoveConfig(id, false)}
                 >
                     Cancel
                 </button>
                 <button
-                    className="confirm"
+                    className="confirm button"
                     onClick={() => {
                         deleteBook(id);
                         setRemoveConfig(id, false);
@@ -167,9 +168,9 @@ const BookStack = ({
     };
     const moveUp = () => move(id, position, position - 1);
     const moveDown = () => move(id, position, position + 1);
-    let classString = 'bookstack row';
+    let classString = 'bookstack columns';
     if (bookStack.get('read')) {
-        classString += ' isRead';
+        classString += ' is-read';
     }
     return (
         <div
@@ -188,49 +189,28 @@ const BookStack = ({
             }}
             onDragOver={preventDefault}
         >
-            <div className="position one column">
-                <Position
-                    id={id}
-                    editing={editing}
-                    fromPosition={position}
-                    newPosition={newPosition}
-                    setEditing={setEditing}
-                    move={move}
-                    setNewPosition={setNewPosition}
-                />
-            </div>
-            <div>
-                <div className="moveArrow" onClick={e => moveUp(e)}>↑</div>
-                <div className="moveArrow" onClick={e => moveDown(e)}>↓</div>
-            </div>
-            <Book book={bookStack.get('book')} staticPath={staticPath} />
-            <div className="info seven columns">
-                <div className="categories">
-                    <h5>Categories</h5>
-                    <ul>
-                        {bookStack.get('categories').map(category =>
-                            (
-                                <li key={category.get('id')}>
-                                    {category.getIn(['detail', 'category'])} -
-                                    <span onClick={() =>
-                                        removeCategory(bookStack.get('id'), category.get('id'))}
-                                    >
-                                        Remove
-                                    </span>
-                                </li>
-                            ))}
-                    </ul>
-                    <AddNewCategory
+            <div className="media-left position">
+                <div className="is-pulled-left">
+                    <Position
                         id={id}
-                        addingCategory={addingCategory}
-                        setAddingCategory={setAddingCategory}
+                        editing={editing}
+                        fromPosition={position}
+                        newPosition={newPosition}
+                        setEditing={setEditing}
+                        move={move}
+                        setNewPosition={setNewPosition}
                     />
                 </div>
-                <div className="read">
-                    Read:
+                <div className="is-pulled-left">
+                    <div className="move-arrow" onClick={e => moveUp(e)}>↑</div>
+                    <div className="move-arrow" onClick={e => moveDown(e)}>↓</div>
+                </div>
+                <div className="media-left">
+                Read:
                     <input
                         onChange={e => setReadState(bookStack.get('id'), Boolean(e.target.checked))}
                         type="checkbox"
+                        className="checkbox"
                         checked={bookStack.get('read')}
                     />
                 </div>
@@ -239,6 +219,28 @@ const BookStack = ({
                     removeConfirm={removeConfirm}
                     setRemoveConfig={setRemoveConfig}
                     deleteBook={deleteBook}
+                />
+            </div>
+            <Book className="column" book={bookStack.get('book')} staticPath={staticPath} />
+            <div className="categories column">
+                <h5>Categories</h5>
+                <ul>
+                    {bookStack.get('categories').map(category =>
+                        (
+                            <li key={category.get('id')}>
+                                {category.getIn(['detail', 'category'])} -
+                                <span onClick={() =>
+                                    removeCategory(bookStack.get('id'), category.get('id'))}
+                                >
+                                    Remove
+                                </span>
+                            </li>
+                        ))}
+                </ul>
+                <AddNewCategory
+                    id={id}
+                    addingCategory={addingCategory}
+                    setAddingCategory={setAddingCategory}
                 />
             </div>
         </div>

@@ -40,12 +40,16 @@ export const StackDetail = ({
             </div>
         );
     return (
-        <div className="stack row">
-            <h1 className="stackName">{stackDetail.get('name')}</h1>
-            <div className="user">{stackDetail.get('user')}</div>
-            <div className="creationDate">{stackDetail.get('creation_date')}</div>
-            <div className="addBook">
-                {addBook}
+        <div className="stack">
+            <div className="columns">
+                <div className="column">
+                    <h1 className="stackName">{stackDetail.get('name')}</h1>
+                    <div className="user">{stackDetail.get('user')}</div>
+                    <div className="creationDate">{stackDetail.get('creation_date')}</div>
+                    <div className="addBook">
+                        {addBook}
+                    </div>
+                </div>
             </div>
             {books.map(bookStack =>
                 (<BookStack

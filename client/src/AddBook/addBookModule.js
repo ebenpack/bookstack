@@ -66,6 +66,17 @@ export default function addBookReducer(state = defaultState, action) {
     case SEARCH_BOOK.SUCCESS:
         return state.set('booksAutocomplete', Immutable.fromJS(action.books));
     case SEARCH_BOOK.CLEAR:
+        // TODO: IS THIS RIGHT?
+        return state.set('selectedBook', Immutable.fromJS({
+            title: '',
+            pages: '',
+            isbn: '',
+            img: '',
+            authors: [],
+            publishers: [],
+            id: '',
+        }));
+    case SELECT_BOOK.CLEAR:
         return state.set('selectedBook', Immutable.fromJS({
             title: '',
             pages: '',

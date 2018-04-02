@@ -33,26 +33,34 @@ export const AddBook = (props) => {
     const bookId = selectedBook.get('id');
     if (bookId && bookId !== '') {
         autocompleteResults = (
-            <div className="select">
-                <div>
+            <div className="modal is-active">
+                <div className="modal-background" />
+                <div className="modal-content">
                     <a title="Close" className="close" onClick={clearSelected}>X</a>
                     <Book className="" book={selectedBook} />
-                    <button onClick={() => addBook(bookId, stackId)}>
+                    <button className="button" onClick={() => addBook(bookId, stackId)}>
                         Add Book
                     </button>
                 </div>
+                <button
+                    className="modal-close close is-large"
+                    aria-label="close"
+                    onClick={clearSelected}
+                />
             </div>
         );
     }
     return (
         <div>
-            <input
-                type="text"
-                value={title}
-                onChange={e => searchBooks(e.target.value)}
-            />
-            {autocompleteResults}
-            {selectedBook}
+            <label>
+                <input
+                    className="input"
+                    type="text"
+                    value={title}
+                    onChange={e => searchBooks(e.target.value)}
+                />
+                {autocompleteResults}
+            </label>
         </div>
     );
 };

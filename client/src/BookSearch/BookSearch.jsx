@@ -15,30 +15,38 @@ export const BookSearch = ({
     books, query, setQuery, bookSearch, addBook,
 }) => (
     <div className="bookSearch">
-        <label>Search
-            <input
-                type="text"
-                value={query}
-                onChange={(e) => {
-                    const queryValue = e.target.value;
-                    setQuery(queryValue);
-                    bookSearch(queryValue);
-                }}
-            />
-        </label>
-        {books.map((book, idx) => {
-            const key = book.get('isbn') || idx;
-            return (
-                <div key={key} className="four columns">
-                    <Book book={book} className="" />
-                    <button
-                        onClick={() => addBook(book)}
-                    >
-                        Add Book
-                    </button>
-                </div>
-            );
-        })}
+        <div className="columns">
+            <div className="column">
+                <label>Search
+                    <input
+                        className="input"
+                        type="text"
+                        value={query}
+                        onChange={(e) => {
+                            const queryValue = e.target.value;
+                            setQuery(queryValue);
+                            bookSearch(queryValue);
+                        }}
+                    />
+                </label>
+            </div>
+        </div>
+        <div className="columns is-multiline">
+            {books.map((book, idx) => {
+                const key = book.get('isbn') || idx;
+                return (
+                    <div key={key} className="column is-half search-result">
+                        <Book book={book} className="" />
+                        <button
+                            className="button"
+                            onClick={() => addBook(book)}
+                        >
+                            Add Book
+                        </button>
+                    </div>
+                );
+            })}
+        </div>
     </div>
 );
 

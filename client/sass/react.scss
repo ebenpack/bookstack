@@ -3,173 +3,198 @@ $color_green: #F0FFF0;
 $color_peach: #FFDAB9;
 $color_yellow: #FFFACD;
 $color_pink: #FFE4E1;
+$color_grey: lightgray;
 
-@mixin modal-dialog() {
-    position: fixed;
-    font-family: Arial, Helvetica, sans-serif;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 99999;
-    opacity:1;
-    pointer-events: auto;
-    -webkit-transition: opacity 400ms ease-in;
-    -moz-transition: opacity 400ms ease-in;
-    transition: opacity 400ms ease-in;
+@import "~bulma";
 
-    & > div {
-        width: 50%;
-        position: relative;
-        margin: 10% auto;
-        padding: 5px 20px 13px 20px;
-        border-radius: 10px;
-        background: #fff;
-    }
-    & .close {
-        background: #606061;
-        color: #FFFFFF;
-        line-height: 25px;
-        position: absolute;
-        right: -12px;
-        text-align: center;
-        top: -10px;
-        width: 24px;
-        text-decoration: none;
-        font-weight: bold;
-        -webkit-border-radius: 12px;
-        -moz-border-radius: 12px;
-        border-radius: 12px;
-        -moz-box-shadow: 1px 1px 3px #000;
-        -webkit-box-shadow: 1px 1px 3px #000;
-        box-shadow: 1px 1px 3px #000;
-    }
-    & .close:hover {
-        background: #00d9ff;
-    }
-}
-
-.menu li {
-    list-style-type: none;
-    display: inline-block;
-    margin: 0 10px;
+.position {
+    align-self: center;
 }
 
 .bookstack {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .position {
-        font-weight: bold;
-        font-size: 1.1em;
-        input {
-            max-width: 80%;
-            margin: 0;
-            padding: 0;
-        }
-    }
-    .moveArrow {
-        &:hover {
-            color: #313131;
-        }
-        color: #D0D0D0;
-        cursor: pointer;
-    }
-    padding: 0.5em;
-    border-top: 1px solid #CDCDCD;
-    &.isRead {
-        background-color: #EEE;
-    }
-    .info {
-        .categories {
-            text-transform: capitalize;
-            padding: 1em;
-            margin: 1em 0;
-            background-color: $color_blue;
-            > .category {
-                display: inline;
-            }
-
-            > .category:before {
-                content:',\0000a0'; /* Non-breaking space */
-            }
-            > .category:first-child:before {
-                content: normal;
-            }
-        }
+    margin: 1em 0;
+    padding: 1em 0;
+    border-bottom: 1px solid $color_grey;
+    &.is-read {
+        background-color: $color_blue;
     }
 }
 
-.bookSearch {
-    .book {
-        float: left;
-    }
-}
-
-.book {
-    > img {
-        max-width: 49px;
-    }
-    .info {
-        > * {
-            margin: 0 0 0.5em 0;
-        }
-    }
-    .authors {
-        padding: 0;
-        text-transform: capitalize;
-        display: inline;
-
-        > .author {
-            display: inline;
-        }
-
-        > .author:before {
-            content:',\0000a0'; /* Non-breaking space */
-        }
-        > .author:first-child:before {
-            content: normal;
-        }
-    }
-}
-
-
-.autocomplete {
-    position: absolute;
-    background-color: white;
-    width: 30%;
-    height: 200px;
-    overflow-y: scroll;
-    border: 1px solid gray;
+.move-arrow {
+    cursor: pointer;
 }
 
 .autocomplete {
     position: absolute;
-    background-color: white;
-    width: 30%;
-    max-height: 120px;
-    overflow-y: scroll;
-    border: 1px solid gray;
-
-    & li {
-        list-style-type: none;
-        margin: 0;
-
-        &:nth-child(odd) {
-            background-color: $color_blue;
-        }
-
-        &:hover {
-            background-color: $color_green;
-        }
-    }
+    display: block;
 }
 
-.addBook .select {
-    @include modal-dialog()
-}
+// @mixin modal-dialog() {
+//     position: fixed;
+//     font-family: Arial, Helvetica, sans-serif;
+//     top: 0;
+//     right: 0;
+//     bottom: 0;
+//     left: 0;
+//     background: rgba(0, 0, 0, 0.8);
+//     z-index: 99999;
+//     opacity:1;
+//     pointer-events: auto;
+//     -webkit-transition: opacity 400ms ease-in;
+//     -moz-transition: opacity 400ms ease-in;
+//     transition: opacity 400ms ease-in;
 
-input.error {
-    background-color: $color_pink;
-}
+//     & > div {
+//         width: 50%;
+//         position: relative;
+//         margin: 10% auto;
+//         padding: 5px 20px 13px 20px;
+//         border-radius: 10px;
+//         background: #fff;
+//     }
+//     & .close {
+//         background: #606061;
+//         color: #FFFFFF;
+//         line-height: 25px;
+//         position: absolute;
+//         right: -12px;
+//         text-align: center;
+//         top: -10px;
+//         width: 24px;
+//         text-decoration: none;
+//         font-weight: bold;
+//         -webkit-border-radius: 12px;
+//         -moz-border-radius: 12px;
+//         border-radius: 12px;
+//         -moz-box-shadow: 1px 1px 3px #000;
+//         -webkit-box-shadow: 1px 1px 3px #000;
+//         box-shadow: 1px 1px 3px #000;
+//     }
+//     & .close:hover {
+//         background: #00d9ff;
+//     }
+// }
+
+// .menu li {
+//     list-style-type: none;
+//     display: inline-block;
+//     margin: 0 10px;
+// }
+
+// .bookstack {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     .position {
+//         font-weight: bold;
+//         font-size: 1.1em;
+//         input {
+//             max-width: 80%;
+//             margin: 0;
+//             padding: 0;
+//         }
+//     }
+//     .moveArrow {
+//         &:hover {
+//             color: #313131;
+//         }
+//         color: #D0D0D0;
+//         cursor: pointer;
+//     }
+//     padding: 0.5em;
+//     border-top: 1px solid #CDCDCD;
+//     &.isRead {
+//         background-color: #EEE;
+//     }
+//     .info {
+//         .categories {
+//             text-transform: capitalize;
+//             padding: 1em;
+//             margin: 1em 0;
+//             background-color: $color_blue;
+//             > .category {
+//                 display: inline;
+//             }
+
+//             > .category:before {
+//                 content:',\0000a0'; /* Non-breaking space */
+//             }
+//             > .category:first-child:before {
+//                 content: normal;
+//             }
+//         }
+//     }
+// }
+
+// .bookSearch {
+//     .book {
+//         float: left;
+//     }
+// }
+
+// .book {
+//     > img {
+//         max-width: 49px;
+//     }
+//     .info {
+//         > * {
+//             margin: 0 0 0.5em 0;
+//         }
+//     }
+//     .authors {
+//         padding: 0;
+//         text-transform: capitalize;
+//         display: inline;
+
+//         > .author {
+//             display: inline;
+//         }
+
+//         > .author:before {
+//             content:',\0000a0'; /* Non-breaking space */
+//         }
+//         > .author:first-child:before {
+//             content: normal;
+//         }
+//     }
+// }
+
+
+// .autocomplete {
+//     position: absolute;
+//     background-color: white;
+//     width: 30%;
+//     height: 200px;
+//     overflow-y: scroll;
+//     border: 1px solid gray;
+// }
+
+// .autocomplete {
+//     position: absolute;
+//     background-color: white;
+//     width: 30%;
+//     max-height: 120px;
+//     overflow-y: scroll;
+//     border: 1px solid gray;
+
+//     & li {
+//         list-style-type: none;
+//         margin: 0;
+
+//         &:nth-child(odd) {
+//             background-color: $color_blue;
+//         }
+
+//         &:hover {
+//             background-color: $color_green;
+//         }
+//     }
+// }
+
+// .addBook .select {
+//     @include modal-dialog()
+// }
+
+// input.error {
+//     background-color: $color_pink;
+// }

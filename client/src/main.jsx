@@ -10,6 +10,4 @@ const runApp = async ({ el, staticPath, apiUrl }) => {
     render(<AppRouter store={store} history={history} />, document.querySelector(el));
 };
 
-window.MyApp = {
-    init: runApp,
-};
+runApp(window.BOOTSTRAP_DATA);

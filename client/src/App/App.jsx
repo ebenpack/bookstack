@@ -11,13 +11,13 @@ import { logoff as logoffAction } from './appModule';
 
 export const App = ({ token, logoff, children }) => (
     <div className="container">
-        <ul className="row menu">
-            <li><Link to={listPath}>View Stacks</Link></li>
-            <li><Link to={bookSearchPath}>Search Books</Link></li>
+        <nav className="navbar" aria-label="main navigation">
+            <li className="navbar-item"><Link to={listPath}>View Stacks</Link></li>
+            <li className="navbar-item"><Link to={bookSearchPath}>Search Books</Link></li>
             {token ?
-                <li><a onClick={logoff} href="#">Logoff</a></li> :
-                <li><Link to={loginPath}>Login</Link></li>}
-        </ul>
+                <li className="navbar-item"><a onClick={logoff} href="#">Logoff</a></li> :
+                <li className="navbar-item"><Link to={loginPath}>Login</Link></li>}
+        </nav>
         {children}
     </div>
 );

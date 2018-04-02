@@ -24,6 +24,7 @@ export const AddCategory = ({
 }) => (
     <div>
         <label>Add Category: <input
+            className="input"
             type="text"
             value={category}
             onChange={(e) => {
@@ -43,9 +44,7 @@ export const AddCategory = ({
                     clearAutoSuggestCategories();
                 }
             }}
-        />
-        </label>
-        {
+        /> {
             (autoSuggestCategories.size > 0) ? (
                 <Autocomplete
                     suggestions={autoSuggestCategories}
@@ -58,6 +57,7 @@ export const AddCategory = ({
                 />
             ) : null
         }
+        </label>
     </div>
 );
 

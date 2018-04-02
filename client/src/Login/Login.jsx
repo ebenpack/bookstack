@@ -26,7 +26,7 @@ export const Login = ({
                     e.target.value ? updateUser(e.target.value) : updateUser('')
                 )}
                 type="text"
-                className={loginError ? 'error' : ''}
+                className={`input${loginError ? ' error' : ''}`}
                 value={user}
             />
         </div>
@@ -36,7 +36,7 @@ export const Login = ({
                     e.target.value ? updatePass(e.target.value) : updatePass('')
                 )}
                 type="password"
-                className={loginError ? 'error' : ''}
+                className={`input${loginError ? ' error' : ''}`}
                 value={pass}
             />
         </div>
@@ -46,10 +46,12 @@ export const Login = ({
                     e.target.checked ? updateSave(e.target.checked) : updateSave(false)
                 )}
                 type="checkbox"
+                className="checkbox"
                 checked={save}
             />
         </div>
         <button
+            className="button"
             onClick={() => submitLogin(user, pass, save)}
         >
             Login

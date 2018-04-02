@@ -1,12 +1,13 @@
 const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: ['./src/main.jsx'],
     output: {
-        path: path.resolve(__dirname, '../bookstack/static/bookstack/js/dist'),
-        publicPath: '/assets/',
+        path: path.resolve(__dirname, '../bookstack/static/bookstack/dist'),
+        publicPath: '/static/bookstack/dist/',
         filename: 'bundle.js',
     },
     resolve: {
@@ -14,6 +15,10 @@ module.exports = {
     },
     plugins: [
         new MiniCssExtractPlugin(),
+        new HtmlWebpackPlugin({
+            filename: path.resolve(__dirname, '../bookstack/templates/bookstack_react.html'),
+            template: path.resolve(__dirname, './src/index.ejs'),
+        }),
     ],
     module: {
         rules: [
