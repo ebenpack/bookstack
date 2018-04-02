@@ -2,8 +2,8 @@ import axios from 'axios';
 
 import { put, call, select, takeEvery } from 'redux-saga/effects';
 
-import { getCredentials } from '../utils/sagasUtils';
-
+import { getCredentials, initializeSaga } from '../utils/sagasUtils';
+import { path } from './PublisherDetailRoute';
 import { PUBLISHER, publisher as publisherActions } from './publisherDetailModule';
 
 
@@ -16,10 +16,13 @@ export function* loadPublisher({ id }) {
     yield put(publisherActions.success(publisher.data));
 }
 
+const initialize = initializeSaga(path, loadPublisher, match => ({ id: match.params.id }));
+
 function* watchLoadPublisher() {
     yield takeEvery(PUBLISHER.REQUEST, loadPublisher);
 }
 
 export default [
+    initialize,
     watchLoadPublisher,
 ];

@@ -9,7 +9,6 @@ import Autocomplete from '../Autocomplete/Autocomplete';
 import * as addBookActions from './addBookModule';
 import * as stackDetailActions from '../StackDetail/stackDetailModule';
 
-
 const mapStateToProps = state => ({
     state: state.addBookStore.get('state'),
     booksAutocomplete: state.addBookStore.get('booksAutocomplete'),

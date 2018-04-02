@@ -17,11 +17,22 @@ const Book = ({ staticPath, className, book }) => (
         <div className="info">
             <div className="title">{book.get('title')}</div>
             By:
-            <ul className="authors">{book.get('authors').map(author =>
-                (<Author key={author.get('id')} author={author} />))}
+            <ul className="authors">{book.get('authors').map(author => (
+                <Author
+                    key={
+                        author.get('id', `${book.get('title')}|${author.get('name')}`)
+                    }
+                    author={author}
+                />
+            ))}
             </ul>
             {book.get('publishers').map(publisher => (
-                <Publisher key={publisher.get('id')} publisher={publisher} />
+                <Publisher
+                    key={
+                        publisher.get('id', `${book.get('title')}|${publisher.get('name')}`)
+                    }
+                    publisher={publisher}
+                />
             ))}
             <div className="pages">{book.get('pages')} pages</div>
             <div className="isbn">ISBN: {book.get('isbn')}</div>

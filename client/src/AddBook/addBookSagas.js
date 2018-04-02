@@ -8,11 +8,11 @@ import * as addBookActions from './addBookModule';
 
 export function* searchBooks({ query }) {
     const { apiUrl } = yield select(getCredentials);
-    const booksAutocomplete = yield call(axios, {
+    const { data } = yield call(axios, {
         method: 'GET',
         url: `${apiUrl}/api/book/?search=${query}`,
     });
-    yield put(addBookActions.searchBooks.success(booksAutocomplete.data));
+    yield put(addBookActions.searchBooks.success(data));
 }
 
 export function* getBook({ id }) {

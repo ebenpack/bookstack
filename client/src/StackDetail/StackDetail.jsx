@@ -7,7 +7,7 @@ import BookStack from '../BookStack/BookStack';
 import AddBook from '../AddBook/AddBook';
 
 import {
-    stackDetail,
+    stackDetail as stackDetailActions,
     position,
     readState,
     removeBook,
@@ -22,72 +22,70 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    loadStack: stackDetail.request,
-    unloadStack: stackDetail.clear,
-    toggleEditing: stackDetail.editing,
+    loadStack: stackDetailActions.request,
+    unloadStack: stackDetailActions.clear,
+    toggleEditing: stackDetailActions.editing,
     updateReadState: readState.request,
     deleteBook: removeBook.request,
     deleteCategory: removeCategory.request,
     updatePosition: position.request,
 };
 
-class StackDetail extends React.Component {
-    componentDidMount() {
-        this.props.loadStack(this.props.params.id);
-    }
-
-    componentWillUnmount() {
-        this.props.unloadStack();
-    }
-
-    render() {
-        const { staticPath } = this.props.route;
-        const { id } = this.props.params;
-        const addBook = this.props.editing ?
-            (
-                <div>
-                    <div onClick={this.props.toggleEditing}>Close -</div>
-                    <AddBook stackId={id} />
-                </div>
-            ) :
-            (
-                <div>
-                    <div onClick={this.props.toggleEditing}>Add book +</div>
-                </div>
-            );
-        return (
-            <div className="stack row">
-                <h1 className="stackName">{this.props.stackDetail.get('name')}</h1>
-                <div className="user">{this.props.stackDetail.get('user')}</div>
-                <div className="creationDate">{this.props.stackDetail.get('creation_date')}</div>
-                <div className="addBook">
-                    {addBook}
-                </div>
-                {this.props.books.map(bookStack =>
-                    (<BookStack
-                        key={bookStack.get('id')}
-                        bookStack={bookStack}
-                        staticPath={staticPath}
-                        setReadState={this.props.updateReadState}
-                        deleteBook={this.props.deleteBook}
-                        removeCategory={this.props.deleteCategory}
-                        updatePosition={this.props.updatePosition}
-                    />))}
+const StackDetail = ({
+    staticPath,
+    match,
+    stackDetail,
+    books,
+    editing,
+    toggleEditing,
+    updateReadState,
+    deleteBook,
+    deleteCategory,
+    updatePosition,
+}) => {
+    const { id } = match.params;
+    const addBook = editing ?
+        (
+            <div>
+                <div onClick={toggleEditing}>Close -</div>
+                <AddBook stackId={id} />
+            </div>
+        ) :
+        (
+            <div>
+                <div onClick={toggleEditing}>Add book +</div>
             </div>
         );
-    }
-}
+    return (
+        <div className="stack row">
+            <h1 className="stackName">{stackDetail.get('name')}</h1>
+            <div className="user">{stackDetail.get('user')}</div>
+            <div className="creationDate">{stackDetail.get('creation_date')}</div>
+            <div className="addBook">
+                {addBook}
+            </div>
+            {books.map(bookStack =>
+                (<BookStack
+                    key={bookStack.get('id')}
+                    bookStack={bookStack}
+                    staticPath={staticPath}
+                    setReadState={updateReadState}
+                    deleteBook={deleteBook}
+                    removeCategory={deleteCategory}
+                    updatePosition={updatePosition}
+                />))}
+        </div>
+    );
+};
 
 StackDetail.propTypes = {
-    loadStack: propTypes.func.isRequired,
-    params: propTypes.shape({
-        id: propTypes.string,
+    staticPath: propTypes.string.isRequired,
+    match: propTypes.shape({
+        params: propTypes.shape({
+            id: propTypes.string,
+        }),
     }).isRequired,
-    unloadStack: propTypes.func.isRequired,
     books: immutablePropTypes.list.isRequired,
-    route: propTypes.shape({
-        staticPath: propTypes.string,
-    }).isRequired,
     editing: propTypes.bool.isRequired,
     toggleEditing: propTypes.func.isRequired,
     stackDetail: immutablePropTypes.map.isRequired,

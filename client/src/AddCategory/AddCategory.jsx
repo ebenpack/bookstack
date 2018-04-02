@@ -5,94 +5,81 @@ import immutablePropTypes from 'react-immutable-proptypes';
 
 import Autocomplete from '../Autocomplete/Autocomplete';
 
-import { categorySearch } from './addCategoryModule';
-import { addCategory, addNewCategory } from '../StackDetail/stackDetailModule';
+import { categorySearch, categoryInput } from './addCategoryModule';
+import {
+    addCategory as addCategoryAction,
+    addNewCategory as addNewCategoryAction,
+} from '../StackDetail/stackDetailModule';
 
 const mapStateToProps = state => ({
     autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories'),
+    category: state.addCategoryStore.get('category'),
 });
 
 const mapDispatchToProps = {
-    addCategory: addCategory.request,
-    addNewCategory: addNewCategory.request,
+    addCategory: addCategoryAction.request,
+    addNewCategory: addNewCategoryAction.request,
+    setCategoryInput: categoryInput.set,
+    clearCategoryInput: categoryInput.clear,
     setAutoSuggestCategories: categorySearch.request,
     clearAutoSuggestCategories: categorySearch.clear,
 };
 
-// TODO: Make pure, stateless render function?
-class AddCategory extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            category: '',
-        };
-    }
-
-    componentWillUnmount() {
-        this.props.clearAutoSuggestCategories();
-    }
-
-    handleChange(e) {
-        const category = e.target.value;
-        if (category) {
-            this.props.setAutoSuggestCategories(category);
-        } else {
-            this.props.clearAutoSuggestCategories();
-        }
-        this.setState({
-            category,
-        });
-    }
-
-    handleAddCategoryKeyUp(e) {
-        if (e.key === 'Enter') {
-            const bookstackId = this.props.id;
-            const { category } = this.state;
-            this.props.addNewCategory(bookstackId, category);
-            this.clearAutocomplete();
-        }
-    }
-
-    clearAutocomplete() {
-        this.setState({
-            category: '',
-        });
-        this.props.clearAutoSuggestCategories();
-    }
-
-    addCategory(categoryId) {
-        const bookstackId = this.props.id;
-        this.props.addCategory(bookstackId, categoryId);
-    }
-
-    render() {
-        let autoSuggestCategories = '';
-        if (this.props.autoSuggestCategories.size > 0) {
-            autoSuggestCategories = (
+const AddCategory = ({
+    id,
+    autoSuggestCategories,
+    category,
+    addCategory,
+    addNewCategory,
+    setAutoSuggestCategories,
+    clearAutoSuggestCategories,
+    setCategoryInput,
+    clearCategoryInput,
+}) => (
+    <div>
+        <label>Add Category: <input
+            type="text"
+            value={category}
+            onChange={(e) => {
+                const newCategory = e.target.value;
+                if (newCategory) {
+                    setCategoryInput(newCategory);
+                    setAutoSuggestCategories(newCategory);
+                } else {
+                    clearCategoryInput();
+                    clearAutoSuggestCategories();
+                }
+            }}
+            onKeyUp={(e) => {
+                if (e.key === 'Enter') {
+                    addNewCategory(id, category);
+                    clearCategoryInput();
+                    clearAutoSuggestCategories();
+                }
+            }}
+        />
+        </label>
+        {
+            (autoSuggestCategories.size > 0) ? (
                 <Autocomplete
-                    suggestions={this.props.autoSuggestCategories}
+                    suggestions={autoSuggestCategories}
                     displayProperty="category"
-                    onClick={e => this.addCategory(e)}
+                    onClick={(suggestionId) => {
+                        clearCategoryInput();
+                        clearAutoSuggestCategories();
+                        addCategory(id, suggestionId);
+                    }}
                 />
-            );
+            ) : null
         }
-        return (
-            <div>
-                <label>Add Category: <input
-                    type="text"
-                    value={this.state.category}
-                    onChange={e => this.handleChange(e)}
-                    onKeyUp={e => this.handleAddCategoryKeyUp(e)}
-                />
-                </label>
-                {autoSuggestCategories}
-            </div>
-        );
-    }
-}
+    </div>
+);
 
 AddCategory.propTypes = {
+    category: propTypes.string.isRequired,
     addCategory: propTypes.func.isRequired,
+    setCategoryInput: propTypes.func.isRequired,
+    clearCategoryInput: propTypes.func.isRequired,
     clearAutoSuggestCategories: propTypes.func.isRequired,
     setAutoSuggestCategories: propTypes.func.isRequired,
     id: propTypes.number.isRequired,

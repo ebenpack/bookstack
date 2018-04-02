@@ -1,239 +1,290 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import immutablePropTypes from 'react-immutable-proptypes';
 
+import * as bookStackActions from './bookStackModule';
 import Book from '../Book/Book';
 import AddCategory from '../AddCategory/AddCategory';
 
-class BookStack extends React.Component {
-    static handleDragOver(e) {
-        e.preventDefault();
-    }
+const preventDefault = e => e.preventDefault();
 
-    static handleDragEnd(e) {
-        e.preventDefault();
-    }
-
-    constructor() {
-        super();
-        this.state = {
-            editing: false,
-            removeConfirm: false,
-            addingCategory: false,
-        };
-    }
-
-    setEditingStateOn() {
-        this.setState({
-            editing: true,
-        });
-    }
-
-    setEditingStateOff() {
-        this.setState({
-            editing: false,
-        });
-    }
-
-    toggleRead(e) {
-        this.props.updateReadState(this.props.bookStack.get('id'), e.target.checked);
-    }
-
-    updatePosition(id, fromPosition, toPosition) {
-        if (fromPosition !== toPosition) {
-            this.props.updatePosition(id, fromPosition, toPosition);
-        }
-    }
-
-    moveUp() {
-        const fromPosition = this.props.bookStack.get('position');
-        const toPosition = fromPosition - 1;
-        const id = this.props.bookStack.get('id');
-        if (toPosition > 0) {
-            this.updatePosition(id, fromPosition, toPosition);
-        }
-    }
-
-    moveDown() {
-        const fromPosition = this.props.bookStack.get('position');
-        const toPosition = fromPosition + 1;
-        const id = this.props.bookStack.get('id');
-        this.updatePosition(id, fromPosition, toPosition);
-    }
-
-    handleBlur(e) {
-        const toPosition = parseInt(e.target.value, 10);
-        const fromPosition = this.props.bookStack.get('position');
-        const id = this.props.bookStack.get('id');
-        this.setEditingStateOff();
-        this.updatePosition(id, fromPosition, toPosition);
-    }
-
-    handleDragStart(e) {
-        e.dataTransfer.setData('text', JSON.stringify({
-            id: this.props.bookStack.get('id'),
-            position: this.props.bookStack.get('position'),
-        }));
-    }
-
-    handleDrop(e) {
-        const { id, position: fromPosition } = JSON.parse(e.dataTransfer.getData('text'));
-        const toPosition = this.props.bookStack.get('position');
-        this.updatePosition(id, fromPosition, toPosition);
-    }
-
-
-    handleRemove() {
-        this.setState({
-            removeConfirm: true,
-        });
-    }
-
-    handleCancel() {
-        this.setState({
-            removeConfirm: false,
-        });
-    }
-
-    handleConfirm() {
-        const id = this.props.bookStack.get('id');
-        this.props.deleteBook(id);
-        this.setState({
-            removeConfirm: false,
-        });
-    }
-
-    toggleAddingCategory() {
-        this.setState({
-            addingCategory: !this.state.addingCategory,
-        });
-    }
-
-    removeCategory(categoryId) {
-        const bookstackId = this.props.bookStack.get('id');
-        this.props.removeCategory(bookstackId, categoryId);
-    }
-
-    render() {
-        const { staticPath } = this.props;
-        let classString = 'bookstack row';
-        if (this.props.bookStack.get('read')) {
-            classString += ' isRead';
-        }
-        const position = (
-            this.state.editing ?
-                (
-                    <div>
-                        <input
-                            autoFocus
-                            ref={input => (input !== null) && input.select()}
-                            className="position"
-                            onBlur={e => this.handleBlur(e)}
-                            defaultValue={this.props.bookStack.get('position')}
-                            onMouseOut={e => this.setEditingStateOff(e)}
-                        />
-                    </div>
-                ) :
-                (
-                    <div
-                        onClick={e => this.setEditingStateOn(e)}
-                    >
-                        {this.props.bookStack.get('position')}
-                    </div>
-                )
-        );
-        const remove = (
-            this.state.removeConfirm ?
-                (
-                    <div className="remove">
-                        <button className="cancel" onClick={e => this.handleCancel(e)}>Cancel</button>
-                        <button className="confirm" onClick={e => this.handleConfirm(e)}>Remove</button>
-                    </div>
-                ) :
-                (
-                    <div className="remove">
-                        <a onClick={e => this.handleRemove(e)}>Remove</a>
-                    </div>
-                )
-        );
-        const addCategory = (
-            this.state.addingCategory ?
-                (
-                    <div>
-                        <div className="addCategory" onClick={e => this.toggleAddingCategory(e)}>- Cancel</div>
-                        <AddCategory
-                            id={this.props.bookStack.get('id')}
-                        />
-                    </div>
-                ) :
-                (
-                    <div>
-                        <div className="addCategory" onClick={e => this.toggleAddingCategory(e)}>+ Add category</div>
-                    </div>
-                )
-        );
-        return (
+const Position = ({
+    id,
+    editing,
+    fromPosition,
+    newPosition,
+    setEditing,
+    move,
+    setNewPosition,
+}) => (
+    editing === id ?
+        (
+            <div>
+                <input
+                    autoFocus
+                    onChange={e =>
+                        e.target.value && setNewPosition(parseInt(e.target.value, 10))
+                    }
+                    value={newPosition}
+                    className="position"
+                    onBlur={(e) => {
+                        const toPosition = parseInt(e.target.value, 10);
+                        setEditing(null);
+                        move(id, fromPosition, toPosition);
+                        setNewPosition(null);
+                    }}
+                    defaultValue={fromPosition}
+                    onMouseOut={() => setEditing(null)}
+                />
+            </div>
+        ) :
+        (
             <div
-                draggable="true"
-                className={classString}
-                onDragStart={e => this.handleDragStart(e)}
-                onDragEnd={e => this.handleDragEnd(e)}
-                onDrop={e => this.handleDrop(e)}
-                onDragOver={e => this.handleDragOver(e)}
+                onClick={() => {
+                    setNewPosition(fromPosition);
+                    setEditing(id);
+                }}
             >
-                <div className="position one column">
-                    {position}
+                {fromPosition}
+            </div>
+        )
+);
+
+Position.defaultProps = {
+    newPosition: null,
+    editing: null,
+};
+
+Position.propTypes = {
+    id: propTypes.number.isRequired,
+    fromPosition: propTypes.number.isRequired,
+    editing: propTypes.number,
+    setEditing: propTypes.func.isRequired,
+    setNewPosition: propTypes.func.isRequired,
+    move: propTypes.func.isRequired,
+    newPosition: propTypes.number,
+};
+
+const RemoveBook = ({
+    id,
+    removeConfirm,
+    setRemoveConfig,
+    deleteBook,
+}) => (
+    removeConfirm ?
+        (
+            <div className="remove">
+                <button
+                    className="cancel"
+                    onClick={() => setRemoveConfig(false)}
+                >
+                    Cancel
+                </button>
+                <button
+                    className="confirm"
+                    onClick={() => {
+                        deleteBook(id);
+                        setRemoveConfig(false);
+                    }}
+                >
+                    Remove
+                </button>
+            </div>
+        ) :
+        (
+            <div className="remove">
+                <a onClick={() => setRemoveConfig(true)}>Remove</a>
+            </div>
+        )
+);
+
+
+RemoveBook.propTypes = {
+    id: propTypes.number.isRequired,
+    removeConfirm: propTypes.bool.isRequired,
+    setRemoveConfig: propTypes.func.isRequired,
+    deleteBook: propTypes.func.isRequired,
+};
+
+const AddNewCategory = ({
+    id,
+    addingCategory,
+    setAddingCategory,
+}) => (
+    addingCategory ?
+        (
+            <div>
+                <div
+                    className="addCategory"
+                    onClick={() =>
+                        setAddingCategory(!addingCategory)}
+                >- Cancel
                 </div>
-                <div>
-                    <div className="moveArrow" onClick={e => this.moveUp(e)}>↑</div>
-                    <div className="moveArrow" onClick={e => this.moveDown(e)}>↓</div>
-                </div>
-                <Book book={this.props.bookStack.get('book')} staticPath={staticPath} />
-                <div className="info seven columns">
-                    <div className="categories">
-                        <h5>Categories</h5>
-                        <ul>
-                            {this.props.bookStack.get('categories').map(category =>
-                                (
-                                    <li
-                                        key={category.get('id')}
-                                    >
-                                        {category.getIn(['detail', 'category'])} -
-                                        <span onClick={() => this.removeCategory(category.get('id'))}>
-                                            Remove
-                                        </span>
-                                    </li>
-                                ))}
-                        </ul>
-                        {addCategory}
-                    </div>
-                    <div className="read">
-                        Read:
-                        <input
-                            onChange={e => this.toggleRead(e)}
-                            type="checkbox"
-                            checked={this.props.bookStack.get('read')}
-                        />
-                    </div>
-                    {remove}
+                <AddCategory
+                    id={id}
+                />
+            </div>
+        ) :
+        (
+            <div>
+                <div
+                    className="addCategory"
+                    onClick={() => setAddingCategory(!addingCategory)}
+                >+ Add category
                 </div>
             </div>
-        );
+        )
+);
+
+AddNewCategory.propTypes = {
+    id: propTypes.number.isRequired,
+    addingCategory: propTypes.bool.isRequired,
+    setAddingCategory: propTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({
+    editing: state.bookStackStore.get('editing'),
+    removeConfirm: state.bookStackStore.get('removeConfirm'),
+    addingCategory: state.bookStackStore.get('addingCategory'),
+    newPosition: state.bookStackStore.get('newPosition'),
+});
+
+const mapDispatchToProps = {
+    setEditing: bookStackActions.setEditing,
+    setRemoveConfig: bookStackActions.setRemoveConfig,
+    setAddingCategory: bookStackActions.setAddingCategory,
+    setNewPosition: bookStackActions.setNewPosition,
+};
+
+const BookStack = ({
+    bookStack,
+    staticPath,
+    editing,
+    newPosition,
+    setEditing,
+    updatePosition,
+    setNewPosition,
+    removeCategory,
+    addingCategory,
+    setAddingCategory,
+    removeConfirm,
+    setRemoveConfig,
+    deleteBook,
+    setReadState,
+}) => {
+    const position = bookStack.get('position');
+    const id = bookStack.get('id');
+    const move = (moveId, fromPosition, toPosition) => {
+        if (toPosition > 0 && toPosition < bookStack.size && toPosition !== fromPosition) {
+            updatePosition(moveId, fromPosition, toPosition);
+        }
+    };
+    const moveUp = () => move(id, position, position - 1);
+    const moveDown = () => move(id, position, position + 1);
+    let classString = 'bookstack row';
+    if (bookStack.get('read')) {
+        classString += ' isRead';
     }
-}
+    return (
+        <div
+            draggable="true"
+            className={classString}
+            onDragStart={(e) => {
+                e.dataTransfer.setData('text', JSON.stringify({
+                    id,
+                    position,
+                }));
+            }}
+            onDragEnd={preventDefault}
+            onDrop={(e) => {
+                const { id: movedId, position: fromPosition } = JSON.parse(e.dataTransfer.getData('text'));
+                move(movedId, fromPosition, position);
+            }}
+            onDragOver={preventDefault}
+        >
+            <div className="position one column">
+                <Position
+                    id={id}
+                    editing={editing}
+                    fromPosition={position}
+                    newPosition={newPosition}
+                    setEditing={setEditing}
+                    move={move}
+                    setNewPosition={setNewPosition}
+                />
+            </div>
+            <div>
+                <div className="moveArrow" onClick={e => moveUp(e)}>↑</div>
+                <div className="moveArrow" onClick={e => moveDown(e)}>↓</div>
+            </div>
+            <Book book={bookStack.get('book')} staticPath={staticPath} />
+            <div className="info seven columns">
+                <div className="categories">
+                    <h5>Categories</h5>
+                    <ul>
+                        {bookStack.get('categories').map(category =>
+                            (
+                                <li key={category.get('id')}>
+                                    {category.getIn(['detail', 'category'])} -
+                                    <span onClick={() =>
+                                        removeCategory(bookStack.get('id'), category.get('id'))}
+                                    >
+                                        Remove
+                                    </span>
+                                </li>
+                            ))}
+                    </ul>
+                    <AddNewCategory
+                        id={id}
+                        addingCategory={addingCategory}
+                        setAddingCategory={setAddingCategory}
+                    />
+                </div>
+                <div className="read">
+                    Read:
+                    <input
+                        onChange={e => setReadState(bookStack.get('id'), Boolean(e.target.checked))}
+                        type="checkbox"
+                        checked={bookStack.get('read')}
+                    />
+                </div>
+                <RemoveBook
+                    id={id}
+                    removeConfirm={removeConfirm}
+                    setRemoveConfig={setRemoveConfig}
+                    deleteBook={deleteBook}
+                />
+            </div>
+        </div>
+    );
+};
 
 BookStack.defaultProps = {
     updateReadState: () => {},
     staticPath: '',
+    newPosition: null,
+    editing: null,
 };
 
 BookStack.propTypes = {
-    updateReadState: propTypes.func,
+    editing: propTypes.number,
+    removeConfirm: propTypes.bool.isRequired,
+    addingCategory: propTypes.bool.isRequired,
+    setEditing: propTypes.func.isRequired,
+    setNewPosition: propTypes.func.isRequired,
+    setAddingCategory: propTypes.func.isRequired,
     bookStack: immutablePropTypes.map.isRequired,
     updatePosition: propTypes.func.isRequired,
     deleteBook: propTypes.func.isRequired,
     removeCategory: propTypes.func.isRequired,
+    setRemoveConfig: propTypes.func.isRequired,
     staticPath: propTypes.string,
+    newPosition: propTypes.number,
+    setReadState: propTypes.func.isRequired,
 };
 
-export default BookStack;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(BookStack);

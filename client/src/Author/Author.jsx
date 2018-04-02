@@ -1,21 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import immutablePropTypes from 'react-immutable-proptypes';
 
-const Author = ({ author }) => {
-    const id = author.get('id');
-    const name = author.get('name');
-    return (
-        <li className="author">
-            {id ? (
-                <Link to={`/author/${id}`}>
-                    {name}
-                </Link>) :
-                name
-            }
-        </li>
-    );
-};
+import { makeAuthorDetailPath } from '../AuthorDetail/AuthorDetailRoute';
+
+const Author = ({ author }) => (
+    <li className="author">
+        {author.get('id') ? (
+            <Link to={makeAuthorDetailPath(author.get('id'))}>
+                {author.get('name')}
+            </Link>) :
+            author.get('name')
+        }
+    </li>
+);
 
 Author.propTypes = {
     author: immutablePropTypes.map.isRequired,

@@ -2,71 +2,82 @@ import React from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 
-import { login } from '../App/appModule';
+import {
+    login,
+    updateUser as updateUserAction,
+    updatePass as updatePassAction,
+    updateSave as updateSaveAction,
+} from '../App/appModule';
+
+const mapStateToProps = state => ({
+    user: state.appStore.get('user'),
+    pass: state.appStore.get('pass'),
+    save: state.appStore.get('save'),
+});
 
 const mapDispatchToProps = {
-    login,
+    submitLogin: login,
+    updateUser: updateUserAction,
+    updatePass: updatePassAction,
+    updateSave: updateSaveAction,
 };
 
-class Login extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            user: '',
-            pass: '',
-            save: true,
-        };
-    }
-
-    handleUserChange(e) {
-        this.setState({
-            user: e.target.value,
-        });
-    }
-
-    handlePassChange(e) {
-        this.setState({
-            pass: e.target.value,
-        });
-    }
-
-    handleSaveChange(e) {
-        this.setState({
-            save: e.target.checked,
-        });
-    }
-
-    handleSubmit() {
-        this.props.login(this.state.user, this.state.pass, this.state.save);
-    }
-
-    render() {
-        return (
-            <div>
-                <div>Username:
-                    <input onChange={e => this.handleUserChange(e)} type="text" value={this.state.user} />
-                </div>
-                <div>Password:
-                    <input onChange={e => this.handlePassChange(e)} type="password" value={this.state.pass} />
-                </div>
-                <div>Stay logged in:
-                    <input
-                        onChange={e => this.handleSaveChange(e)}
-                        type="checkbox"
-                        checked={this.state.save ? 'checked' : ''}
-                    />
-                </div>
-                <button onClick={e => this.handleSubmit(e)}>Login</button>
-            </div>
-        );
-    }
-}
+const Login = ({
+    user,
+    pass,
+    save,
+    submitLogin,
+    updateUser,
+    updatePass,
+    updateSave,
+}) => (
+    <div>
+        <div>Username:
+            <input
+                onChange={e => (
+                    e.target.value ? updateUser(e.target.value) : updateUser('')
+                )}
+                type="text"
+                value={user}
+            />
+        </div>
+        <div>Password:
+            <input
+                onChange={e => (
+                    e.target.value ? updatePass(e.target.value) : updatePass('')
+                )}
+                type="password"
+                value={pass}
+            />
+        </div>
+        <div>Stay logged in:
+            <input
+                onChange={e => (
+                    e.target.checked ? updateSave(e.target.checked) : updateSave(false)
+                )}
+                type="checkbox"
+                checked={save}
+            />
+        </div>
+        <button
+            onClick={() => submitLogin(user, pass, save)}
+        >
+            Login
+        </button>
+    </div>
+);
 
 Login.propTypes = {
-    login: propTypes.func.isRequired,
+    user: propTypes.string.isRequired,
+    pass: propTypes.string.isRequired,
+    save: propTypes.bool.isRequired,
+    submitLogin: propTypes.func.isRequired,
+    updateUser: propTypes.func.isRequired,
+    updatePass: propTypes.func.isRequired,
+    updateSave: propTypes.func.isRequired,
 };
 
 export default connect(
-    undefined,
+    mapStateToProps,
     mapDispatchToProps,
 )(Login);

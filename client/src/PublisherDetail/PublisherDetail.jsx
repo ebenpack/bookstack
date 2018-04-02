@@ -4,7 +4,6 @@ import propTypes from 'prop-types';
 import immutablePropTypes from 'react-immutable-proptypes';
 
 import Book from '../Book/Book';
-import { publisher as publisherActions } from '../PublisherDetail/publisherDetailModule';
 
 const mapStateToProps = state => ({
     name: state.publisherDetailStore.get('name'),
@@ -12,37 +11,16 @@ const mapStateToProps = state => ({
     books: state.publisherDetailStore.get('books'),
 });
 
-const mapDispatchToProps = {
-    loadPublisher: publisherActions.request,
-};
-
-class PublisherDetail extends React.Component {
-    componentDidMount() {
-        if (this.props.params.id) {
-            this.props.loadPublisher(this.props.params.id);
-        }
-    }
-
-    render() {
-        return (
-            <div className="author">
-                <h2>{this.props.name}</h2>
-                {this.props.books.map(book => (<Book key={book.get('id')} book={book} />))}
-            </div>
-        );
-    }
-}
+const PublisherDetail = ({ name, books }) =>  (
+    <div className="author">
+        <h2>{name}</h2>
+        {books.map(book => (<Book key={book.get('id')} book={book} />))}
+    </div>
+);
 
 PublisherDetail.propTypes = {
-    params: propTypes.shape({
-        id: propTypes.string,
-    }).isRequired,
-    loadPublisher: propTypes.func.isRequired,
     name: propTypes.string.isRequired,
     books: immutablePropTypes.list.isRequired,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(PublisherDetail);
+export default connect(mapStateToProps)(PublisherDetail);

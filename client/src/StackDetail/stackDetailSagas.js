@@ -3,8 +3,8 @@ import axios from 'axios';
 import { delay } from 'redux-saga';
 import { put, call, select, take, takeEvery, race } from 'redux-saga/effects';
 
-import { getCredentials, getCurrentTime } from '../utils/sagasUtils';
-
+import { getCredentials, getCurrentTime, initializeSaga } from '../utils/sagasUtils';
+import { path } from './StackDetailRoute';
 import * as categoryActions from '../AddCategory/addCategoryModule';
 import * as stackDetailActions from '../StackDetail/stackDetailModule';
 
@@ -46,8 +46,8 @@ export function* updateReadState({ bookId, readState }) {
             Authorization: `Token ${token}`,
         },
     });
-    const { id, read } = response.data;
-    yield put(readState.success(id, read));
+    const { read } = response.data;
+    yield put(stackDetailActions.readState.success(bookId, read));
 }
 
 export function* updatePosition({ id, from, to }) {
@@ -155,6 +155,7 @@ export function* addBook({ bookId, stackId }) {
     yield put(stackDetail.editing());
 }
 
+const initialize = initializeSaga(path, loadStack, match => ({ id: match.params.id }));
 
 function* watchLoadStack() {
     yield takeEvery(STACK_DETAIL.REQUEST, loadStack);
@@ -189,6 +190,7 @@ function* watchAddBook() {
 }
 
 export default [
+    initialize,
     watchLoadStack,
     watchUpdateReadState,
     watchUpdatePosition,

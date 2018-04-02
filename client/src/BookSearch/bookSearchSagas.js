@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Immutable from 'immutable';
 
 import { delay } from 'redux-saga';
 import { put, call, take, fork, cancel } from 'redux-saga/effects';
@@ -6,10 +7,11 @@ import { put, call, take, fork, cancel } from 'redux-saga/effects';
 import { BOOK_SEARCH, bookSearch as bookSearchActions } from './bookSearchModule';
 
 function formatBook(book) {
-    // TODO: Revisit this...
+    // TODO: Revisit this... this transformation is ugly, and probably misses a
+    // lot of edge-cases
     return {
         title: book.volumeInfo.title,
-        pages: book.volumeInfo.pageCount,
+        pages: book.volumeInfo.pageCount || 0,
         isbn: (book.volumeInfo.industryIdentifiers) ?
             book.volumeInfo.industryIdentifiers.reduce((prev, ident) => {
                 if (ident.type === 'ISBN_10') {
@@ -19,43 +21,48 @@ function formatBook(book) {
                 }
                 return prev;
             }, '') : undefined,
-        authors: book.volumeInfo.authors ? book.volumeInfo.authors.map(author => ({
-            name: author,
-        })) : [],
+        authors: book.volumeInfo.authors ?
+            book.volumeInfo.authors.map(author => ({
+                name: author,
+            })) : [],
         img: (
             book.volumeInfo.imageLinks &&
             book.volumeInfo.imageLinks.smallThumbnail
-        ) ?
-            book.volumeInfo.imageLinks.smallThumbnail : undefined,
+        ) ? book.volumeInfo.imageLinks.smallThumbnail : undefined,
         publishers: (
             Array.isArray(book.volumeInfo.publisher) ?
                 book.volumeInfo.publisher :
                 [book.volumeInfo.publisher]
-        ).map(publisher => ({ name: publisher })),
+        ).filter(publisher => publisher).map(publisher => ({ name: publisher })),
     };
 }
 
 export function* bookSearch(query) {
-    yield call(delay, 500);
     const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
     const response = yield call(axios, {
         method: 'GET',
         url: googleBooksUrl,
     });
     const results = response.data;
-    const books = results.totalItems ? results.items.map(formatBook) : [];
-    yield put(bookSearchActions.success(books));
+    const books = results.totalItems ?
+        results.items.map(formatBook) : [];
+    yield put(bookSearchActions.success(Immutable.fromJS(books)));
 }
 
 function* watchBookSearch() {
     let search;
     while (true) {
+        // In order to prevent making a lot of unecessary requests,
+        // calls to bookSearch are debounced
         const { query } = yield take(BOOK_SEARCH.REQUEST);
         if (search) {
             yield cancel(search);
         }
         if (query) {
-            search = yield fork(bookSearch, query);
+            search = yield fork(function* delayedSearch() {
+                yield call(delay, 500);
+                yield call(bookSearch, query);
+            });
         } else {
             yield put(bookSearchActions.clear());
         }

@@ -1,10 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import propTypes from 'prop-types';
 
-import { initialize, logoff } from './appModule';
-import { bookSearch } from '../BookSearch/bookSearchModule';
+import { path as listPath } from '../StackList/StackListRoute';
+import { path as bookSearchPath } from '../BookSearch/BookSearchRoute';
+import { path as loginPath } from '../Login/LoginRoute';
+
+import { logoff as logoffAction } from './appModule';
 
 const mapStateToProps = state => ({
     searchFocus: state.appStore.get('searchFocus'),
@@ -12,37 +15,23 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    initialize,
-    logoff,
-    bookSearch,
+    logoff: logoffAction,
 };
 
-class App extends React.Component {
-    componentDidMount() {
-        this.props.initialize();
-    }
-
-    render() {
-        const login = (
-            this.props.token ?
-                <li><a onClick={this.props.logoff} href="#">Logoff</a></li> :
-                <li><Link to="/login">Login</Link></li>
-        );
-        return (
-            <div className="container">
-                <ul className="row menu">
-                    <li><Link to="/list">View Stacks</Link></li>
-                    <li><Link to="/booksearch">Search Books</Link></li>
-                    {login}
-                </ul>
-                {this.props.children}
-            </div>
-        );
-    }
-}
+const App = ({ token, logoff, children }) => (
+    <div className="container">
+        <ul className="row menu">
+            <li><Link to={listPath}>View Stacks</Link></li>
+            <li><Link to={bookSearchPath}>Search Books</Link></li>
+            {token ?
+                <li><a onClick={logoff} href="#">Logoff</a></li> :
+                <li><Link to={loginPath}>Login</Link></li>}
+        </ul>
+        {children}
+    </div>
+);
 
 App.propTypes = {
-    initialize: propTypes.func.isRequired,
     token: propTypes.string.isRequired,
     logoff: propTypes.func.isRequired,
     children: propTypes.node.isRequired,

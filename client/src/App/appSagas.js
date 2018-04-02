@@ -1,9 +1,11 @@
 import axios from 'axios';
 
 import { put, call, select, takeEvery } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 
 import { getCredentials } from '../utils/sagasUtils';
 
+import { path } from '../StackList/StackListRoute';
 import * as appActions from './appModule';
 
 function* getStoredToken() {
@@ -42,6 +44,8 @@ export function* login({ user, pass, save }) {
     if (save) {
         yield call(storeToken, token);
     }
+    yield put(appActions.clearLogin());
+    yield put(push(path));
     yield put(appActions.setToken(token));
 }
 

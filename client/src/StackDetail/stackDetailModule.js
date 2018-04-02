@@ -1,8 +1,5 @@
 import Immutable from 'immutable';
 
-
-// Actions
-
 import {
     makeAction,
     createRequestTypes,
@@ -12,6 +9,8 @@ import {
     CLEAR,
     EDITING,
 } from '../utils/moduleUtils';
+
+// Actions
 
 export const STACK_DETAIL = createRequestTypes(
     'STACK_DETAIL', 'STACK_DETAIL',
@@ -109,10 +108,10 @@ export default function stackDetailReducer(state = defaultState, action) {
                 'stackDetail',
                 'books',
                 state.getIn(bookLocation)
-                    .findIndex(book => book.get('id') === action.id),
+                    .findIndex(book => book.get('id') === action.bookId),
                 'read',
             ],
-            action.read,
+            action.readState,
         );
     case REMOVE_BOOK.SUCCESS:
         return state.updateIn(

@@ -1,18 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import immutablePropTypes from 'react-immutable-proptypes';
 
-const Publisher = ({ publisher }) => {
-    const id = publisher.get('id');
-    const name = publisher.get('name');
-    return (
-        <div className="publisher">
-            <Link to={`/publisher/${id}`}>
-                {name}
-            </Link>
-        </div>
-    );
-};
+import { makePublisherDetailPath } from '../PublisherDetail/PublisherDetailRoute';
+
+const Publisher = ({ publisher }) => (
+    <div className="publisher">
+        {publisher.get('id') ? (
+            <Link to={makePublisherDetailPath(publisher.get('id'))}>
+                {publisher.get('name')}
+            </Link>) :
+            publisher.get('name')
+        }
+    </div>
+);
 
 Publisher.propTypes = {
     publisher: immutablePropTypes.map.isRequired,
