@@ -221,7 +221,7 @@ const BookStack = ({
                     deleteBook={deleteBook}
                 />
             </div>
-            <Book className="column" book={bookStack.get('book')} staticPath={staticPath} />
+            <Book book={bookStack.get('book')} staticPath={staticPath} />
             <div className="categories column">
                 <h5>Categories</h5>
                 <ul>

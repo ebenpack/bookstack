@@ -35,18 +35,24 @@ export const AddBook = (props) => {
         autocompleteResults = (
             <div className="modal is-active">
                 <div className="modal-background" />
-                <div className="modal-content">
-                    <a title="Close" className="close" onClick={clearSelected}>X</a>
-                    <Book className="" book={selectedBook} />
-                    <button className="button" onClick={() => addBook(bookId, stackId)}>
-                        Add Book
-                    </button>
+                <div className="modal-card">
+                    <header className="modal-card-head">
+                        <button
+                            className="delete"
+                            aria-label="close"
+                            onClick={clearSelected}
+                        />
+                    </header>
+                    <div className="modal-card-body">
+                        <Book className="" book={selectedBook} />
+                    </div>
+                    <footer className="modal-card-foot">
+                        <button className="button" onClick={() => addBook(bookId, stackId)}>
+                            Add Book
+                        </button>
+                    </footer>
                 </div>
-                <button
-                    className="modal-close close is-large"
-                    aria-label="close"
-                    onClick={clearSelected}
-                />
+                
             </div>
         );
     }

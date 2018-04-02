@@ -36,13 +36,15 @@ export const BookSearch = ({
                 const key = book.get('isbn') || idx;
                 return (
                     <div key={key} className="column is-half search-result">
-                        <Book book={book} className="" />
-                        <button
-                            className="button"
-                            onClick={() => addBook(book)}
-                        >
-                            Add Book
-                        </button>
+                        <div className="box">
+                            <Book book={book} className="" />
+                            <button
+                                className="button"
+                                onClick={() => addBook(book)}
+                            >
+                                Add Book
+                            </button>
+                        </div>
                     </div>
                 );
             })}
