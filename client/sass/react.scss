@@ -13,8 +13,7 @@ $color_white: #e7e7e7;
 }
 
 .bookstack {
-    margin: 1em 0;
-    padding: 1em 0;
+    padding: 1em;
     border-bottom: 1px solid $color_grey;
     &.is-read {
         background-color: $color_blue;
