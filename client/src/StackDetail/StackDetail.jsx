@@ -4,7 +4,7 @@ import propTypes from 'prop-types';
 import immutablePropTypes from 'react-immutable-proptypes';
 
 import BookStack from '../BookStack/BookStack';
-import AddBook from '../AddBook/AddBook';
+import ConnectedAddBook from '../AddBook/AddBook';
 
 import {
     stackDetail as stackDetailActions,
@@ -14,24 +14,7 @@ import {
     removeCategory,
 } from '../StackDetail/stackDetailModule';
 
-const mapStateToProps = state => ({
-    staticPath: state.appStore.get('staticPath'),
-    stackDetail: state.stackDetailStore.get('stackDetail'),
-    books: state.stackDetailStore.getIn(['stackDetail', 'books']),
-    editing: state.stackDetailStore.get('editing'),
-});
-
-const mapDispatchToProps = {
-    loadStack: stackDetailActions.request,
-    unloadStack: stackDetailActions.clear,
-    toggleEditing: stackDetailActions.editing,
-    updateReadState: readState.request,
-    deleteBook: removeBook.request,
-    deleteCategory: removeCategory.request,
-    updatePosition: position.request,
-};
-
-const StackDetail = ({
+export const StackDetail = ({
     staticPath,
     match,
     stackDetail,
@@ -48,7 +31,7 @@ const StackDetail = ({
         (
             <div>
                 <div onClick={toggleEditing}>Close -</div>
-                <AddBook stackId={id} />
+                <ConnectedAddBook stackId={id} />
             </div>
         ) :
         (
@@ -93,6 +76,23 @@ StackDetail.propTypes = {
     deleteBook: propTypes.func.isRequired,
     deleteCategory: propTypes.func.isRequired,
     updatePosition: propTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({
+    staticPath: state.appStore.get('staticPath'),
+    stackDetail: state.stackDetailStore.get('stackDetail'),
+    books: state.stackDetailStore.getIn(['stackDetail', 'books']),
+    editing: state.stackDetailStore.get('editing'),
+});
+
+const mapDispatchToProps = {
+    loadStack: stackDetailActions.request,
+    unloadStack: stackDetailActions.clear,
+    toggleEditing: stackDetailActions.editing,
+    updateReadState: readState.request,
+    deleteBook: removeBook.request,
+    deleteCategory: removeCategory.request,
+    updatePosition: position.request,
 };
 
 export default connect(

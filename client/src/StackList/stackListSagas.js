@@ -7,14 +7,18 @@ import { path } from './StackListRoute';
 
 export function* loadStackList() {
     const { apiUrl } = yield select(getCredentials);
-    const stack = yield call(axios, {
-        method: 'GET',
-        url: `${apiUrl}/api/stack/`,
-    });
-    yield put(stackActions.success(stack.data));
+    try {
+        const stack = yield call(axios, {
+            method: 'GET',
+            url: `${apiUrl}/api/stack/`,
+        });
+        yield put(stackActions.success(stack.data));
+    } catch (error) {
+        yield put(stackActions.failure(error));
+    }
 }
 
-const initialize = initializeSaga(path, loadStackList, match => null);
+const initialize = initializeSaga(path, loadStackList, () => null);
 
 function* watchLoadStacklist() {
     yield takeEvery(STACK.REQUEST, loadStackList);

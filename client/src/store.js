@@ -16,7 +16,6 @@ import StackListSaga from './StackList/stackListSagas';
 // Reducers
 import publisherDetailStore from './PublisherDetail/publisherDetailModule';
 import bookSearchStore from './BookSearch/bookSearchModule';
-import bookStackStore from './BookStack/bookStackModule';
 import addBookStore from './AddBook/addBookModule';
 import addCategoryStore from './AddCategory/addCategoryModule';
 import authorDetailStore from './AuthorDetail/authorDetailModule';
@@ -42,7 +41,6 @@ const initializeStore = ({ apiUrl, staticPath }) => {
         authorDetailStore,
         publisherDetailStore,
         bookSearchStore,
-        bookStackStore,
         addBookStore,
         addCategoryStore,
         router: routerReducer,

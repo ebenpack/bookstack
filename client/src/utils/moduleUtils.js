@@ -12,7 +12,7 @@ export const createRequestTypes = (namespace, action, types = [REQUEST, SUCCESS,
         return acc;
     }, {});
 
-export const makeAction = (type, args) => ({
+export const makeAction = (type, args = {}) => ({
     type,
     ...args,
 });

@@ -7,8 +7,12 @@ import { makeAction, createRequestTypes, REQUEST, SUCCESS, FAILURE, CLEAR } from
 export const STACK = createRequestTypes('STACK', 'STACK', [REQUEST, SUCCESS, FAILURE, CLEAR]);
 
 export const stack = {
-    request: () => makeAction(STACK.REQUEST),
-    success: stck => makeAction(STACK.SUCCESS, { stack: stck }),
+    request: () =>
+        makeAction(STACK.REQUEST),
+    success: stck =>
+        makeAction(STACK.SUCCESS, { stack: stck }),
+    failure: error =>
+        makeAction(STACK.FAILURE, { error }),
     clear: () => makeAction(STACK.CLEAR),
 };
 

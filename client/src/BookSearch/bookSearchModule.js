@@ -1,8 +1,8 @@
 import Immutable from 'immutable';
 
-// Actions
-
 import { makeAction, createRequestTypes, SET, REQUEST, SUCCESS, FAILURE, CLEAR } from '../utils/moduleUtils';
+
+// Actions
 
 // TODO: CONSOLIDATE ALL BOOK STUFF?
 export const BOOK_SEARCH = createRequestTypes('BOOK_SEARCH', 'SEARCH', [REQUEST, SUCCESS, FAILURE, CLEAR]);
@@ -10,9 +10,14 @@ export const BOOK_SEARCH = createRequestTypes('BOOK_SEARCH', 'SEARCH', [REQUEST,
 export const QUERY = createRequestTypes('BOOK_SEARCH', 'QUERY', [SET, CLEAR]);
 
 export const bookSearch = {
-    request: query => makeAction(BOOK_SEARCH.REQUEST, { query }),
-    success: books => makeAction(BOOK_SEARCH.SUCCESS, { books }),
-    clear: () => makeAction(BOOK_SEARCH.CLEAR),
+    request: query =>
+        makeAction(BOOK_SEARCH.REQUEST, { query }),
+    success: books =>
+        makeAction(BOOK_SEARCH.SUCCESS, { books }),
+    failure: error =>
+        makeAction(BOOK_SEARCH.FAILURE, { error }),
+    clear: () =>
+        makeAction(BOOK_SEARCH.CLEAR),
 };
 
 export const query = {

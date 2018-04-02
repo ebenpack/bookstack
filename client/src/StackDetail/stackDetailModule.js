@@ -32,16 +32,26 @@ export const SET_ADDING_CATEGORY = createRequestTypes('STACK_DETAIL', 'ADDING_CA
 export const SET_NEW_POSITION = createRequestTypes('STACK_DETAIL', 'NEW_POSITION', [SET]);
 
 export const stackDetail = {
-    request: id => makeAction(STACK_DETAIL.REQUEST, { id }),
-    success: stack => makeAction(STACK_DETAIL.SUCCESS, { stack }),
-    clear: () => makeAction(STACK_DETAIL.CLEAR),
-    editing: () => makeAction(STACK_DETAIL.EDITING),
+    request: id =>
+        makeAction(STACK_DETAIL.REQUEST, { id }),
+    success: stack =>
+        makeAction(STACK_DETAIL.SUCCESS, { stack }),
+    failure: error =>
+        makeAction(STACK_DETAIL.FAILURE, { error }),
+    clear: () =>
+        makeAction(STACK_DETAIL.CLEAR),
+    editing: () =>
+        makeAction(STACK_DETAIL.EDITING),
 };
 
 
 export const position = {
-    request: (id, from, to) => makeAction(POSITION.REQUEST, { id, from, to }),
-    success: (id, from, to) => makeAction(POSITION.SUCCESS, { id, from, to }),
+    request: (id, from, to) =>
+        makeAction(POSITION.REQUEST, { id, from, to }),
+    success: (id, from, to) =>
+        makeAction(POSITION.SUCCESS, { id, from, to }),
+    failure: error =>
+        makeAction(POSITION.FAILURE, { error }),
 };
 
 export const readState = {
@@ -49,17 +59,26 @@ export const readState = {
         makeAction(READ_STATE.REQUEST, { bookId, readState: rdState }),
     success: (bookId, rdState) =>
         makeAction(READ_STATE.SUCCESS, { bookId, readState: rdState }),
+    failure: error =>
+        makeAction(READ_STATE.FAILURE, { error }),
 };
 
 export const addBook = {
-    request: (bookId, stackId) => makeAction(ADD_BOOK.REQUEST, { bookId, stackId }),
-    success: () => { /* TODO */
-    },
+    request: (bookId, stackId) =>
+        makeAction(ADD_BOOK.REQUEST, { bookId, stackId }),
+    success: () =>
+        makeAction(ADD_BOOK.SUCCESS, { /* TODO */ }),
+    failure: error =>
+        makeAction(ADD_BOOK.FAILURE, { error }),
 };
 
 export const removeBook = {
-    request: id => makeAction(REMOVE_BOOK.REQUEST, { id }),
-    success: id => makeAction(REMOVE_BOOK.SUCCESS, { id }),
+    request: id =>
+        makeAction(REMOVE_BOOK.REQUEST, { id }),
+    success: id =>
+        makeAction(REMOVE_BOOK.SUCCESS, { id }),
+    failure: error =>
+        makeAction(REMOVE_BOOK.FAILURE, { error }),
 };
 
 export const addCategory = {
@@ -67,11 +86,17 @@ export const addCategory = {
         makeAction(ADD_CATEGORY.REQUEST, { bookstackId, categoryId }),
     success: (bookstackId, category) =>
         makeAction(ADD_CATEGORY.SUCCESS, { bookstackId, category }),
+    failure: error =>
+        makeAction(ADD_CATEGORY.FAILURE, { error }),
 };
 
 export const addNewCategory = {
     request: (bookstackId, category) =>
         makeAction(ADD_NEW_CATEGORY.REQUEST, { bookstackId, category }),
+    success: () =>
+        makeAction(ADD_NEW_CATEGORY.SUCCESS, { /* TODO */ }),
+    failure: error =>
+        makeAction(ADD_NEW_CATEGORY.FAILURE, { error }),
 };
 
 export const removeCategory = {
@@ -79,6 +104,8 @@ export const removeCategory = {
         makeAction(REMOVE_CATEGORY.REQUEST, { bookstackId, categoryId }),
     success: (bookstackId, categoryId) =>
         makeAction(REMOVE_CATEGORY.SUCCESS, { bookstackId, categoryId }),
+    failure: error =>
+        makeAction(REMOVE_CATEGORY.FAILURE, { error }),
 };
 
 export const setEditing = (bookId, editing) =>

@@ -5,7 +5,7 @@ import immutablePropTypes from 'react-immutable-proptypes';
 
 import * as stackDetailActions from '../StackDetail/stackDetailModule';
 import Book from '../Book/Book';
-import AddCategory from '../AddCategory/AddCategory';
+import ConnectedAddCategory from '../AddCategory/AddCategory';
 
 const preventDefault = e => e.preventDefault();
 
@@ -120,7 +120,7 @@ const AddNewCategory = ({
                         setAddingCategory(id, !addingCategory)}
                 >- Cancel
                 </div>
-                <AddCategory
+                <ConnectedAddCategory
                     id={id}
                 />
             </div>
@@ -140,13 +140,6 @@ AddNewCategory.propTypes = {
     id: propTypes.number.isRequired,
     addingCategory: propTypes.bool.isRequired,
     setAddingCategory: propTypes.func.isRequired,
-};
-
-const mapDispatchToProps = {
-    setEditing: stackDetailActions.setEditing,
-    setRemoveConfig: stackDetailActions.setRemoveConfig,
-    setAddingCategory: stackDetailActions.setAddingCategory,
-    setNewPosition: stackDetailActions.setNewPosition,
 };
 
 const BookStack = ({
@@ -268,6 +261,13 @@ BookStack.propTypes = {
     setRemoveConfig: propTypes.func.isRequired,
     staticPath: propTypes.string,
     setReadState: propTypes.func.isRequired,
+};
+
+const mapDispatchToProps = {
+    setEditing: stackDetailActions.setEditing,
+    setRemoveConfig: stackDetailActions.setRemoveConfig,
+    setAddingCategory: stackDetailActions.setAddingCategory,
+    setNewPosition: stackDetailActions.setNewPosition,
 };
 
 export default connect(

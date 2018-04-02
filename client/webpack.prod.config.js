@@ -3,5 +3,5 @@ const webpack = require('webpack');
 
 module.exports = Object.assign({}, {
     mode: 'production',
-    plugins: []
+    plugins: [...baseConfig.plugins],
 }, baseConfig);

@@ -1,14 +1,18 @@
 import Immutable from 'immutable';
 
-// Actions
-
 import { makeAction, createRequestTypes } from '../utils/moduleUtils';
+
+// Actions
 
 export const PUBLISHER = createRequestTypes('PUBLISHER', 'PUBLISHER');
 
 export const publisher = {
-    request: id => makeAction(PUBLISHER.REQUEST, { id }),
-    success: pub => makeAction(PUBLISHER.SUCCESS, { publisher: pub }),
+    request: id =>
+        makeAction(PUBLISHER.REQUEST, { id }),
+    success: pub =>
+        makeAction(PUBLISHER.SUCCESS, { publisher: pub }),
+    failure: error =>
+        makeAction(PUBLISHER.FAILURE, { error }),
 };
 
 // State

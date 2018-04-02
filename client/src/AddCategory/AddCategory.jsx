@@ -11,21 +11,7 @@ import {
     addNewCategory as addNewCategoryAction,
 } from '../StackDetail/stackDetailModule';
 
-const mapStateToProps = state => ({
-    autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories'),
-    category: state.addCategoryStore.get('category'),
-});
-
-const mapDispatchToProps = {
-    addCategory: addCategoryAction.request,
-    addNewCategory: addNewCategoryAction.request,
-    setCategoryInput: categoryInput.set,
-    clearCategoryInput: categoryInput.clear,
-    setAutoSuggestCategories: categorySearch.request,
-    clearAutoSuggestCategories: categorySearch.clear,
-};
-
-const AddCategory = ({
+export const AddCategory = ({
     id,
     autoSuggestCategories,
     category,
@@ -85,6 +71,20 @@ AddCategory.propTypes = {
     id: propTypes.number.isRequired,
     addNewCategory: propTypes.func.isRequired,
     autoSuggestCategories: immutablePropTypes.list.isRequired,
+};
+
+const mapStateToProps = state => ({
+    autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories'),
+    category: state.addCategoryStore.get('category'),
+});
+
+const mapDispatchToProps = {
+    addCategory: addCategoryAction.request,
+    addNewCategory: addNewCategoryAction.request,
+    setCategoryInput: categoryInput.set,
+    clearCategoryInput: categoryInput.clear,
+    setAutoSuggestCategories: categorySearch.request,
+    clearAutoSuggestCategories: categorySearch.clear,
 };
 
 export default connect(

@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { put, call, select, takeEvery } from 'redux-saga/effects';
 
 import { getCredentials, initializeSaga } from '../utils/sagasUtils';
@@ -9,11 +8,15 @@ import { PUBLISHER, publisher as publisherActions } from './publisherDetailModul
 
 export function* loadPublisher({ id }) {
     const { apiUrl } = yield select(getCredentials);
-    const publisher = yield call(axios, {
-        method: 'GET',
-        url: `${apiUrl}/api/publisher/${id}/`,
-    });
-    yield put(publisherActions.success(publisher.data));
+    try {
+        const publisher = yield call(axios, {
+            method: 'GET',
+            url: `${apiUrl}/api/publisher/${id}/`,
+        });
+        yield put(publisherActions.success(publisher.data));
+    } catch (error) {
+        yield put(publisherActions.failure(error));
+    }
 }
 
 const initialize = initializeSaga(path, loadPublisher, match => ({ id: match.params.id }));

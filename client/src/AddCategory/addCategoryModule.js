@@ -9,19 +9,30 @@ export const SEARCH = createRequestTypes('CATEGORY', 'SEARCH', [REQUEST, SUCCESS
 export const INPUT = createRequestTypes('CATEGORY', 'INPUT', [SET, CLEAR]);
 
 export const addCategory = {
-    request: category => makeAction(ADD.REQUEST, { category }),
-    success: category => makeAction(ADD.SUCCESS, { category }),
+    request: category =>
+        makeAction(ADD.REQUEST, { category }),
+    success: category =>
+        makeAction(ADD.SUCCESS, { category }),
+    failure: error =>
+        makeAction(ADD.FAILURE, { error }),
 };
 
 export const categorySearch = {
-    request: query => makeAction(SEARCH.REQUEST, { query }),
-    success: suggestions => makeAction(SEARCH.SUCCESS, { suggestions }),
-    clear: () => makeAction(SEARCH.CLEAR),
+    request: query =>
+        makeAction(SEARCH.REQUEST, { query }),
+    success: suggestions =>
+        makeAction(SEARCH.SUCCESS, { suggestions }),
+    failure: error =>
+        makeAction(SEARCH.FAILURE, { error }),
+    clear: () =>
+        makeAction(SEARCH.CLEAR),
 };
 
 export const categoryInput = {
-    set: query => makeAction(INPUT.SET, { query }),
-    clear: () => makeAction(INPUT.CLEAR, {}),
+    set: query =>
+        makeAction(INPUT.SET, { query }),
+    clear: () =>
+        makeAction(INPUT.CLEAR, {}),
 };
 
 // State

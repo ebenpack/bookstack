@@ -1,14 +1,16 @@
 import Immutable from 'immutable';
 
-// Actions
-
 import { makeAction, createRequestTypes } from '../utils/moduleUtils';
+
+// Actions
 
 export const AUTHOR = createRequestTypes('AUTHOR', 'AUTHOR');
 
 export const author = {
-    request: id => makeAction(AUTHOR.REQUEST, { id }),
-    success: auth => makeAction(AUTHOR.SUCCESS, { author: auth }),
+    request: id =>
+        makeAction(AUTHOR.REQUEST, { id }),
+    success: auth =>
+        makeAction(AUTHOR.SUCCESS, { author: auth }),
 };
 
 // State

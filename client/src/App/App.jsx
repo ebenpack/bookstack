@@ -9,16 +9,7 @@ import { path as loginPath } from '../Login/LoginRoute';
 
 import { logoff as logoffAction } from './appModule';
 
-const mapStateToProps = state => ({
-    searchFocus: state.appStore.get('searchFocus'),
-    token: state.appStore.get('token'),
-});
-
-const mapDispatchToProps = {
-    logoff: logoffAction,
-};
-
-const App = ({ token, logoff, children }) => (
+export const App = ({ token, logoff, children }) => (
     <div className="container">
         <ul className="row menu">
             <li><Link to={listPath}>View Stacks</Link></li>
@@ -35,6 +26,15 @@ App.propTypes = {
     token: propTypes.string.isRequired,
     logoff: propTypes.func.isRequired,
     children: propTypes.node.isRequired,
+};
+
+const mapStateToProps = state => ({
+    searchFocus: state.appStore.get('searchFocus'),
+    token: state.appStore.get('token'),
+});
+
+const mapDispatchToProps = {
+    logoff: logoffAction,
 };
 
 export default connect(

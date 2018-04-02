@@ -11,18 +11,9 @@ import {
 } from '../BookSearch/bookSearchModule';
 import { addBook as addBookAction } from '../AddBook/addBookModule';
 
-const mapStateToProps = state => ({
-    books: state.bookSearchStore.get('books'),
-    query: state.bookSearchStore.get('query'),
-});
-
-const mapDispatchToProps = {
-    setQuery: queryActions.set,
-    bookSearch: bookSearchActions.request,
-    addBook: addBookAction.request,
-};
-
-const BookSearch = ({ books, query, setQuery, bookSearch, addBook }) => (
+export const BookSearch = ({
+    books, query, setQuery, bookSearch, addBook,
+}) => (
     <div className="bookSearch">
         <label>Search
             <input
@@ -57,6 +48,17 @@ BookSearch.propTypes = {
     books: immutablePropTypes.list.isRequired,
     bookSearch: propTypes.func.isRequired,
     addBook: propTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({
+    books: state.bookSearchStore.get('books'),
+    query: state.bookSearchStore.get('query'),
+});
+
+const mapDispatchToProps = {
+    setQuery: queryActions.set,
+    bookSearch: bookSearchActions.request,
+    addBook: addBookAction.request,
 };
 
 export default connect(

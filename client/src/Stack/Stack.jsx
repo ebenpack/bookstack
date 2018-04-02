@@ -1,6 +1,5 @@
 import React from 'react';
 import immutablePropTypes from 'react-immutable-proptypes';
-
 import { Link } from 'react-router-dom';
 
 import { makeStackDetailPath } from '../StackDetail/StackDetailRoute';

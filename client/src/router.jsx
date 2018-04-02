@@ -5,7 +5,7 @@ import { withRouter } from 'react-router';
 
 import { ConnectedRouter } from 'react-router-redux';
 
-import App from './App/App';
+import ConnectedApp from './App/App';
 import AuthorDetailRoute from './AuthorDetail/AuthorDetailRoute';
 import BookSearchRoute from './BookSearch/BookSearchRoute';
 import LoginRoute from './Login/LoginRoute';
@@ -13,26 +13,28 @@ import PublisherDetailRoute from './PublisherDetail/PublisherDetailRoute';
 import StackListRoute from './StackList/StackListRoute';
 import StackDetailRoute from './StackDetail/StackDetailRoute';
 
-const AppWithRouter = withRouter(App);
+const ConnectedAppWithRouter = withRouter(ConnectedApp);
 
 const AppRouter = ({ store, history }) => (
     <Provider store={store}>
         <ConnectedRouter history={history}>
-            <AppWithRouter>
+            <ConnectedAppWithRouter>
                 <StackDetailRoute />
                 <StackListRoute />
                 <LoginRoute />
                 <AuthorDetailRoute />
                 <PublisherDetailRoute />
                 <BookSearchRoute />
-            </AppWithRouter>
+            </ConnectedAppWithRouter>
         </ConnectedRouter>
     </Provider>
 );
 
 AppRouter.propTypes = {
+    /* eslint-disable react/forbid-prop-types */
     store: propTypes.object.isRequired,
     history: propTypes.object.isRequired,
+    /* eslint-enable react/forbid-prop-types */
 };
 
 export default AppRouter;

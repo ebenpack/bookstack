@@ -1,6 +1,5 @@
 import axios from 'axios';
 import Immutable from 'immutable';
-
 import { delay } from 'redux-saga';
 import { put, call, take, fork, cancel } from 'redux-saga/effects';
 
@@ -39,14 +38,18 @@ function formatBook(book) {
 
 export function* bookSearch(query) {
     const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
-    const response = yield call(axios, {
-        method: 'GET',
-        url: googleBooksUrl,
-    });
-    const results = response.data;
-    const books = results.totalItems ?
-        results.items.map(formatBook) : [];
-    yield put(bookSearchActions.success(Immutable.fromJS(books)));
+    try {
+        const response = yield call(axios, {
+            method: 'GET',
+            url: googleBooksUrl,
+        });
+        const results = response.data;
+        const books = results.totalItems ?
+            results.items.map(formatBook) : [];
+        yield put(bookSearchActions.success(Immutable.fromJS(books)));
+    } catch (error) {
+        yield put(bookSearchActions.failure(error));
+    }
 }
 
 function* watchBookSearch() {

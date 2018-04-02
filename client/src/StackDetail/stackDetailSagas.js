@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import { delay } from 'redux-saga';
 import { put, call, select, take, takeEvery, race } from 'redux-saga/effects';
 
@@ -26,60 +25,77 @@ const {
 
 export function* loadStack({ id }) {
     const { apiUrl } = yield select(getCredentials);
-    const stack = yield call(axios, {
-        method: 'GET',
-        url: `${apiUrl}/api/stack/${id}/`,
-    });
-    yield put(stackDetail.success(stack.data));
+    try {
+        const stack = yield call(axios, {
+            method: 'GET',
+            url: `${apiUrl}/api/stack/${id}/`,
+        });
+        yield put(stackDetail.success(stack.data));
+    } catch (error) {
+        yield put(stackDetail.failure(error));
+    }
 }
 
 export function* updateReadState({ bookId, readState }) {
     const { apiUrl, token } = yield select(getCredentials);
-    const response = yield call(axios, {
-        method: 'PATCH',
-        url: `${apiUrl}/api/bookset/${bookId}/`,
-        data: {
-            read: readState,
-        },
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Token ${token}`,
-        },
-    });
-    const { read } = response.data;
-    yield put(stackDetailActions.readState.success(bookId, read));
-}
-
-export function* updatePosition({ id, from, to }) {
-    const { apiUrl, token } = yield select(getCredentials);
-    const stackLength = yield select(store => store.stackDetailStore.getIn(['stackDetail', 'books']).size);
-    if (to > 0 && to <= stackLength) {
-        yield call(axios, {
+    try {
+        const response = yield call(axios, {
             method: 'PATCH',
-            url: `${apiUrl}/api/bookset/${id}/renumber/`,
+            url: `${apiUrl}/api/bookset/${bookId}/`,
             data: {
-                position: to,
+                read: readState,
             },
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Token ${token}`,
             },
         });
+        const { read } = response.data;
+        yield put(stackDetailActions.readState.success(bookId, read));
+    } catch (error) {
+        yield put(stackDetailActions.readState.failure(error));
     }
-    yield put(position.success(id, from, to));
+}
+
+export function* updatePosition({ id, from, to }) {
+    const { apiUrl, token } = yield select(getCredentials);
+    const stackLength = yield select(store =>
+        store.stackDetailStore.getIn(['stackDetail', 'books']).size);
+    try {
+        if (to > 0 && to <= stackLength) {
+            yield call(axios, {
+                method: 'PATCH',
+                url: `${apiUrl}/api/bookset/${id}/renumber/`,
+                data: {
+                    position: to,
+                },
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Token ${token}`,
+                },
+            });
+        }
+        yield put(position.success(id, from, to));
+    } catch (error) {
+        yield put(position.failure(error));
+    }
 }
 
 export function* deleteBook({ id }) {
     const { apiUrl, token } = yield select(getCredentials);
-    yield call(axios, {
-        method: 'DELETE',
-        url: `${apiUrl}/api/bookset/${id}/`,
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Token ${token}`,
-        },
-    });
-    yield put(removeBook.success(id));
+    try {
+        yield call(axios, {
+            method: 'DELETE',
+            url: `${apiUrl}/api/bookset/${id}/`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Token ${token}`,
+            },
+        });
+        yield put(removeBook.success(id));
+    } catch (error) {
+        yield put(removeBook.failure(error));
+    }
 }
 
 export function* addNewCategory({ bookstackId, category }) {
@@ -104,55 +120,67 @@ export function* addNewCategory({ bookstackId, category }) {
 
 export function* addCategory({ bookstackId, categoryId }) {
     const { apiUrl, token } = yield select(getCredentials);
-    const response = yield call(axios, {
-        method: 'POST',
-        url: `${apiUrl}/api/booksetcategory/`,
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Token ${token}`,
-        },
-        data: {
-            bookstack: bookstackId,
-            category: categoryId,
-        },
-    });
-
-    yield put(stackDetailActions.addCategory.success(response.data.bookstack, response.data));
+    try {
+        const response = yield call(axios, {
+            method: 'POST',
+            url: `${apiUrl}/api/booksetcategory/`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Token ${token}`,
+            },
+            data: {
+                bookstack: bookstackId,
+                category: categoryId,
+            },
+        });
+        yield put(stackDetailActions.addCategory.success(response.data.bookstack, response.data));
+    } catch (error) {
+        yield put(stackDetailActions.addCategory.failure(error));
+    }
 }
 
 export function* deleteCategory({ bookstackId, categoryId }) {
     const { apiUrl, token } = yield select(getCredentials);
-    yield call(axios, {
-        method: 'DELETE',
-        url: `${apiUrl}/api/booksetcategory/${categoryId}/`,
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Token ${token}`,
-        },
-    });
-    yield put(removeCategory.success(bookstackId, categoryId));
+    try {
+        yield call(axios, {
+            method: 'DELETE',
+            url: `${apiUrl}/api/booksetcategory/${categoryId}/`,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Token ${token}`,
+            },
+        });
+        yield put(removeCategory.success(bookstackId, categoryId));
+    } catch (error) {
+        yield put(removeCategory.failure(error));
+    }
 }
 
 export function* addBook({ bookId, stackId }) {
     const { apiUrl, token } = yield select(getCredentials);
-    yield call(axios, {
-        url: `${apiUrl}/api/bookset/`,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Token ${token}`,
-        },
-        data: {
-            categories: [],
-            bookId,
-            stackId,
-        },
-    });
-    // TODO: FIIIIIXXXX!
-    // yield put(addBookActions.addNewBook(bookId, stackId)); WTF?
-    // TODO: FIX
-    // yield put(addBookActions.clearSelected());
-    yield put(stackDetail.editing());
+    try {
+        yield call(axios, {
+            url: `${apiUrl}/api/bookset/`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Token ${token}`,
+            },
+            data: {
+                categories: [],
+                bookId,
+                stackId,
+            },
+        });
+        // TODO: FIIIIIXXXX!
+        // yield put(addBookActions.addNewBook(bookId, stackId)); WTF?
+        // TODO: FIX
+        // yield put(addBookActions.clearSelected());
+        yield put(stackDetail.editing());
+        yield put(stackDetailActions.addBook.success());
+    } catch (error) {
+        yield put(stackDetailActions.addBook.failure(error));
+    }
 }
 
 const initialize = initializeSaga(path, loadStack, match => ({ id: match.params.id }));

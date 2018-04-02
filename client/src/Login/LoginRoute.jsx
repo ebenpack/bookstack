@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
 
-import Login from './Login';
+import ConnectedLogin from './Login';
 
 export const path = '/login';
 
-export default () => <Route path={path} component={Login} exact />;
+export default () => <Route path={path} component={ConnectedLogin} exact />;

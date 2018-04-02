@@ -1,17 +1,20 @@
 const path = require('path');
 const webpack = require('webpack');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: ['./src/main.jsx'],
-
     output: {
-        path: path.resolve(__dirname, "../bookstack/static/bookstack/js/dist"),
+        path: path.resolve(__dirname, '../bookstack/static/bookstack/js/dist'),
         publicPath: '/assets/',
         filename: 'bundle.js',
     },
     resolve: {
         extensions: ['.js', '.jsx', '.scss'],
     },
+    plugins: [
+        new MiniCssExtractPlugin(),
+    ],
     module: {
         rules: [
             {
@@ -27,17 +30,16 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: [{
-                    loader: "style-loader"
-                }, {
-                    loader: "css-loader"
-                }, {
-                    loader: "sass-loader",
-                    options: {
-                        sourceMap: true,
-                        includePaths: [path.resolve(__dirname, "sass")]
-                    }
-                }]
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        loader: "css-loader"
+                    }, {
+                        loader: "sass-loader",
+                        options: {
+                            sourceMap: true,
+                        },
+                    }],
             }
         ]
     }

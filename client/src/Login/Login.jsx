@@ -9,23 +9,11 @@ import {
     updateSave as updateSaveAction,
 } from '../App/appModule';
 
-const mapStateToProps = state => ({
-    user: state.appStore.get('user'),
-    pass: state.appStore.get('pass'),
-    save: state.appStore.get('save'),
-});
-
-const mapDispatchToProps = {
-    submitLogin: login,
-    updateUser: updateUserAction,
-    updatePass: updatePassAction,
-    updateSave: updateSaveAction,
-};
-
-const Login = ({
+export const Login = ({
     user,
     pass,
     save,
+    loginError,
     submitLogin,
     updateUser,
     updatePass,
@@ -38,6 +26,7 @@ const Login = ({
                     e.target.value ? updateUser(e.target.value) : updateUser('')
                 )}
                 type="text"
+                className={loginError ? 'error' : ''}
                 value={user}
             />
         </div>
@@ -47,6 +36,7 @@ const Login = ({
                     e.target.value ? updatePass(e.target.value) : updatePass('')
                 )}
                 type="password"
+                className={loginError ? 'error' : ''}
                 value={pass}
             />
         </div>
@@ -70,11 +60,26 @@ const Login = ({
 Login.propTypes = {
     user: propTypes.string.isRequired,
     pass: propTypes.string.isRequired,
+    loginError: propTypes.bool.isRequired,
     save: propTypes.bool.isRequired,
     submitLogin: propTypes.func.isRequired,
     updateUser: propTypes.func.isRequired,
     updatePass: propTypes.func.isRequired,
     updateSave: propTypes.func.isRequired,
+};
+
+const mapStateToProps = state => ({
+    user: state.appStore.get('user'),
+    pass: state.appStore.get('pass'),
+    save: state.appStore.get('save'),
+    loginError: state.appStore.get('loginError'),
+});
+
+const mapDispatchToProps = {
+    submitLogin: login.request,
+    updateUser: updateUserAction,
+    updatePass: updatePassAction,
+    updateSave: updateSaveAction,
 };
 
 export default connect(

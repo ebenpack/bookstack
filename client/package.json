@@ -5,8 +5,10 @@
         "axios": "^0.18.0",
         "babel-plugin-transform-object-rest-spread": "^6.26.0",
         "babel-polyfill": "^6.26.0",
+        "extract-text-webpack-plugin": "^4.0.0-beta.0",
         "history": "^4.7.2",
         "immutable": "^3.8.2",
+        "mini-css-extract-plugin": "^0.4.0",
         "prop-types": "^15.6.1",
         "react": "^16.3.0",
         "react-dom": "^16.3.0",
@@ -44,7 +46,6 @@
         "build": "NODE_ENV=production webpack --config webpack.prod.config.js",
         "lint": "eslint src --ext .jsx --ext .js",
         "lintfix": "eslint src --fix --ext .jsx --ext .js",
-        "sass": "sassc sass/react.scss > ../bookstack/static/bookstack/css/react.css",
         "server:dev": "webpack-dashboard  -- webpack-dev-server --content-base ./build"
     }
 }

@@ -169,3 +169,7 @@ $color_pink: #FFE4E1;
 .addBook .select {
     @include modal-dialog()
 }
+
+input.error {
+    background-color: $color_pink;
+}
