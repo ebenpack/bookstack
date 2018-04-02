@@ -82,6 +82,7 @@ class BookStackManager(models.Manager):
 class BookStack(models.Model):
     class Meta:
         ordering = ['position']
+        unique_together = (('stack', 'position'),)
 
     stack = models.ForeignKey(Stack, on_delete=models.PROTECT)
     book = models.ForeignKey(Book, on_delete=models.PROTECT)
@@ -123,6 +124,10 @@ class BookStack(models.Model):
         # Grab the book being moved first, otherwise we
         # won't be able to uniquely identify it by its postion
         moved = bookstack_set.get(position=from_position)
+        # Temporarily move it off the end of the list, to avoid
+        # bumping into our uniqueness constraint
+        moved.position = max_position
+        moved.save()
 
         bookstack_set.filter(
             position__gte=start
@@ -160,7 +165,8 @@ class Category(models.Model):
 
 class BookStackCategoryManager(models.Manager):
     def create_bookstack_category(self, bookstack, category):
-        bookstack_category = self.create(bookstack=bookstack, category=category)
+        bookstack_category = self.create(
+            bookstack=bookstack, category=category)
         bookstack_category.save()
         return bookstack_category
 
