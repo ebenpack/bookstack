@@ -45,12 +45,10 @@ const Book = ({ staticPath, book }) => (
 
 Book.defaultProps = {
     staticPath: '',
-    className: 'book four columns',
 };
 
 Book.propTypes = {
     staticPath: propTypes.string,
-    className: propTypes.string,
     book: immutablePropTypes.map.isRequired,
 };
 
