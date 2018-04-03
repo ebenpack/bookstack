@@ -3,6 +3,7 @@ dist/
 vendor/
 css/
 __pycache__/
+.pytest_cache/
 .idea/
 bundle.js
 .DS_Store

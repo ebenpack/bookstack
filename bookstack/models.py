@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.db.models import F
-
+from django.db.models import F, Case, When, Value, Q, ExpressionWrapper
 
 class StackManager(models.Manager):
     def create_stack(self, name, user, private=False, creation_date=None, books=None):
@@ -67,7 +66,9 @@ class BookStackManager(models.Manager):
             book=book,
             stack=stack,
         )
-        if categories is not None:
+        if categories is None:
+            bookstack.save()
+        else:
             bookstack.save()
             for category in categories:
                 BookStackCategory.objects.create_bookstack_category(
@@ -75,14 +76,12 @@ class BookStackManager(models.Manager):
                     category=category
                 )
 
-        bookstack.save()
         return bookstack
 
 
 class BookStack(models.Model):
     class Meta:
         ordering = ['position']
-        unique_together = (('stack', 'position'),)
 
     stack = models.ForeignKey(Stack, on_delete=models.PROTECT)
     book = models.ForeignKey(Book, on_delete=models.PROTECT)
@@ -99,18 +98,20 @@ class BookStack(models.Model):
     def max_position(self):
         return self.stack.bookstack_set.count()
 
-    def renumber(self, position):
+    def renumber(self, to_position):
         """Re-number book positions in the stack. After this method is executed,
         all books in a stack will be numbered sequentially from 1-n, where n is
         the number of books in the stack, and each book will have a unique position.
         """
         from_position = self.position
-        to_position = position
         bookstack_set = self.stack.bookstack_set
         max_position = self.max_position()
 
-        if to_position < 0 or to_position > max_position:
+        if to_position <= 0 or to_position > max_position:
             raise IndexError
+
+        if from_position == to_position:
+            return
 
         start = min(from_position, to_position)
         end = max(from_position, to_position)
@@ -121,24 +122,20 @@ class BookStack(models.Model):
             end = end - 1
             direction = 1
 
-        # Grab the book being moved first, otherwise we
-        # won't be able to uniquely identify it by its postion
-        moved = bookstack_set.get(position=from_position)
-        # Temporarily move it off the end of the list, to avoid
-        # bumping into our uniqueness constraint
-        moved.position = max_position
-        moved.save()
-
-        bookstack_set.filter(
-            position__gte=start
-        ).filter(
-            position__lte=end
-        ).update(
-            position=F('position') + direction
+        bookstack_set.update(
+            position=Case(
+                When(
+                    (Q(position__gte=start) & Q(position__lte=end)),
+                    then=ExpressionWrapper(F('position') + direction, output_field=models.IntegerField())
+                ),
+                When(
+                    position=from_position,
+                    then=Value(to_position)
+                ),
+                default=ExpressionWrapper(F('position'), output_field=models.IntegerField()),
+                output_field=models.IntegerField()
+            )
         )
-
-        moved.position = to_position
-        moved.save()
 
     def toggle_read(self):
         self.read = not self.read
