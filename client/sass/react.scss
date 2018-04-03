@@ -8,6 +8,14 @@ $color_white: #e7e7e7;
 
 @import "~bulma";
 
+@mixin centered() {
+    display: flex;
+    justify-content: center;
+    & > div {
+        align-self: center;
+    }
+}
+
 .position {
     align-self: center;
 }
@@ -41,4 +49,8 @@ $color_white: #e7e7e7;
         padding: 2em;
         background-color: $color_white;
     }
+}
+
+.position .centered {
+    @include centered();
 }

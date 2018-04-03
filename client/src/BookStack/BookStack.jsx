@@ -74,6 +74,7 @@ const RemoveBook = ({
 }) => (
     removeConfirm ?
         (
+            // TODO: MAKE MODAL
             <div className="remove">
                 <button
                     className="cancel button is-warning"
@@ -94,7 +95,13 @@ const RemoveBook = ({
         ) :
         (
             <div className="remove">
-                <a onClick={() => setRemoveConfig(id, true)}>Remove</a>
+                <button
+                    onClick={() =>
+                        setRemoveConfig(id, true)}
+                    className="button is-centered"
+                >
+                    Remove
+                </button>
             </div>
         )
 );
@@ -190,36 +197,38 @@ const BookStack = ({
             onDragOver={preventDefault}
         >
             <div className="media-left position">
-                <div className="is-pulled-left">
-                    <Position
+                <div className="centered">
+                    <div className="is-pulled-left">
+                        <Position
+                            id={id}
+                            editing={editing}
+                            fromPosition={position}
+                            newPosition={newPosition}
+                            setEditing={setEditing}
+                            move={move}
+                            setNewPosition={setNewPosition}
+                        />
+                    </div>
+                    <div className="is-pulled-left">
+                        <div className="move-arrow" onClick={e => moveUp(e)}>↑</div>
+                        <div className="move-arrow" onClick={e => moveDown(e)}>↓</div>
+                    </div>
+                </div>
+                <div className="">
+                    <button
+                        onClick={e =>
+                            setReadState(bookStack.get('id'), !bookStack.get('read'))}
+                        className={`button is-centered${bookStack.get('read') ? ' is-info is-active' : ''}`}
+                    >
+                        Read
+                    </button>
+                    <RemoveBook
                         id={id}
-                        editing={editing}
-                        fromPosition={position}
-                        newPosition={newPosition}
-                        setEditing={setEditing}
-                        move={move}
-                        setNewPosition={setNewPosition}
+                        removeConfirm={removeConfirm}
+                        setRemoveConfig={setRemoveConfig}
+                        deleteBook={deleteBook}
                     />
                 </div>
-                <div className="is-pulled-left">
-                    <div className="move-arrow" onClick={e => moveUp(e)}>↑</div>
-                    <div className="move-arrow" onClick={e => moveDown(e)}>↓</div>
-                </div>
-                <div className="media-left">
-                Read:
-                    <input
-                        onChange={e => setReadState(bookStack.get('id'), Boolean(e.target.checked))}
-                        type="checkbox"
-                        className="checkbox"
-                        checked={bookStack.get('read')}
-                    />
-                </div>
-                <RemoveBook
-                    id={id}
-                    removeConfirm={removeConfirm}
-                    setRemoveConfig={setRemoveConfig}
-                    deleteBook={deleteBook}
-                />
             </div>
             <Book book={bookStack.get('book')} staticPath={staticPath} />
             <div className="categories column">
