@@ -53,10 +53,8 @@ class BookSerializer(serializers.ModelSerializer):
             included = set(include)
             existing = set(self.fields.keys())
 
-            # TODO: Union or some shit?
-            for field in existing:
-                if field not in included:
-                    self.fields.pop(field)
+            for field in existing - included:
+                self.fields.pop(field)
 
     def create(self, validated_data):
         authors = self.initial_data.pop('authors')
