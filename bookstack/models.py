@@ -140,8 +140,14 @@ class BookStack(models.Model):
         )
 
     def toggle_read(self):
-        self.read = not self.read
-        self.save()
+        BookStack.objects.filter(id=self.id).update(
+            read=Case(
+                When(read=True, then=Value(False)),
+                default=Value(True),
+                output_field=models.BooleanField()
+            )
+        )
+        self.refresh_from_db()
 
     def save(self, *args, **kwargs):
         if not self.position:
