@@ -115,6 +115,8 @@ class BookStack(models.Model):
 
         start = min(from_position, to_position)
         end = max(from_position, to_position)
+        # Shift all items between `to` and `from` either to the left or right,
+        # leaving off a space on one end or the other for the item being moved.
         if from_position < to_position:
             start = start + 1
             direction = -1
