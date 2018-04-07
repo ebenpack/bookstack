@@ -10,15 +10,15 @@ app_name = 'bookstack'
 schema_view = get_swagger_view(title="Bookstack API")
 
 router = routers.DefaultRouter()
-router.register(r'stack', views.StackViewSet)
-router.register(r'bookset', views.BookStackViewSet)
-router.register(r'booksetcategory', views.BookStackCategoryViewSet)
-router.register(r'book', views.BookViewSet)
-router.register(r'author', views.AuthorViewSet)
-router.register(r'publisher', views.PublisherViewSet)
-router.register(r'category', views.CategoryViewSet)
-router.register(r'user', views.UserViewSet)
-router.register(r'group', views.GroupViewSet)
+router.register(r'stack', views.StackViewSet, 'stack')
+router.register(r'bookset', views.BookStackViewSet, 'bookset')
+router.register(r'booksetcategory', views.BookStackCategoryViewSet, 'booksetcategory')
+router.register(r'book', views.BookViewSet, 'book')
+router.register(r'author', views.AuthorViewSet, 'author')
+router.register(r'publisher', views.PublisherViewSet, 'publisher')
+router.register(r'category', views.CategoryViewSet, 'category')
+router.register(r'user', views.UserViewSet, 'user')
+router.register(r'group', views.GroupViewSet, 'group')
 
 urlpatterns = [
     url(r'^api/', include(router.urls)),
