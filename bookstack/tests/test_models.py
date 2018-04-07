@@ -33,8 +33,8 @@ def test_max_position():
 def test_random_renumbering_preserves_positioning_invariant():
     for stack in Stack.objects.all():
         stack_size = stack.bookstack_set.count()
-        bookstack = stack.bookstack_set.all()[randint(0,stack_size-1)]
-        bookstack.renumber(randint(0, stack_size))
+        bookstack = stack.bookstack_set.all()[randint(1, stack_size-1)]
+        bookstack.renumber(randint(1, stack_size))
 
         actual_positions = list(stack.bookstack_set.all().values_list("position", flat=True))
         expected_positions = list(range(1, stack_size + 1))
@@ -68,6 +68,16 @@ def test_renumber_from_back_to_front_preserves_positioning_invariant():
 
     assert bookstack_id == stack.bookstack_set.first().id
 
+def test_renumber_to_current_position_doesnt_do_anything():
+    stack = Stack.objects.first()
+    stack_size = stack.bookstack_set.count()
+    bookstack = stack.bookstack_set.first()
+    bookstack_id = bookstack.id
+
+    bookstack.renumber(1)
+
+    assert bookstack_id == stack.bookstack_set.first().id
+
 def test_renumber_to_position_outside_of_bounds_raises_index_error():
     stack = Stack.objects.first()
     stack_size = stack.bookstack_set.count()
@@ -77,6 +87,17 @@ def test_renumber_to_position_outside_of_bounds_raises_index_error():
 
     with pytest.raises(IndexError):
         bookstack.renumber(stack_size + 1)
+
+def test_saving_without_position_sets_position_to_end():
+    stack = Stack.objects.first()
+    book = Book.objects.first()
+    stack_size = stack.bookstack_set.count()
+
+    new_bookstack = BookStack.objects.create(
+        book=book,
+        stack=stack
+    )
+    assert new_bookstack.position == stack_size + 1
 
 def test_toggle_read():
     bookstack = Stack.objects.first().bookstack_set.first()
