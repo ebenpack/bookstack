@@ -147,7 +147,10 @@ class BookStackCategoryViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows categories to be viewed or edited.
     """
-    queryset = models.BookStackCategory.objects
+    queryset = models.BookStackCategory.objects.select_related(
+        'bookstack',
+        'category',
+    )
     serializer_class = serializers.BookStackCategorySerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
