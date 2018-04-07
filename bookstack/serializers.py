@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
+from rest_framework.fields import CurrentUserDefault
 
 from bookstack.models import (Author, Book, BookStack, Category, Publisher, Stack, BookStackCategory)
 
@@ -140,8 +141,8 @@ class StackListSerializer(serializers.ModelSerializer):
 
 
 class StackSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
-    books = BookStackSerializer(many=True, source='bookstack_set')
+    user = serializers.StringRelatedField(default=CurrentUserDefault())
+    books = BookStackSerializer(many=True, source='bookstack_set', read_only=True)
 
     class Meta:
         model = Stack
