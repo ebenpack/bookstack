@@ -6,7 +6,7 @@ from django.db.models import F, Case, When, Value, Q, ExpressionWrapper
 class Stack(models.Model):
     name = models.CharField(max_length=200)
     private = models.BooleanField(default=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     creation_date = models.DateTimeField(
         auto_now_add=True
     )
@@ -32,8 +32,8 @@ class BookStack(models.Model):
     class Meta:
         ordering = ['position']
 
-    stack = models.ForeignKey(Stack, on_delete=models.PROTECT)
-    book = models.ForeignKey(Book, on_delete=models.PROTECT)
+    stack = models.ForeignKey(Stack, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
     categories = models.ManyToManyField(
         'Category',
@@ -117,8 +117,8 @@ class Category(models.Model):
 
 
 class BookStackCategory(models.Model):
-    bookstack = models.ForeignKey(BookStack, on_delete=models.PROTECT)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    bookstack = models.ForeignKey(BookStack, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ('category', 'bookstack')

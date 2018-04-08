@@ -126,8 +126,6 @@ class BookStackViewSet(viewsets.ModelViewSet):
             content = {'detail': 'Invalid position supplied'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         bookstack.renumber(position)
-        # Re-fetch object to get updated position
-        bookstack = self.get_object()
         serializer = serializers.BookStackSerializer(bookstack, partial=True)
         return Response(serializer.data)
 

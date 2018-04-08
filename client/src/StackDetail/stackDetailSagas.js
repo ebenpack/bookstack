@@ -41,7 +41,7 @@ export function* updateReadState({ bookId, readState }) {
     try {
         const response = yield call(axios, {
             method: 'PATCH',
-            url: `${apiUrl}/api/bookset/${bookId}/`,
+            url: `${apiUrl}/api/bookstack/${bookId}/`,
             data: {
                 read: readState,
             },
@@ -65,7 +65,7 @@ export function* updatePosition({ id, from, to }) {
         if (to > 0 && to <= stackLength) {
             yield call(axios, {
                 method: 'PATCH',
-                url: `${apiUrl}/api/bookset/${id}/renumber/`,
+                url: `${apiUrl}/api/bookstack/${id}/renumber/`,
                 data: {
                     position: to,
                 },
@@ -86,7 +86,7 @@ export function* deleteBook({ id }) {
     try {
         yield call(axios, {
             method: 'DELETE',
-            url: `${apiUrl}/api/bookset/${id}/`,
+            url: `${apiUrl}/api/bookstack/${id}/`,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Token ${token}`,
@@ -123,7 +123,7 @@ export function* addCategory({ bookstackId, categoryId }) {
     try {
         const response = yield call(axios, {
             method: 'POST',
-            url: `${apiUrl}/api/booksetcategory/`,
+            url: `${apiUrl}/api/bookstackcategory/`,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Token ${token}`,
@@ -144,7 +144,7 @@ export function* deleteCategory({ bookstackId, categoryId }) {
     try {
         yield call(axios, {
             method: 'DELETE',
-            url: `${apiUrl}/api/booksetcategory/${categoryId}/`,
+            url: `${apiUrl}/api/bookstackcategory/${categoryId}/`,
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Token ${token}`,
@@ -160,7 +160,7 @@ export function* addBook({ bookId, stackId }) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
         yield call(axios, {
-            url: `${apiUrl}/api/bookset/`,
+            url: `${apiUrl}/api/bookstack/`,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -168,14 +168,10 @@ export function* addBook({ bookId, stackId }) {
             },
             data: {
                 categories: [],
-                bookId,
-                stackId,
+                book_id: bookId,
+                stack_id: stackId,
             },
         });
-        // TODO: FIIIIIXXXX!
-        // yield put(addBookActions.addNewBook(bookId, stackId)); WTF?
-        // TODO: FIX
-        // yield put(addBookActions.clearSelected());
         yield put(stackDetail.editing());
         yield put(stackDetailActions.addBook.success());
     } catch (error) {

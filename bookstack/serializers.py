@@ -44,30 +44,17 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = ('title', 'pages', 'isbn', 'img', 'authors', 'publishers', 'id')
 
-    def __init__(self, *args, **kwargs):
-        # If instantiated with `include` kwarg,
-        # then limit fields returned to just those
-        # specified
-        include = kwargs.pop('include', None)
-        super(BookSerializer, self).__init__(*args, **kwargs)
-        if include:
-            included = set(include)
-            existing = set(self.fields.keys())
-
-            for field in existing - included:
-                self.fields.pop(field)
-
     def create(self, validated_data):
-        authors = self.initial_data.pop('authors')
-        publishers = self.initial_data.pop('publishers')
+        authors = self.initial_data.get('authors', [])
+        publishers = self.initial_data.get('publishers', [])
         book = Book.objects.create(**validated_data)
 
         for author in authors:
-            a, created = Author.objects.get_or_create(name=author['name'])
+            a, created = Author.objects.get_or_create(name=author)
             book.authors.add(a)
 
         for publisher in publishers:
-            p, created = Publisher.objects.get_or_create(name=publisher['name'])
+            p, created = Publisher.objects.get_or_create(name=publisher)
             book.publishers.add(p)
 
         return book
@@ -104,24 +91,27 @@ class BookStackCategorySerializer(serializers.ModelSerializer):
 
 class BookStackSerializer(serializers.ModelSerializer):
     book = BookSerializer(read_only=True)
-    categories = BookStackCategorySerializer(many=True, source='bookstackcategory_set')
+    categories = BookStackCategorySerializer(many=True, source='bookstackcategory_set', read_only=True)
     stack = serializers.PrimaryKeyRelatedField(read_only=True)
-    bookId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Book.objects.all())
-    stackId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Stack.objects.all())
+    book_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Book.objects.all())
+    stack_id = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Stack.objects.all())
 
     class Meta:
         model = BookStack
-        fields = ('read', 'position', 'book', 'categories', 'stack', 'id', 'bookId', 'stackId')
+        fields = ('read', 'position', 'book', 'categories', 'stack', 'id', 'book_id', 'stack_id')
 
-    # TODO: FIX ME
     def create(self, validated_data):
-        categories = validated_data.pop('bookstackcategory_set')
+        categories = self.initial_data.get('categories', [])
+        book_id = validated_data.pop('book_id')
+        stack_id = validated_data.pop('stack_id')
         bookstack = BookStack.objects.create(
-            book=validated_data['bookId'],
-            stack=validated_data['stackId']
+            book=book_id,
+            stack=stack_id,
+            **validated_data
         )
         for category in categories:
-            BookStackCategory.objects.get_or_create(bookstack=bookstack, **category)
+            category, _ = Category.objects.get_or_create(category=category)
+            BookStackCategory.objects.get_or_create(bookstack=bookstack, category=category)
         return bookstack
 
     def update(self, instance, validated_data):
