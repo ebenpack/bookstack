@@ -171,13 +171,6 @@ def test_view(db, admin_client, view):
 #######################
 
 
-# "bookstack": "http://localhost:8000/api/bookstack/",
-# "bookstackcategory": "http://localhost:8000/api/bookstackcategory/",
-# "book": "http://localhost:8000/api/book/",
-# "author": "http://localhost:8000/api/author/",
-# "publisher": "http://localhost:8000/api/publisher/",
-# "category": "http://localhost:8000/api/category/",
-
 #######################
 # BookStack
 #######################
