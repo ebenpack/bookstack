@@ -115,8 +115,15 @@ class BookStackSerializer(serializers.ModelSerializer):
         return bookstack
 
     def update(self, instance, validated_data):
+        categories = self.initial_data.get('categories', [])
         instance.read = validated_data.get('read', instance.read)
         instance.position = validated_data.get('position', instance.position)
+
+        if categories:
+            instance.categories.clear()
+            for category in categories:
+                category, _ = Category.objects.get_or_create(category=category)
+                BookStackCategory.objects.get_or_create(bookstack=instance, category=category)
 
         instance.save()
         return instance
