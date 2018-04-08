@@ -28,7 +28,7 @@ def django_db_setup(django_db_setup, django_db_blocker):
 
 View = namedtuple('View',
                   field_names=['name', 'url', 'detail_viewname', 'list_viewname', 'expected_queries', 'model',
-                               'post_data'])
+                               'post_data', 'patch_data'])
 
 api_data = [
     View(name="stack",
@@ -40,6 +40,10 @@ api_data = [
          post_data=lambda: {
              "name": "Foobar",
              "private": True
+         },
+         patch_data=lambda: {
+             "name": "Bazqux",
+             "private": False
          }),
     View(name="bookstack",
          url="/api/bookstack/",
@@ -49,8 +53,13 @@ api_data = [
          model=BookStack,
          post_data=lambda: {
              "read": True,
+             "categories": ["foo", "bar", "baz"],
              "book_id": Book.objects.create(title="foobarbazqux", pages=1729, isbn="foobarbazqux").id,
              "stack_id": Stack.objects.create(name="foobarbazqux", user=User.objects.create(username="foobarbaz")).id
+         },
+         patch_data=lambda: {
+             "read": False,
+             "categories": ["qux", "quux"]
          }),
     View(name="bookstackcategory",
          url="/api/bookstackcategory/",
@@ -61,7 +70,8 @@ api_data = [
          post_data=lambda: {
              "bookstack": BookStack.objects.first().id,
              "category": Category.objects.create(category="foobarbazqux").id
-         }),
+         },
+         patch_data=None),
     View(name="book",
          url="/api/book/",
          detail_viewname="bookstack:book-detail",
@@ -77,7 +87,19 @@ api_data = [
                  Author.objects.create(name="Jerry Lewis").id
              ],
              "publishers": [
-                 Publisher.objects.create(name="Yoyodyne, Inc,").id
+                 Publisher.objects.create(name="Yoyodyne, Inc.").id
+             ]
+         },
+         patch_data=lambda: {
+             "title": "A French Lieutenant's Laaaaadddddy!",
+             "pages": 1729,
+             "isbn": "foobarbazqux",
+             "img": "",
+             "authors": [
+                 Author.objects.create(name="Julius F. Kelp").id
+             ],
+             "publishers": [
+                 Publisher.objects.create(name="TThe Wing Kong Exchang").id
              ]
          }),
     View(name="author",
@@ -88,6 +110,9 @@ api_data = [
          model=Author,
          post_data=lambda: {
              "name": "Pirate Prentice"
+         },
+         patch_data=lambda: {
+             "name": "Pig Bodine"
          }),
     View(name="publisher",
          url="/api/publisher/",
@@ -97,6 +122,9 @@ api_data = [
          model=Publisher,
          post_data=lambda: {
              "name": "Yoyodyne, Inc."
+         },
+         patch_data=lambda: {
+            "name": "The Wing Kong Exchange"
          }),
     View(name="category",
          url="/api/category/",
@@ -106,6 +134,9 @@ api_data = [
          model=Category,
          post_data=lambda: {
              "category": "Underwater Basket Weaving"
+         },
+         patch_data=lambda: {
+             "category": "Quantum Gravity"
          }),
 ]
 
@@ -131,18 +162,23 @@ def test_view(db, admin_client, view):
     # Given: The object list URL
     post_url = reverse(view.list_viewname)
     # When: A new object is posted
-    post_response = admin_client.post(post_url, view.post_data())
+    post_response = admin_client.post(post_url, json.dumps(view.post_data()), content_type='application/json')
     post_response_data = post_response.json()
     # Then: A 201 response will be returned
     assert post_response.status_code == 201
+    # Then: The object will have been created in the DB
+    view.model.objects.filter(pk=post_response_data['id']).exists()
+    assert view.model.objects.count() == initial_count + 1
     # Then: The response will be in the expected format
     # TODO:
     # for prop in view.post_data:
     #     assert post_response_data[prop] == view.post_data[prop]
 
-    # Then: The object will have been created in the DB
-    view.model.objects.filter(pk=post_response_data['id']).exists()
-    assert view.model.objects.count() == initial_count + 1
+    if view.patch_data:
+        patch_url = reverse(view.detail_viewname, kwargs={'pk': post_response_data['id']})
+        patch_response = admin_client.patch(patch_url, json.dumps(view.patch_data()), content_type='application/json')
+        assert patch_response.status_code == 200
+
     # Given: The detail URL for the new object
     get_url = reverse(view.detail_viewname, kwargs={'pk': post_response_data['id']})
     # When: The object is requested
