@@ -12,7 +12,10 @@ export function* searchBooks({ query }) {
             url: `${apiUrl}/api/book/?search=${query}`,
         });
         yield put(addBookActions.searchBooks.success(data));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Search request failed' };
         yield put(addBookActions.searchBooks.failure(error));
     }
 }
@@ -25,7 +28,10 @@ export function* getBook({ id }) {
             url: `${apiUrl}/api/book/${id}/`,
         });
         yield put(addBookActions.selectBook.success(data));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Search request failed' };
         yield put(addBookActions.selectBook.failure(error));
     }
 }
@@ -42,21 +48,24 @@ export function* addBook({ book }) {
             },
             data: book.toJS(),
         });
-        yield put(addBookActions.addBook.failure(data));
-    } catch (error) {
+        yield put(addBookActions.addBook.success(data));
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Search request failed' };
         yield put(addBookActions.addBook.failure(error));
     }
 }
 
-function* watchBookSearch() {
+export function* watchBookSearch() {
     yield takeEvery(addBookActions.SEARCH_BOOK.REQUEST, searchBooks);
 }
 
-function* watchGetBook() {
+export function* watchGetBook() {
     yield takeEvery(addBookActions.GET_BOOK.REQUEST, getBook);
 }
 
-function* watchAddBook() {
+export function* watchAddBook() {
     yield takeEvery(addBookActions.ADD_BOOK.REQUEST, addBook);
 }
 

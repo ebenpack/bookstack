@@ -57,7 +57,7 @@ export const clearLogin = () =>
 
 // State
 
-const defaultState = Immutable.Map({
+export const initialState = Immutable.Map({
     apiUrl: '',
     token: '',
     user: '',
@@ -66,7 +66,7 @@ const defaultState = Immutable.Map({
     loginError: false,
 });
 
-export default function storeReducer(state = defaultState, action) {
+export default function storeReducer(state = initialState, action) {
     switch (action.type) {
     case APP_SET_API_URL:
         return state.set('apiUrl', action.apiUrl);

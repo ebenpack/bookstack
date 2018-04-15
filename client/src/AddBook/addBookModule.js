@@ -45,7 +45,7 @@ export const selectBook = {
 
 // State
 
-const defaultState = Immutable.fromJS({
+export const initialState = Immutable.fromJS({
     title: '',
     booksAutocomplete: [],
     selectedBook: {
@@ -59,7 +59,7 @@ const defaultState = Immutable.fromJS({
     },
 });
 
-export default function addBookReducer(state = defaultState, action) {
+export default function addBookReducer(state = initialState, action) {
     switch (action.type) {
     case SELECT_BOOK.SUCCESS:
         return state.set('selectedBook', Immutable.fromJS(action.book));
