@@ -1,7 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TransformObjectRestSpreadPlugin = require('babel-plugin-transform-object-rest-spread');
+
 
 module.exports = {
     entry: ['./src/main.jsx'],
@@ -25,11 +27,11 @@ module.exports = {
             cacheGroups: {
                 commons: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: "vendors",
-                    chunks: "all"
-                }
-            }
-        }
+                    name: 'vendors',
+                    chunks: 'all',
+                },
+            },
+        },
     },
     module: {
         rules: [
@@ -40,23 +42,23 @@ module.exports = {
                     loader: 'babel-loader',
                     options: {
                         presets: ['react', 'es2015'],
-                        plugins: [require('babel-plugin-transform-object-rest-spread')]
-                    }
-                }
+                        plugins: [TransformObjectRestSpreadPlugin],
+                    },
+                },
             },
             {
                 test: /\.scss$/,
                 use: [
                     MiniCssExtractPlugin.loader,
                     {
-                        loader: "css-loader"
+                        loader: 'css-loader',
                     }, {
-                        loader: "sass-loader",
+                        loader: 'sass-loader',
                         options: {
                             sourceMap: true,
                         },
                     }],
-            }
-        ]
-    }
+            },
+        ],
+    },
 };

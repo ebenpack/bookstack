@@ -1,5 +1,5 @@
-const baseConfig = require('./webpack.base.config');
 const DashboardPlugin = require('webpack-dashboard/plugin');
+const baseConfig = require('./webpack.base.config');
 
 module.exports = Object.assign({}, {
     mode: 'development',
@@ -7,5 +7,5 @@ module.exports = Object.assign({}, {
         new DashboardPlugin(),
         ...baseConfig.plugins,
     ],
-    devtool: 'source-map'
+    devtool: 'source-map',
 }, baseConfig);
