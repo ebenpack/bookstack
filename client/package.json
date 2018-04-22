@@ -45,10 +45,11 @@
         "webpack": "^4.4.1",
         "webpack-cli": "^2.0.13",
         "webpack-dashboard": "^1.1.1",
-        "webpack-dev-server": "^3.1.1"
+        "webpack-dev-server": "^3.1.3",
+        "write-file-webpack-plugin": "^4.2.0"
     },
     "scripts": {
-        "build:dev": "webpack-dashboard -- webpack --config webpack.dev.config.js --watch",
+        "build:dev": "webpack-dashboard -- webpack-dev-server --config webpack.dev.config.js --watch --hot --inline",
         "build": "NODE_ENV=production webpack --config webpack.prod.config.js",
         "lint": "eslint src --ext .jsx --ext .js",
         "lintfix": "eslint src --fix --ext .jsx --ext .js",
