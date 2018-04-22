@@ -10,3 +10,4 @@ bundle.js
 .coverage
 htmlcov/
 bookstack_react.html
+yarn-error.log
