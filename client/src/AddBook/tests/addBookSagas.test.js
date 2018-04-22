@@ -47,6 +47,7 @@ describe('bookSearch', () => {
             .toEqual(searchBooks.success('foo'));
     });
     it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
+        // eslint-disable-next-line prefer-promise-reject-errors
         axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
         sagaTester.dispatch(searchBooks.request('foobarbaz'));
         await sagaTester.waitFor(SEARCH_BOOK.FAILURE);
@@ -87,6 +88,7 @@ describe('getBook', () => {
             .toEqual(selectBook.success('foo'));
     });
     it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
+        // eslint-disable-next-line prefer-promise-reject-errors
         axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
         sagaTester.dispatch(getBook.request('foobarbaz'));
         await sagaTester.waitFor(SELECT_BOOK.FAILURE);
@@ -132,6 +134,7 @@ describe('addBook', () => {
             .toEqual(addBook.success('foo'));
     });
     it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
+        // eslint-disable-next-line prefer-promise-reject-errors
         axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
         sagaTester.dispatch(addBook.request(fromJS({ title: 'foo' })));
         await sagaTester.waitFor(ADD_BOOK.FAILURE);

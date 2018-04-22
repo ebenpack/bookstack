@@ -48,6 +48,7 @@ describe('addCategory', () => {
             .toEqual(addCategory.success('foo'));
     });
     it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
+        // eslint-disable-next-line prefer-promise-reject-errors
         axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
         sagaTester.dispatch(addCategory.request('foobarbaz'));
         await sagaTester.waitFor(ADD.FAILURE);
@@ -93,6 +94,7 @@ describe('setAutoSuggestCategories', () => {
             .toEqual(categorySearch.success('foo'));
     });
     it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
+        // eslint-disable-next-line prefer-promise-reject-errors
         axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
         sagaTester.dispatch(categorySearch.request('foobarbaz'));
         await sagaTester.waitFor(SEARCH.FAILURE);
