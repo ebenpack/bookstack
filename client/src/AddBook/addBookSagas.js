@@ -15,7 +15,7 @@ export function* searchBooks({ query }) {
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
-            : { error: 'Search request failed' };
+            : { error: 'Search books request failed' };
         yield put(addBookActions.searchBooks.failure(error));
     }
 }
@@ -31,7 +31,7 @@ export function* getBook({ id }) {
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
-            : { error: 'Search request failed' };
+            : { error: 'Get book request failed' };
         yield put(addBookActions.selectBook.failure(error));
     }
 }
@@ -52,7 +52,7 @@ export function* addBook({ book }) {
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
-            : { error: 'Search request failed' };
+            : { error: 'Add book request failed' };
         yield put(addBookActions.addBook.failure(error));
     }
 }
