@@ -43,9 +43,8 @@ describe('bookSearch', () => {
             method: 'GET',
             url: 'http://foo.bar.baz/api/book/?search=foobarbaz',
         });
-        expect(sagaTester.getLatestCalledAction()).toEqual(
-            searchBooks.success('foo')
-        );
+        expect(sagaTester.getLatestCalledAction())
+            .toEqual(searchBooks.success('foo'));
     });
     it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
         axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
@@ -55,9 +54,8 @@ describe('bookSearch', () => {
             method: 'GET',
             url: 'http://foo.bar.baz/api/book/?search=foobarbaz',
         });
-        expect(sagaTester.getLatestCalledAction()).toEqual(
-            searchBooks.failure('Error message')
-        );
+        expect(sagaTester.getLatestCalledAction())
+            .toEqual(searchBooks.failure('Error message'));
     });
 });
 
@@ -85,9 +83,8 @@ describe('getBook', () => {
             method: 'GET',
             url: 'http://foo.bar.baz/api/book/foobarbaz/',
         });
-        expect(sagaTester.getLatestCalledAction()).toEqual(
-            selectBook.success('foo')
-        );
+        expect(sagaTester.getLatestCalledAction())
+            .toEqual(selectBook.success('foo'));
     });
     it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
         axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
@@ -97,9 +94,8 @@ describe('getBook', () => {
             method: 'GET',
             url: 'http://foo.bar.baz/api/book/foobarbaz/',
         });
-        expect(sagaTester.getLatestCalledAction()).toEqual(
-            selectBook.failure('Error message')
-        );
+        expect(sagaTester.getLatestCalledAction())
+            .toEqual(selectBook.failure('Error message'));
     });
 });
 
@@ -121,9 +117,7 @@ describe('addBook', () => {
 
     it('should retrieve data from the server and send a SUCCESS action', async () => {
         axios.mockReturnValue(Promise.resolve({ data: 'foo' }));
-        sagaTester.dispatch(
-            addBook.request(fromJS({ title: 'foo' }))
-        );
+        sagaTester.dispatch(addBook.request(fromJS({ title: 'foo' })));
         await sagaTester.waitFor(ADD_BOOK.SUCCESS);
         expect(axios).toBeCalledWith({
             method: 'POST',
@@ -134,9 +128,8 @@ describe('addBook', () => {
             },
             data: { title: 'foo' },
         });
-        expect(sagaTester.getLatestCalledAction()).toEqual(
-            addBook.success('foo')
-        );
+        expect(sagaTester.getLatestCalledAction())
+            .toEqual(addBook.success('foo'));
     });
     it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
         axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
@@ -151,8 +144,7 @@ describe('addBook', () => {
             },
             data: { title: 'foo' },
         });
-        expect(sagaTester.getLatestCalledAction()).toEqual(
-            addBook.failure('Error message')
-        );
+        expect(sagaTester.getLatestCalledAction())
+            .toEqual(addBook.failure('Error message'));
     });
 });
