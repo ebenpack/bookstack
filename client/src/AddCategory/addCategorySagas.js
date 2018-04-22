@@ -19,7 +19,10 @@ export function* addCategory({ category }) {
             },
         });
         yield put(categoryActions.addCategory.success(data));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(categoryActions.addCategory.failure(error));
     }
 }
@@ -32,16 +35,19 @@ export function* setAutoSuggestCategories({ query }) {
             url: `${apiUrl}/api/category/?search=${query}`,
         });
         yield put(categoryActions.categorySearch.success(data));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Category search request failed' };
         yield put(categoryActions.categorySearch.failure(error));
     }
 }
 
-function* watchAddCategory() {
+export function* watchAddCategory() {
     yield takeEvery(categoryActions.ADD.REQUEST, addCategory);
 }
 
-function* watchSetAutoSuggestCategories() {
+export function* watchSetAutoSuggestCategories() {
     yield takeEvery(categoryActions.SEARCH.REQUEST, setAutoSuggestCategories);
 }
 
