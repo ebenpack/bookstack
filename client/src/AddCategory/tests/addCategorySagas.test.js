@@ -3,16 +3,14 @@ import SagaTester from 'redux-saga-tester';
 import axios from 'axios';
 import {
     watchAddCategory,
-    watchSetAutoSuggestCategories
+    watchSetAutoSuggestCategories,
 } from '../addCategorySagas';
 import {
     initialState,
     addCategory,
     categorySearch,
-    categoryInput,
     ADD,
     SEARCH,
-    INPUT,
 } from '../addCategoryModule';
 
 jest.mock('axios');
