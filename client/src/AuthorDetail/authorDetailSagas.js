@@ -16,7 +16,7 @@ export function* loadAuthor({ id }) {
 
 const initialize = initializeSaga(path, loadAuthor, match => ({ id: match.params.id }));
 
-function* watchLoadAuthor() {
+export function* watchLoadAuthor() {
     yield takeEvery(AUTHOR.REQUEST, loadAuthor);
 }
 

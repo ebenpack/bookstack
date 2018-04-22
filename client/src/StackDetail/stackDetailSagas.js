@@ -179,37 +179,37 @@ export function* addBook({ bookId, stackId }) {
     }
 }
 
-const initialize = initializeSaga(path, loadStack, match => ({ id: match.params.id }));
+export const initialize = initializeSaga(path, loadStack, match => ({ id: match.params.id }));
 
-function* watchLoadStack() {
+export function* watchLoadStack() {
     yield takeEvery(STACK_DETAIL.REQUEST, loadStack);
 }
 
-function* watchUpdateReadState() {
+export function* watchUpdateReadState() {
     yield takeEvery(READ_STATE.REQUEST, updateReadState);
 }
 
-function* watchUpdatePosition() {
+export function* watchUpdatePosition() {
     yield takeEvery(POSITION.REQUEST, updatePosition);
 }
 
-function* watchDeleteBook() {
+export function* watchDeleteBook() {
     yield takeEvery(REMOVE_BOOK.REQUEST, deleteBook);
 }
 
-function* watchAddCategory() {
+export function* watchAddCategory() {
     yield takeEvery(ADD_CATEGORY.REQUEST, addCategory);
 }
 
-function* watchAddNewCategory() {
+export function* watchAddNewCategory() {
     yield takeEvery(ADD_NEW_CATEGORY.REQUEST, addNewCategory);
 }
 
-function* watchDeleteCategory() {
+export function* watchDeleteCategory() {
     yield takeEvery(REMOVE_CATEGORY.REQUEST, deleteCategory);
 }
 
-function* watchAddBook() {
+export function* watchAddBook() {
     yield takeEvery(ADD_BOOK.REQUEST, addBook);
 }
 

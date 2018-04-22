@@ -52,7 +52,7 @@ export function* bookSearch(query) {
     }
 }
 
-function* watchBookSearch() {
+export function* watchBookSearch() {
     let search;
     while (true) {
         // In order to prevent making a lot of unecessary requests,

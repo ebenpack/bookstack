@@ -18,9 +18,9 @@ export function* loadStackList() {
     }
 }
 
-const initialize = initializeSaga(path, loadStackList, () => null);
+export const initialize = initializeSaga(path, loadStackList, () => null);
 
-function* watchLoadStacklist() {
+export function* watchLoadStacklist() {
     yield takeEvery(STACK.REQUEST, loadStackList);
 }
 

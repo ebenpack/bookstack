@@ -56,15 +56,15 @@ export function* logoff() {
     yield put(appActions.deleteToken());
 }
 
-function* watchInitialize() {
+export function* watchInitialize() {
     yield takeEvery(appActions.APP_INITIALIZE, initialize);
 }
 
-function* watchLogin() {
+export function* watchLogin() {
     yield takeEvery(appActions.APP_LOGIN.REQUEST, login);
 }
 
-function* watchLogoff() {
+export function* watchLogoff() {
     yield takeEvery(appActions.APP_LOGOFF, logoff);
 }
 
