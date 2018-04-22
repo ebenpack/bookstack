@@ -22,14 +22,13 @@ const Position = ({
         (
             <div>
                 <input
-                    className="input"
+                    className="input position"
                     autoFocus
                     type="text"
                     onChange={e =>
                         e.target.value && setNewPosition(id, parseInt(e.target.value, 10))
                     }
                     value={newPosition}
-                    className="position"
                     onBlur={(e) => {
                         const toPosition = parseInt(e.target.value, 10);
                         setEditing(id, false);
@@ -216,7 +215,7 @@ const BookStack = ({
                 </div>
                 <div className="">
                     <button
-                        onClick={e =>
+                        onClick={() =>
                             setReadState(bookStack.get('id'), !bookStack.get('read'))}
                         className={`button is-centered${bookStack.get('read') ? ' is-info is-active' : ''}`}
                     >

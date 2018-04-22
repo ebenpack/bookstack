@@ -52,7 +52,6 @@ export const AddBook = (props) => {
                         </button>
                     </footer>
                 </div>
-                
             </div>
         );
     }
