@@ -37,12 +37,12 @@ export const categoryInput = {
 
 // State
 
-const defaultState = Immutable.fromJS({
+export const initialState = Immutable.fromJS({
     autoSuggestCategories: [],
     category: '',
 });
 
-export default function categoryReducer(state = defaultState, action) {
+export default function categoryReducer(state = initialState, action) {
     switch (action.type) {
     case SEARCH.SUCCESS:
         return state.set('autoSuggestCategories', Immutable.fromJS(action.suggestions));
