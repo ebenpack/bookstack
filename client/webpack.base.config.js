@@ -8,7 +8,7 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, '../bookstack/static/bookstack/dist'),
         publicPath: '/static/bookstack/dist/',
-        filename: 'bundle.js',
+        filename: '[name].[chunkhash].js',
     },
     resolve: {
         extensions: ['.js', '.jsx', '.scss'],
