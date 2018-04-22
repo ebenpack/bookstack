@@ -272,6 +272,22 @@ def test_bookstack_renumber_position_out_of_bounds(db, admin_client):
     # Then: A 400 response is returned
     assert renumber_response.status_code == 400
 
+def test_bookstack_renumber_queries(db, django_assert_num_queries, admin_client):
+    # Given: A user and a stack
+    user = User.objects.first()
+    stack = Stack.objects.first()
+    # Given: The renumber bookstack URL
+    bookstack = stack.bookstack_set.first()
+    renumber_url = reverse("bookstack:bookstack-renumber", kwargs={'pk': bookstack.id})
+    # Given: The new position to which the bookstack will be moved
+    new_position = bookstack.max_position()
+    with django_assert_num_queries(14):
+        # When: A request is made to renumber the bookstack
+        # Then: Only the expected number of queries will have been made
+        admin_client.patch(renumber_url, data=json.dumps({'position': new_position}),
+                           content_type='application/json')
+
+
 #######################
 # BookStackCategory
 #######################

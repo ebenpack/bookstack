@@ -70,7 +70,6 @@ def test_renumber_from_back_to_front_preserves_positioning_invariant():
 
 def test_renumber_to_current_position_doesnt_do_anything():
     stack = Stack.objects.first()
-    stack_size = stack.bookstack_set.count()
     bookstack = stack.bookstack_set.first()
     bookstack_id = bookstack.id
 
