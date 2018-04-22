@@ -20,6 +20,9 @@ module.exports = {
         publicPath: "http://localhost:8080/static/bookstack/dist",
         filename: '[name].[hash].js',
     },
+    optimization: {
+        minimize: false
+    },
     devtool: 'source-map',
     devServer: {
         contentBase: baseConfig.output.path,
