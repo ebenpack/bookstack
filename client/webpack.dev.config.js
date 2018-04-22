@@ -7,13 +7,13 @@ module.exports = {
     ...baseConfig,
     mode: 'development',
     plugins: [
+        ...baseConfig.plugins,
         new DashboardPlugin(),
         new WriteFilePlugin({
             test: /\.html$/,
         }),
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        ...baseConfig.plugins,
     ],
     output: {
         ...baseConfig.output,

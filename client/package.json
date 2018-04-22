@@ -2,6 +2,7 @@
     "name": "bookstack-react",
     "description": "Bookstack",
     "version": "0.0.1",
+    "license": "MIT",
     "dependencies": {
         "axios": "^0.18.0",
         "babel-plugin-transform-object-rest-spread": "^6.26.0",

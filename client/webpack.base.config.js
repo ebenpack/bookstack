@@ -6,7 +6,7 @@ const TransformObjectRestSpreadPlugin = require('babel-plugin-transform-object-r
 
 
 module.exports = {
-    entry: ['./src/main.jsx'],
+    entry: ['babel-polyfill', './src/main.jsx'],
     output: {
         path: path.resolve(__dirname, '../bookstack/static/bookstack/dist'),
         publicPath: '/static/bookstack/dist/',
@@ -48,6 +48,7 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
+                exclude: /node_modules/,
                 use: [
                     MiniCssExtractPlugin.loader,
                     {
