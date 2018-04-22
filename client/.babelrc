@@ -1,16 +1,18 @@
 {
     "presets": [
         [
-            "env",
+            "@babel/preset-env",
             {
                 "targets": {
                     "browsers": [
                         "last 2 versions",
-                        "safari >= 9"
+                        "safari >= 7"
                     ]
-                }
+                },
+                "useBuiltIns": "usage"
             }
         ],
-        "react"
-    ]
+        "@babel/preset-react"
+    ],
+    "plugins": ["@babel/plugin-syntax-object-rest-spread"]
 }

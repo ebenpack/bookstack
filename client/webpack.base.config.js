@@ -2,11 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const TransformObjectRestSpreadPlugin = require('babel-plugin-transform-object-rest-spread');
 
 
 module.exports = {
-    entry: ['babel-polyfill', './src/main.jsx'],
+    entry: ['./src/main.jsx'],
     output: {
         path: path.resolve(__dirname, '../bookstack/static/bookstack/dist'),
         publicPath: '/static/bookstack/dist/',
@@ -40,10 +39,6 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                    options: {
-                        presets: ['react', 'es2015'],
-                        plugins: [TransformObjectRestSpreadPlugin],
-                    },
                 },
             },
             {
