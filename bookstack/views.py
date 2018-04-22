@@ -117,15 +117,11 @@ class BookStackViewSet(viewsets.ModelViewSet):
     def renumber(self, request, pk=None):
         try:
             position = int(request.data['position'])
-        except ValueError:
+            bookstack = self.get_object()
+            bookstack.renumber(position)
+        except (ValueError, IndexError):
             content = {'detail': 'Invalid position supplied'}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        bookstack = self.get_object()
-        max_position = bookstack.max_position()
-        if position > max_position or position < 1:
-            content = {'detail': 'Invalid position supplied'}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
-        bookstack.renumber(position)
         serializer = serializers.BookStackSerializer(bookstack, partial=True)
         return Response(serializer.data)
 
