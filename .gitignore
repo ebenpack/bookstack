@@ -9,3 +9,4 @@ bundle.js
 .DS_Store
 .coverage
 htmlcov/
+bookstack_react.html
