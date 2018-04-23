@@ -8,7 +8,9 @@ module.exports = {
     mode: 'development',
     plugins: [
         ...baseConfig.plugins,
-        new DashboardPlugin(),
+        new DashboardPlugin({
+            minified: false,
+        }),
         new WriteFilePlugin({
             test: /\.html$/,
         }),
