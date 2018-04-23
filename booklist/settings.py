@@ -6,7 +6,7 @@ PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 SECRET_KEY = 'vbmb999aw1_zm8jgpb@%$))a_c#x3sc4h3_2nmu(t32do(wjxz'
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ('localhost', '127.0.0.1', '10.0.2.2')
 
 DEBUG_TOOLBAR_CONFIG = {
     # Fix djdt performance issue in 1.11
@@ -101,4 +101,4 @@ STATICDIRS = (
 
 STATIC_URL = '/static/'
 
-INTERNAL_IPS = ('127.0.0.1',)
+INTERNAL_IPS = ('127.0.0.1', '10.0.2.2')
