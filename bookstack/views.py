@@ -5,6 +5,9 @@ from rest_framework.decorators import detail_route
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.openapi import Response as OpenApiResponse
+
 from bookstack import serializers
 from bookstack import models
 
@@ -27,6 +30,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
+
+
+user_response = OpenApiResponse('response description', serializers.ErrorSerialiser)
+
 class StackViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows book stacks to be viewed or edited.
@@ -40,9 +47,16 @@ class StackViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.StackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
+    @swagger_auto_schema(responses={404: user_response})
     def list(self, request):
         queryset = models.Stack.objects.select_related('user')
         serializer = serializers.StackListSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @swagger_auto_schema(responses={404: user_response})
+    def retrieve(self, request, pk=None):
+        queryset = models.Stack.objects.select_related('user')
+        serializer = self.serializer_class
         return Response(serializer.data)
 
 

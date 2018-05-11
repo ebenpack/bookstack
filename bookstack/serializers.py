@@ -4,6 +4,9 @@ from rest_framework.fields import CurrentUserDefault
 
 from bookstack.models import (Author, Book, BookStack, Category, Publisher, Stack, BookStackCategory)
 
+class ErrorSerialiser(serializers.Serializer):
+    code = serializers.IntegerField(label='Error response code')
+    error = serializers.CharField(label='Error message')
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
