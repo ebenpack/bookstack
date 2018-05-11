@@ -30,6 +30,9 @@ INSTALLED_APPS = (
     'corsheaders',
     'bookstack',
     'debug_toolbar',
+    'drf_yasg',
+    'rest_framework_docs',
+    'drf_autodocs',
 )
 
 REST_FRAMEWORK = {
