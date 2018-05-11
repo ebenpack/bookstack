@@ -88,6 +88,10 @@ TEMPLATES = [
     }
 ]
 
+SWAGGER_SETTINGS = {
+   'DEFAULT_INFO': 'bookstack.urls.api_info',
+}
+
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'

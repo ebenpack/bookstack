@@ -36,6 +36,8 @@ user_response = OpenApiResponse('response description', serializers.ErrorSeriali
 
 class StackViewSet(viewsets.ModelViewSet):
     """
+    # Foobar
+    ## Baz qux
     API endpoint that allows book stacks to be viewed or edited.
     """
     queryset = models.Stack.objects.prefetch_related(
