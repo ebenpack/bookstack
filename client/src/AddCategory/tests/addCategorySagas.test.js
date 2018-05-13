@@ -1,6 +1,5 @@
 import { fromJS } from 'immutable';
-import SagaTester from 'redux-saga-tester';
-import axios from 'axios';
+import { sagaTest } from '../../utils/testUtils';
 import {
     watchAddCategory,
     watchSetAutoSuggestCategories,
@@ -13,96 +12,37 @@ import {
     SEARCH,
 } from '../addCategoryModule';
 
-jest.mock('axios');
+sagaTest(
+    'addCategory',
+    { addBookStore: initialState },
+    watchAddCategory,
+    {
+        url: 'http://foo.bar.baz/api/category/',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Token token',
+        },
+        data: { category: 'foobarbaz' },
+    },
+    addCategory.request('foobarbaz'),
+    addCategory.success('foo'),
+    addCategory.failure('Error message'),
+    ADD.SUCCESS,
+    ADD.FAILURE,
+);
 
-describe('addCategory', () => {
-    let sagaTester = null;
-    beforeEach(() => {
-        jest.resetAllMocks();
-        sagaTester = new SagaTester({
-            initialState: {
-                appStore: fromJS({
-                    apiUrl: 'http://foo.bar.baz',
-                    token: 'token',
-                }),
-                addBookStore: initialState,
-            },
-        });
-        sagaTester.start(watchAddCategory);
-    });
-
-    it('should retrieve data from the server and send a SUCCESS action', async () => {
-        axios.mockReturnValue(Promise.resolve({ data: 'foo' }));
-        sagaTester.dispatch(addCategory.request('foobarbaz'));
-        await sagaTester.waitFor(ADD.SUCCESS);
-        expect(axios).toBeCalledWith({
-            url: 'http://foo.bar.baz/api/category/',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Token token',
-            },
-            data: { category: 'foobarbaz' },
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(addCategory.success('foo'));
-    });
-    it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
-        sagaTester.dispatch(addCategory.request('foobarbaz'));
-        await sagaTester.waitFor(ADD.FAILURE);
-        expect(axios).toBeCalledWith({
-            url: 'http://foo.bar.baz/api/category/',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Token token',
-            },
-            data: { category: 'foobarbaz' },
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(addCategory.failure('Error message'));
-    });
-});
-
-describe('setAutoSuggestCategories', () => {
-    let sagaTester = null;
-    beforeEach(() => {
-        jest.resetAllMocks();
-        sagaTester = new SagaTester({
-            initialState: {
-                appStore: fromJS({
-                    apiUrl: 'http://foo.bar.baz',
-                    token: 'token',
-                }),
-                addBookStore: initialState,
-            },
-        });
-        sagaTester.start(watchSetAutoSuggestCategories);
-    });
-
-    it('should retrieve data from the server and send a SUCCESS action', async () => {
-        axios.mockReturnValue(Promise.resolve({ data: 'foo' }));
-        sagaTester.dispatch(categorySearch.request('foobarbaz'));
-        await sagaTester.waitFor(SEARCH.SUCCESS);
-        expect(axios).toBeCalledWith({
-            url: 'http://foo.bar.baz/api/category/?search=foobarbaz',
-            method: 'GET',
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(categorySearch.success('foo'));
-    });
-    it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
-        sagaTester.dispatch(categorySearch.request('foobarbaz'));
-        await sagaTester.waitFor(SEARCH.FAILURE);
-        expect(axios).toBeCalledWith({
-            url: 'http://foo.bar.baz/api/category/?search=foobarbaz',
-            method: 'GET',
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(categorySearch.failure('Error message'));
-    });
-});
+sagaTest(
+    'setAutoSuggestCategories',
+    { addBookStore: initialState },
+    watchSetAutoSuggestCategories,
+    {
+        url: 'http://foo.bar.baz/api/category/?search=foobarbaz',
+        method: 'GET',
+    },
+    categorySearch.request('foobarbaz'),
+    categorySearch.success('foo'),
+    categorySearch.failure('Error message'),
+    SEARCH.SUCCESS,
+    SEARCH.FAILURE,
+);

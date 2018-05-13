@@ -1,6 +1,5 @@
 import { fromJS } from 'immutable';
-import SagaTester from 'redux-saga-tester';
-import axios from 'axios';
+import { sagaTest } from '../../utils/testUtils';
 import {
     watchBookSearch,
     watchGetBook,
@@ -17,137 +16,52 @@ import {
     SEARCH_BOOK,
 } from '../addBookModule';
 
-jest.mock('axios');
+sagaTest(
+    'bookSearch',
+    { addBookStore: initialState },
+    watchBookSearch,
+    {
+        method: 'GET',
+        url: 'http://foo.bar.baz/api/book/?search=foobarbaz',
+    },
+    searchBooks.request('foobarbaz'),
+    searchBooks.success('foo'),
+    searchBooks.failure('Error message'),
+    SEARCH_BOOK.SUCCESS,
+    SEARCH_BOOK.FAILURE,
+);
 
-describe('bookSearch', () => {
-    let sagaTester = null;
-    beforeEach(() => {
-        jest.resetAllMocks();
-        sagaTester = new SagaTester({
-            initialState: {
-                appStore: fromJS({
-                    apiUrl: 'http://foo.bar.baz',
-                    token: 'token',
-                }),
-                addBookStore: initialState,
-            },
-        });
-        sagaTester.start(watchBookSearch);
-    });
+sagaTest(
+    'getBook',
+    { addBookStore: initialState },
+    watchGetBook,
+    {
+        method: 'GET',
+        url: 'http://foo.bar.baz/api/book/foobarbaz/',
+    },
+    getBook.request('foobarbaz'),
+    selectBook.success('foo'),
+    selectBook.failure('Error message'),
+    SELECT_BOOK.SUCCESS,
+    SELECT_BOOK.FAILURE,
+);
 
-    it('should retrieve data from the server and send a SUCCESS action', async () => {
-        axios.mockReturnValue(Promise.resolve({ data: 'foo' }));
-        sagaTester.dispatch(searchBooks.request('foobarbaz'));
-        await sagaTester.waitFor(SEARCH_BOOK.SUCCESS);
-        expect(axios).toBeCalledWith({
-            method: 'GET',
-            url: 'http://foo.bar.baz/api/book/?search=foobarbaz',
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(searchBooks.success('foo'));
-    });
-    it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
-        sagaTester.dispatch(searchBooks.request('foobarbaz'));
-        await sagaTester.waitFor(SEARCH_BOOK.FAILURE);
-        expect(axios).toBeCalledWith({
-            method: 'GET',
-            url: 'http://foo.bar.baz/api/book/?search=foobarbaz',
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(searchBooks.failure('Error message'));
-    });
-});
-
-describe('getBook', () => {
-    let sagaTester = null;
-    beforeEach(() => {
-        jest.resetAllMocks();
-        sagaTester = new SagaTester({
-            initialState: {
-                appStore: fromJS({
-                    apiUrl: 'http://foo.bar.baz',
-                    token: 'token',
-                }),
-                addBookStore: initialState,
-            },
-        });
-        sagaTester.start(watchGetBook);
-    });
-
-    it('should retrieve data from the server and send a SUCCESS action', async () => {
-        axios.mockReturnValue(Promise.resolve({ data: 'foo' }));
-        sagaTester.dispatch(getBook.request('foobarbaz'));
-        await sagaTester.waitFor(SELECT_BOOK.SUCCESS);
-        expect(axios).toBeCalledWith({
-            method: 'GET',
-            url: 'http://foo.bar.baz/api/book/foobarbaz/',
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(selectBook.success('foo'));
-    });
-    it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
-        sagaTester.dispatch(getBook.request('foobarbaz'));
-        await sagaTester.waitFor(SELECT_BOOK.FAILURE);
-        expect(axios).toBeCalledWith({
-            method: 'GET',
-            url: 'http://foo.bar.baz/api/book/foobarbaz/',
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(selectBook.failure('Error message'));
-    });
-});
-
-describe('addBook', () => {
-    let sagaTester = null;
-    beforeEach(() => {
-        jest.resetAllMocks();
-        sagaTester = new SagaTester({
-            initialState: {
-                appStore: fromJS({
-                    apiUrl: 'http://foo.bar.baz',
-                    token: 'token',
-                }),
-                addBookStore: initialState,
-            },
-        });
-        sagaTester.start(watchAddBook);
-    });
-
-    it('should retrieve data from the server and send a SUCCESS action', async () => {
-        axios.mockReturnValue(Promise.resolve({ data: 'foo' }));
-        sagaTester.dispatch(addBook.request(fromJS({ title: 'foo' })));
-        await sagaTester.waitFor(ADD_BOOK.SUCCESS);
-        expect(axios).toBeCalledWith({
-            method: 'POST',
-            url: 'http://foo.bar.baz/api/book/',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Token token',
-            },
-            data: { title: 'foo' },
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(addBook.success('foo'));
-    });
-    it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
-        sagaTester.dispatch(addBook.request(fromJS({ title: 'foo' })));
-        await sagaTester.waitFor(ADD_BOOK.FAILURE);
-        expect(axios).toBeCalledWith({
-            method: 'POST',
-            url: 'http://foo.bar.baz/api/book/',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Token token',
-            },
-            data: { title: 'foo' },
-        });
-        expect(sagaTester.getLatestCalledAction())
-            .toEqual(addBook.failure('Error message'));
-    });
-});
+sagaTest(
+    'addBook',
+    { addBookStore: initialState },
+    watchAddBook,
+    {
+        method: 'POST',
+        url: 'http://foo.bar.baz/api/book/',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Token token',
+        },
+        data: { title: 'foo' },
+    },
+    addBook.request(fromJS({ title: 'foo' })),
+    addBook.success('foo'),
+    addBook.failure('Error message'),
+    ADD_BOOK.SUCCESS,
+    ADD_BOOK.FAILURE,
+);
