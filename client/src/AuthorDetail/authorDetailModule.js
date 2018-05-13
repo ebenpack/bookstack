@@ -11,6 +11,8 @@ export const author = {
         makeAction(AUTHOR.REQUEST, { id }),
     success: auth =>
         makeAction(AUTHOR.SUCCESS, { author: auth }),
+    failure: error =>
+        makeAction(AUTHOR.FAILURE, { error }),
 };
 
 // State

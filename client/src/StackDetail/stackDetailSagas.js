@@ -31,7 +31,10 @@ export function* loadStack({ id }) {
             url: `${apiUrl}/api/stack/${id}/`,
         });
         yield put(stackDetail.success(stack.data));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(stackDetail.failure(error));
     }
 }
@@ -52,7 +55,10 @@ export function* updateReadState({ bookId, readState }) {
         });
         const { read } = response.data;
         yield put(stackDetailActions.readState.success(bookId, read));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(stackDetailActions.readState.failure(error));
     }
 }
@@ -76,7 +82,10 @@ export function* updatePosition({ id, from, to }) {
             });
         }
         yield put(position.success(id, from, to));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(position.failure(error));
     }
 }
@@ -93,7 +102,10 @@ export function* deleteBook({ id }) {
             },
         });
         yield put(removeBook.success(id));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(removeBook.failure(error));
     }
 }
@@ -134,7 +146,10 @@ export function* addCategory({ bookstackId, categoryId }) {
             },
         });
         yield put(stackDetailActions.addCategory.success(response.data.bookstack, response.data));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(stackDetailActions.addCategory.failure(error));
     }
 }
@@ -151,7 +166,10 @@ export function* deleteCategory({ bookstackId, categoryId }) {
             },
         });
         yield put(removeCategory.success(bookstackId, categoryId));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(removeCategory.failure(error));
     }
 }
@@ -174,7 +192,10 @@ export function* addBook({ bookId, stackId }) {
         });
         yield put(stackDetail.editing());
         yield put(stackDetailActions.addBook.success());
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(stackDetailActions.addBook.failure(error));
     }
 }

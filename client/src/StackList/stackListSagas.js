@@ -13,7 +13,10 @@ export function* loadStackList() {
             url: `${apiUrl}/api/stack/`,
         });
         yield put(stackActions.success(stack.data));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(stackActions.failure(error));
     }
 }

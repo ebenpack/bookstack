@@ -14,7 +14,10 @@ export function* loadPublisher({ id }) {
             url: `${apiUrl}/api/publisher/${id}/`,
         });
         yield put(publisherActions.success(publisher.data));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(publisherActions.failure(error));
     }
 }

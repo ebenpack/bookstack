@@ -47,7 +47,10 @@ export function* bookSearch(query) {
         const books = results.totalItems ?
             results.items.map(formatBook) : [];
         yield put(bookSearchActions.success(Immutable.fromJS(books)));
-    } catch (error) {
+    } catch (err) {
+        const error = err && err.response && err.response.data
+            ? err.response.data
+            : { error: 'Add category request failed' };
         yield put(bookSearchActions.failure(error));
     }
 }
