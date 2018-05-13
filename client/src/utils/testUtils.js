@@ -6,7 +6,7 @@ import axios from 'axios';
 jest.mock('axios');
 
 // eslint-disable-next-line import/prefer-default-export
-export const sagaTest = (testName, initialState, saga, request, requestAction, successAction, failureAction, SUCCESS, FAILURE) => {
+export const sagaTest = (testName, initialState, saga, request, response, requestAction, successAction, failureAction, SUCCESS, FAILURE) => {
     describe(testName, () => {
         let sagaTester = null;
         beforeEach(() => {
@@ -24,7 +24,7 @@ export const sagaTest = (testName, initialState, saga, request, requestAction, s
         });
 
         it('should retrieve data from the server and send a SUCCESS action', async () => {
-            axios.mockReturnValue(Promise.resolve({ data: 'foo' }));
+            axios.mockReturnValue(Promise.resolve(response));
             sagaTester.dispatch(requestAction);
             await sagaTester.waitFor(SUCCESS);
             expect(axios).toBeCalledWith(request);

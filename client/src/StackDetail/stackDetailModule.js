@@ -56,7 +56,7 @@ export const position = {
 
 export const readState = {
     request: (bookId, rdState) =>
-        makeAction(READ_STATE.REQUEST, { bookId, readState: rdState }),
+        makeAction(READ_STATE.REQUEST, { bookId, newReadState: rdState }),
     success: (bookId, rdState) =>
         makeAction(READ_STATE.SUCCESS, { bookId, readState: rdState }),
     failure: error =>
@@ -136,7 +136,7 @@ const setInBook = (state, bookId, path, value) => state.setIn(
     value,
 );
 
-const defaultState = Immutable.fromJS({
+export const initialState = Immutable.fromJS({
     stackDetail: {
         books: [],
     },
@@ -146,7 +146,7 @@ const defaultState = Immutable.fromJS({
 });
 
 // TODO: This is probably too big, should be broken up
-export default function stackDetailReducer(state = defaultState, action) {
+export default function stackDetailReducer(state = initialState, action) {
     switch (action.type) {
     case STACK_DETAIL.SUCCESS:
         return state.set('stackDetail', Immutable.fromJS(action.stack)

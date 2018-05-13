@@ -27,12 +27,12 @@ export const query = {
 
 // State
 
-const defaultState = Immutable.fromJS({
+export const initialState = Immutable.fromJS({
     query: '',
     books: [],
 });
 
-export default function BookSearchReducer(state = defaultState, action) {
+export default function BookSearchReducer(state = initialState, action) {
     switch (action.type) {
     case BOOK_SEARCH.SUCCESS:
         return state.set('books', action.books);

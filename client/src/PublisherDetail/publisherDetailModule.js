@@ -17,13 +17,13 @@ export const publisher = {
 
 // State
 
-const defaultState = Immutable.fromJS({
+export const initialState = Immutable.fromJS({
     books: [],
     name: '',
     id: 0,
 });
 
-export default function PublisherDetailReducer(state = defaultState, action) {
+export default function PublisherDetailReducer(state = initialState, action) {
     switch (action.type) {
     case PUBLISHER.SUCCESS:
         return Immutable.fromJS(action.publisher);

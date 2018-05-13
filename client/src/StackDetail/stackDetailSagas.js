@@ -4,11 +4,7 @@ import { put, call, select, take, takeEvery, race } from 'redux-saga/effects';
 
 import { getCredentials, getCurrentTime, initializeSaga } from '../utils/sagasUtils';
 import { path } from './StackDetailRoute';
-import * as categoryActions from '../AddCategory/addCategoryModule';
-import * as stackDetailActions from '../StackDetail/stackDetailModule';
-
-const { ADD } = categoryActions;
-const {
+import {
     STACK_DETAIL,
     POSITION,
     READ_STATE,
@@ -17,11 +13,17 @@ const {
     ADD_CATEGORY,
     ADD_NEW_CATEGORY,
     REMOVE_CATEGORY,
+    addBook as addBookAction,
+    addCategory as addCategoryAction,
+    readState,
     stackDetail,
     position,
     removeBook,
     removeCategory,
-} = stackDetailActions;
+} from './stackDetailModule';
+import * as categoryActions from '../AddCategory/addCategoryModule';
+
+const { ADD } = categoryActions;
 
 export function* loadStack({ id }) {
     const { apiUrl } = yield select(getCredentials);
@@ -39,14 +41,14 @@ export function* loadStack({ id }) {
     }
 }
 
-export function* updateReadState({ bookId, readState }) {
+export function* updateReadState({ bookId, newReadState }) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
         const response = yield call(axios, {
             method: 'PATCH',
             url: `${apiUrl}/api/bookstack/${bookId}/`,
             data: {
-                read: readState,
+                read: newReadState,
             },
             headers: {
                 'Content-Type': 'application/json',
@@ -54,12 +56,12 @@ export function* updateReadState({ bookId, readState }) {
             },
         });
         const { read } = response.data;
-        yield put(stackDetailActions.readState.success(bookId, read));
+        yield put(readState.success(bookId, read));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(stackDetailActions.readState.failure(error));
+        yield put(readState.failure(error));
     }
 }
 
@@ -124,7 +126,7 @@ export function* addNewCategory({ bookstackId, category }) {
         if (timeout) {
             break;
         } else if (action.category.category === category) {
-            yield put(stackDetailActions.addCategory.request(bookstackId, action.category.id));
+            yield put(addCategoryAction.request(bookstackId, action.category.id));
             break;
         }
     }
@@ -145,12 +147,12 @@ export function* addCategory({ bookstackId, categoryId }) {
                 category: categoryId,
             },
         });
-        yield put(stackDetailActions.addCategory.success(response.data.bookstack, response.data));
+        yield put(addCategoryAction.success(response.data.bookstack, response.data.category));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(stackDetailActions.addCategory.failure(error));
+        yield put(addCategoryAction.failure(error));
     }
 }
 
@@ -191,12 +193,12 @@ export function* addBook({ bookId, stackId }) {
             },
         });
         yield put(stackDetail.editing());
-        yield put(stackDetailActions.addBook.success());
+        yield put(addBookAction.success());
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(stackDetailActions.addBook.failure(error));
+        yield put(addBookAction.failure(error));
     }
 }
 

@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable';
 import { sagaTest } from '../../utils/testUtils';
 import {
     watchAddCategory,
@@ -25,6 +24,7 @@ sagaTest(
         },
         data: { category: 'foobarbaz' },
     },
+    { data: 'foo' },
     addCategory.request('foobarbaz'),
     addCategory.success('foo'),
     addCategory.failure('Error message'),
@@ -40,6 +40,7 @@ sagaTest(
         url: 'http://foo.bar.baz/api/category/?search=foobarbaz',
         method: 'GET',
     },
+    { data: 'foo' },
     categorySearch.request('foobarbaz'),
     categorySearch.success('foo'),
     categorySearch.failure('Error message'),
