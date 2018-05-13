@@ -1,13 +1,11 @@
 from django.conf.urls import url, include
 from rest_framework import routers
 from rest_framework.authtoken import views as authtoken_views
-from rest_framework_swagger.views import get_swagger_view
 
+from .views import schema_view
 from bookstack import views
 
 app_name = 'bookstack'
-
-schema_view = get_swagger_view(title="Bookstack API")
 
 router = routers.DefaultRouter()
 router.register(r'stack', views.StackViewSet, 'stack')
@@ -24,6 +22,7 @@ urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', authtoken_views.obtain_auth_token),
-    url(r'^docs/', schema_view),
+    url(r'^docs(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
+    url(r'^docs/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
     url(r'app/', views.app_view),
 ]

@@ -5,6 +5,9 @@ from rest_framework.decorators import detail_route
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
 from bookstack import serializers
 from bookstack import models
 
@@ -202,6 +205,17 @@ class PublisherViewSet(viewsets.ModelViewSet):
         serializer = serializers.PublisherDetailSerializer(publisher_detail)
         return Response(serializer.data)
 
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Bookstack API",
+      default_version='v1',
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="MIT License"),
+   ),
+   validators=['flex', 'ssv'],
+   public=True,
+   permission_classes=(),
+)
 
 def app_view(request):
     return render(request, 'bookstack_react.html')
