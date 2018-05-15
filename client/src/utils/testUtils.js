@@ -6,7 +6,18 @@ import axios from 'axios';
 jest.mock('axios');
 
 // eslint-disable-next-line import/prefer-default-export
-export const sagaTest = (testName, initialState, saga, request, response, requestAction, successAction, failureAction, SUCCESS, FAILURE) => {
+export const sagaTest = (
+    testName,
+    initialState,
+    saga,
+    request,
+    response,
+    requestAction,
+    successAction,
+    failureAction,
+    SUCCESS,
+    FAILURE,
+) => {
     describe(testName, () => {
         let sagaTester = null;
         beforeEach(() => {

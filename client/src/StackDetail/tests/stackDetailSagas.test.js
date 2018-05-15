@@ -1,3 +1,4 @@
+import { fromJS } from 'immutable';
 import { sagaTest } from '../../utils/testUtils';
 import {
     watchLoadStack,
@@ -25,7 +26,6 @@ import {
     removeCategory,
     initialState,
 } from '../stackDetailModule';
-import { fromJS } from 'immutable';
 
 sagaTest(
     'loadStack',
