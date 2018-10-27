@@ -9,10 +9,7 @@ const Book = ({ staticPath, book }) => (
     <div className="columns">
         <div className="column">
             <img
-                src={
-                    book.has('img') ?
-                        book.get('img') :
-                        `${staticPath}bookstack/images/defaultbook.jpg`}
+                src={book.get('img', `${staticPath}bookstack/images/defaultbook.jpg`)}
                 alt={`${book.get('title')} Cover`}
             />
             <div className="title">{book.get('title')}</div>
