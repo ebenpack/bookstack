@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from rest_framework.fields import CurrentUserDefault
 
-from bookstack.models import (Author, Book, BookStack, Category, Publisher, Stack, BookStackCategory)
+from bookstack.models import (Author, Book, BookStack, BookStackCategory, Category, Publisher, Stack)
 
 
 class UserSerializer(serializers.ModelSerializer):

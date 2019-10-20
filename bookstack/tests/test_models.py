@@ -1,14 +1,12 @@
-from django.core.management import call_command
-import pytest
 from random import randint
+
+import pytest
+from django.core.management import call_command
 
 from bookstack.models import (
     Stack,
     Book,
-    BookStack,
-    Category,
-    Author,
-    Publisher
+    BookStack
 )
 
 pytestmark = pytest.mark.django_db

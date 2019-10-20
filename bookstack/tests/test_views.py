@@ -1,12 +1,12 @@
 import json
 from collections import namedtuple
 from itertools import permutations
-from django.core.management import call_command
-from django.contrib.auth.models import User
-from django.urls import reverse
-import pytest
 
-from .utils import django_assert_num_queries
+import pytest
+from django.contrib.auth.models import User
+from django.core.management import call_command
+from django.urls import reverse
+
 from bookstack.models import (
     Stack,
     Book,
@@ -274,14 +274,13 @@ def test_bookstack_renumber_position_out_of_bounds(db, admin_client):
 
 def test_bookstack_renumber_queries(db, django_assert_num_queries, admin_client):
     # Given: A user and a stack
-    user = User.objects.first()
     stack = Stack.objects.first()
     # Given: The renumber bookstack URL
-    bookstack = stack.bookstack_set.first()
+    bookstack = stack.bookstack_set.get(position=1)
     renumber_url = reverse("bookstack:bookstack-renumber", kwargs={'pk': bookstack.id})
     # Given: The new position to which the bookstack will be moved
     new_position = bookstack.max_position()
-    with django_assert_num_queries(14):
+    with django_assert_num_queries(19):
         # When: A request is made to renumber the bookstack
         # Then: Only the expected number of queries will have been made
         admin_client.patch(renumber_url, data=json.dumps({'position': new_position}),

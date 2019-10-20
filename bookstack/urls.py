@@ -1,28 +1,39 @@
-from django.conf.urls import url, include
+from django.urls import include, path, re_path
 from rest_framework import routers
 from rest_framework.authtoken import views as authtoken_views
 
-from .views import schema_view
-from bookstack import views
+from bookstack.views import (
+    app_view,
+    schema_view,
+    AuthorViewSet,
+    BookStackViewSet,
+    BookStackCategoryViewSet,
+    BookViewSet,
+    CategoryViewSet,
+    GroupViewSet,
+    PublisherViewSet,
+    StackViewSet,
+    UserViewSet
+)
 
 app_name = 'bookstack'
 
 router = routers.DefaultRouter()
-router.register(r'stack', views.StackViewSet, 'stack')
-router.register(r'bookstack', views.BookStackViewSet, 'bookstack')
-router.register(r'bookstackcategory', views.BookStackCategoryViewSet, 'bookstackcategory')
-router.register(r'book', views.BookViewSet, 'book')
-router.register(r'author', views.AuthorViewSet, 'author')
-router.register(r'publisher', views.PublisherViewSet, 'publisher')
-router.register(r'category', views.CategoryViewSet, 'category')
-router.register(r'user', views.UserViewSet, 'user')
-router.register(r'group', views.GroupViewSet, 'group')
+router.register(r'stack', StackViewSet, 'stack')
+router.register(r'bookstack', BookStackViewSet, 'bookstack')
+router.register(r'bookstackcategory', BookStackCategoryViewSet, 'bookstackcategory')
+router.register(r'book', BookViewSet, 'book')
+router.register(r'author', AuthorViewSet, 'author')
+router.register(r'publisher', PublisherViewSet, 'publisher')
+router.register(r'category', CategoryViewSet, 'category')
+router.register(r'user', UserViewSet, 'user')
+router.register(r'group', GroupViewSet, 'group')
 
 urlpatterns = [
-    url(r'^api/', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^api-token-auth/', authtoken_views.obtain_auth_token),
-    url(r'^docs(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
-    url(r'^docs/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
-    url(r'app/', views.app_view),
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api-token-auth/', authtoken_views.obtain_auth_token),
+    re_path(r'docs(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
+    path('docs/', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
+    path('app/', app_view),
 ]

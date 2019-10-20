@@ -320,6 +320,166 @@
         }
     },
     {
+        "model": "bookstack.book",
+        "pk": 21,
+        "fields": {
+            "title": "20",
+            "pages": 1729,
+            "isbn": "00000000020",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "bookstack.book",
+        "pk": 22,
+        "fields": {
+            "title": "21",
+            "pages": 1729,
+            "isbn": "00000000021",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "bookstack.book",
+        "pk": 23,
+        "fields": {
+            "title": "22",
+            "pages": 1729,
+            "isbn": "00000000022",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "bookstack.book",
+        "pk": 24,
+        "fields": {
+            "title": "23",
+            "pages": 1729,
+            "isbn": "00000000023",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "bookstack.book",
+        "pk": 25,
+        "fields": {
+            "title": "24",
+            "pages": 1729,
+            "isbn": "00000000024",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "bookstack.book",
+        "pk": 26,
+        "fields": {
+            "title": "25",
+            "pages": 1729,
+            "isbn": "00000000025",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "bookstack.book",
+        "pk": 27,
+        "fields": {
+            "title": "26",
+            "pages": 1729,
+            "isbn": "00000000026",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "bookstack.book",
+        "pk": 28,
+        "fields": {
+            "title": "27",
+            "pages": 1729,
+            "isbn": "00000000027",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "bookstack.book",
+        "pk": 29,
+        "fields": {
+            "title": "28",
+            "pages": 1729,
+            "isbn": "00000000028",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
+        "model": "bookstack.book",
+        "pk": 30,
+        "fields": {
+            "title": "29",
+            "pages": 1729,
+            "isbn": "00000000029",
+            "img": "",
+            "authors": [
+                1
+            ],
+            "publishers": [
+                1
+            ]
+        }
+    },
+    {
         "model": "bookstack.bookstack",
         "pk": 1,
         "fields": {
@@ -517,6 +677,106 @@
             "book": 20,
             "read": false,
             "position": 20
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 21,
+        "fields": {
+            "stack": 1,
+            "book": 21,
+            "read": false,
+            "position": 21
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 22,
+        "fields": {
+            "stack": 1,
+            "book": 22,
+            "read": false,
+            "position": 22
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 23,
+        "fields": {
+            "stack": 1,
+            "book": 23,
+            "read": false,
+            "position": 23
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 24,
+        "fields": {
+            "stack": 1,
+            "book": 24,
+            "read": false,
+            "position": 24
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 25,
+        "fields": {
+            "stack": 1,
+            "book": 25,
+            "read": false,
+            "position": 25
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 26,
+        "fields": {
+            "stack": 1,
+            "book": 26,
+            "read": false,
+            "position": 26
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 27,
+        "fields": {
+            "stack": 1,
+            "book": 27,
+            "read": false,
+            "position": 27
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 28,
+        "fields": {
+            "stack": 1,
+            "book": 28,
+            "read": false,
+            "position": 28
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 29,
+        "fields": {
+            "stack": 1,
+            "book": 29,
+            "read": false,
+            "position": 29
+        }
+    },
+    {
+        "model": "bookstack.bookstack",
+        "pk": 30,
+        "fields": {
+            "stack": 1,
+            "book": 30,
+            "read": false,
+            "position": 30
         }
     },
     {
