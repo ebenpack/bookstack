@@ -1,31 +1,39 @@
 import axios from 'axios';
 import { put, call, select, takeEvery } from 'redux-saga/effects';
 
-import { getCredentials, initializeSaga } from '../utils/sagasUtils';
+import { axiosCall, getCredentials } from '../utils/sagasUtils';
 import { path } from './PublisherDetailRoute';
-import { PUBLISHER, publisher as publisherActions } from './publisherDetailModule';
+import { 
+    publisherSuccess,
+    publisherFailure,
+    PublisherRequestAction,
+    PUBLISHER_INITIALIZE,
+    PUBLISHER_REQUEST
+} from './publisherDetailModule';
 
 
-export function* loadPublisher({ id }) {
+export function* loadPublisher({ id }: PublisherRequestAction) {
     const { apiUrl } = yield select(getCredentials);
     try {
-        const publisher = yield call(axios, {
+        const publisher = yield call(axiosCall, {
             method: 'GET',
             url: `${apiUrl}/api/publisher/${id}/`,
         });
-        yield put(publisherActions.success(publisher.data));
+        yield put(publisherSuccess(publisher.data));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(publisherActions.failure(error));
+        yield put(publisherFailure(error));
     }
 }
 
-const initialize = initializeSaga(path, loadPublisher, match => ({ id: match.params.id }));
+export function* initialize() {
+    yield takeEvery(PUBLISHER_INITIALIZE, loadPublisher);
+}
 
 export function* watchLoadPublisher() {
-    yield takeEvery(PUBLISHER.REQUEST, loadPublisher);
+    yield takeEvery(PUBLISHER_REQUEST, loadPublisher);
 }
 
 export default [

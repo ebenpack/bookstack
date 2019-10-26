@@ -1,32 +1,73 @@
-import Immutable from 'immutable';
+import { List, Record } from 'immutable';
 
-import { makeAction, createRequestTypes } from '../utils/moduleUtils';
+import { IPublisher } from './types';
+import { IBook } from '../Book/types';
 
 // Actions
+export const PUBLISHER_INITIALIZE = 'PUBLISHER_INITIALIZE';
 
-export const PUBLISHER = createRequestTypes('PUBLISHER', 'PUBLISHER');
+export const PUBLISHER_REQUEST = 'PUBLISHER_REQUEST';
+export const PUBLISHER_SUCCESS = 'PUBLISHER_SUCCESS';
+export const PUBLISHER_FAILURE = 'PUBLISHER_FAILURE';
 
-export const publisher = {
-    request: id =>
-        makeAction(PUBLISHER.REQUEST, { id }),
-    success: pub =>
-        makeAction(PUBLISHER.SUCCESS, { publisher: pub }),
-    failure: error =>
-        makeAction(PUBLISHER.FAILURE, { error }),
-};
+export const initializePublisher = () => ({ type: PUBLISHER_INITIALIZE });
+
+export interface PublisherRequestAction {
+    type: typeof PUBLISHER_REQUEST
+    id: string
+}
+
+export interface PublisherSuccessAction {
+    type: typeof PUBLISHER_SUCCESS
+    publisher: IPublisher,
+}
+
+export interface PublisherFailureAction {
+    type: typeof PUBLISHER_FAILURE
+    error: string
+}
+
+export const publisherRequest: (id: string) => PublisherRequestAction = 
+    (id) => ({ type: PUBLISHER_REQUEST, id });
+
+export const publisherSuccess: (publisher: IPublisher) => PublisherSuccessAction = 
+    (publisher) => ({ type: PUBLISHER_SUCCESS, publisher });
+
+export const publisherFailure: (error: string) => PublisherFailureAction = 
+    (error) => ({ type: PUBLISHER_FAILURE, error });
+
+export type PublisherAction =
+    | PublisherRequestAction
+    | PublisherSuccessAction
+    | PublisherFailureAction;
+
 
 // State
+const defaultValue = { id: 0, name: '', books: List() };
 
-export const initialState = Immutable.fromJS({
-    books: [],
+export class PublisherRecord extends Record(defaultValue) implements IPublisher {
+    id: number;
+    name: string;
+    books: List<IBook>;
+
+    constructor(params: IPublisher) {
+        super(params);
+        this.id = params.id;
+        this.name = params.name;
+        this.books = params.books;
+    }
+}
+
+export const initialState = new PublisherRecord({
+    books: List(),
     name: '',
     id: 0,
 });
 
-export default function PublisherDetailReducer(state = initialState, action) {
+export default function PublisherDetailReducer(state = initialState, action: PublisherAction) {
     switch (action.type) {
-    case PUBLISHER.SUCCESS:
-        return Immutable.fromJS(action.publisher);
+    case PUBLISHER_SUCCESS:
+        return new PublisherRecord(action.publisher);
     default:
         return state;
     }

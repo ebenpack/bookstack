@@ -1,11 +1,26 @@
 import axios from 'axios';
-import Immutable from 'immutable';
+import * as Immutable from 'immutable';
 import { delay } from 'redux-saga/effects';
 import { put, call, take, fork, cancel } from 'redux-saga/effects';
 
+import { axiosCall } from '../utils/sagasUtils';
 import { BOOK_SEARCH, bookSearch as bookSearchActions } from './bookSearchModule';
 
-function formatBook(book) {
+
+interface GoogleBook {
+    volumeInfo: {
+        title: string,
+        pageCount: string,
+        industryIdentifiers: { type: string, identifier: string }[],
+        authors: string[],
+        imageLinks: {
+            smallThumbnail: string
+        },
+        publisher: string[]
+    }
+}
+
+function formatBook(book: GoogleBook) {
     // TODO: Revisit this... this transformation is ugly, and probably misses a
     // lot of edge-cases
     return {
@@ -36,10 +51,10 @@ function formatBook(book) {
     };
 }
 
-export function* bookSearch(query) {
+export function* bookSearch(query: string) {
     const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
     try {
-        const response = yield call(axios, {
+        const response = yield call(axiosCall, {
             method: 'GET',
             url: googleBooksUrl,
         });

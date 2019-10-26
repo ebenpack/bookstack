@@ -1,57 +1,100 @@
-import Immutable from 'immutable';
+import { fromJS, List, Record } from 'immutable';
 
 import { makeAction, createRequestTypes, SET, REQUEST, SUCCESS, FAILURE, CLEAR } from '../utils/moduleUtils';
 
 // Actions
+export const ADD_CATEGORY_ADD_REQUEST = 'ADD_CATEGORY_ADD_REQUEST';
+export const ADD_CATEGORY_ADD_SUCCESS = 'ADD_CATEGORY_ADD_SUCCESS';
+export const ADD_CATEGORY_ADD_FAILURE = 'ADD_CATEGORY_ADD_FAILURE';
 
-export const ADD = createRequestTypes('CATEGORY', 'ADD');
-export const SEARCH = createRequestTypes('CATEGORY', 'SEARCH', [REQUEST, SUCCESS, FAILURE, CLEAR]);
-export const INPUT = createRequestTypes('CATEGORY', 'INPUT', [SET, CLEAR]);
+export const ADD_CATEGORY_SEARCH_REQUEST = 'ADD_CATEGORY_SEARCH_REQUEST';
+export const ADD_CATEGORY_SEARCH_SUCCESS = 'ADD_CATEGORY_SEARCH_SUCCESS';
+export const ADD_CATEGORY_SEARCH_FAILURE = 'ADD_CATEGORY_SEARCH_FAILURE';
+export const ADD_CATEGORY_SEARCH_CLEAR = 'ADD_CATEGORY_SEARCH_CLEAR';
 
-export const addCategory = {
-    request: category =>
-        makeAction(ADD.REQUEST, { category }),
-    success: category =>
-        makeAction(ADD.SUCCESS, { category }),
-    failure: error =>
-        makeAction(ADD.FAILURE, { error }),
-};
+/*****************
+** Add Category **
+******************/
+export interface AddCategoryRequestAction {
+    type: typeof ADD_CATEGORY_ADD_REQUEST
+    category: string
+}
 
-export const categorySearch = {
-    request: query =>
-        makeAction(SEARCH.REQUEST, { query }),
-    success: suggestions =>
-        makeAction(SEARCH.SUCCESS, { suggestions }),
-    failure: error =>
-        makeAction(SEARCH.FAILURE, { error }),
-    clear: () =>
-        makeAction(SEARCH.CLEAR),
-};
+export interface AddCategorySuccessAction {
+    type: typeof ADD_CATEGORY_ADD_SUCCESS
+    category: string
+}
 
-export const categoryInput = {
-    set: query =>
-        makeAction(INPUT.SET, { query }),
-    clear: () =>
-        makeAction(INPUT.CLEAR, {}),
-};
+export interface AddCategoryFailureAction {
+    type: typeof ADD_CATEGORY_ADD_FAILURE
+    error: string
+}
+
+
+export const addCategoryRequest: (category: string) => AddCategoryRequestAction =
+        (category: string) => ({ type: ADD_CATEGORY_ADD_REQUEST, category });
+
+export const addCategorySuccess: (category: string) => AddCategorySuccessAction =
+        (category: string) => ({ type: ADD_CATEGORY_ADD_SUCCESS, category });
+
+export const addCategoryFailure: (error: string) => AddCategoryFailureAction =
+        (error: string) => ({ type: ADD_CATEGORY_ADD_FAILURE, error });
+
+
+/********************
+** Search Category **
+*********************/
+
+export interface SearchCategoryRequestAction {
+    type: typeof ADD_CATEGORY_SEARCH_REQUEST
+    query: string
+}
+
+export interface SearchCategorySuccessAction {
+    type: typeof ADD_CATEGORY_SEARCH_SUCCESS
+    suggestions: List<string>
+}
+
+export interface SearchCategoryFailureAction {
+    type: typeof ADD_CATEGORY_SEARCH_FAILURE
+    error: string
+}
+
+export interface SearchCategoryClearAction {
+    type: typeof ADD_CATEGORY_SEARCH_CLEAR
+}
+
+
+
+export const searchCategoryRequest: (query: string) => SearchCategoryRequestAction =
+    query => ({ type: ADD_CATEGORY_SEARCH_REQUEST, query });
+
+export const searchCategorySuccess: (suggestions: List<string>) => SearchCategorySuccessAction =
+    suggestions => ({ type: ADD_CATEGORY_SEARCH_SUCCESS, suggestions });
+
+export const searchCategoryFailure: (error: string) => SearchCategoryFailureAction =
+    error => ({ type: ADD_CATEGORY_SEARCH_FAILURE, error });
+
+export const searchCategoryClear: () => SearchCategoryClearAction =
+    () => ({ type: ADD_CATEGORY_SEARCH_CLEAR });
+
+export type AddCategoryActionTypes
+    = SearchCategorySuccessAction
+    | SearchCategoryFailureAction;
+
 
 // State
-
-export const initialState = Immutable.fromJS({
-    autoSuggestCategories: [],
-    category: '',
+export const initialState = fromJS({
+    autoSuggestCategories: []
 });
 
-export default function categoryReducer(state = initialState, action) {
+// TODO: HOOK IT?
+export default function categoryReducer(state = initialState, action: AddCategoryActionTypes) {
     switch (action.type) {
-    case SEARCH.SUCCESS:
-        return state.set('autoSuggestCategories', Immutable.fromJS(action.suggestions));
-    case SEARCH.CLEAR:
-        return state.set('autoSuggestCategories', Immutable.List());
-    case INPUT.SET:
-        return state.set('category', action.query);
-    case INPUT.CLEAR:
-        return state.set('category', '');
+    case ADD_CATEGORY_SEARCH_SUCCESS:
+        return state.set('autoSuggestCategories', fromJS(action.suggestions));
+    case ADD_CATEGORY_SEARCH_FAILURE:
+        return state.set('autoSuggestCategories', List());
     default:
         return state;
     }

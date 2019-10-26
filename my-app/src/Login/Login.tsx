@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import propTypes from 'prop-types';
+import * as propTypes from 'prop-types';
 
 import { LoginProps } from './types';
 import {

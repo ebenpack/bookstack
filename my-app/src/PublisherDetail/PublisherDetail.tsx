@@ -1,16 +1,30 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import propTypes from 'prop-types';
-import immutablePropTypes from 'react-immutable-proptypes';
+import * as propTypes from 'prop-types';
+import * as immutablePropTypes from 'react-immutable-proptypes';
 
 import Book from '../Book/Book';
 
-export const PublisherDetail = ({ name, books }) => (
-    <div className="author">
-        <h2>{name}</h2>
-        {books.map(book => (<Book key={book.get('id')} book={book} />))}
-    </div>
-);
+import { initializePublisher } from './publisherDetailModule';
+import { List } from 'immutable';
+import { IBook } from '../Book/types';
+
+interface PublisherDetailProps {
+    name: string,
+    books: List<IBook>,
+    initializePublisher: () => void,
+}
+
+export const PublisherDetail = ({ name, books, initializePublisher }: PublisherDetailProps) => {
+    useEffect(initializePublisher, [])
+    return (
+        <div className="author">
+            <h2>{name}</h2>
+            {books.map(book => (<Book key={book.id} book={book} />))}
+        </div>
+    );
+};
 
 PublisherDetail.propTypes = {
     name: propTypes.string.isRequired,
@@ -23,4 +37,8 @@ const mapStateToProps = state => ({
     books: state.publisherDetailStore.get('books'),
 });
 
-export default connect(mapStateToProps)(PublisherDetail);
+const mapDispatchToProps = {
+    initializePublisher
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PublisherDetail);

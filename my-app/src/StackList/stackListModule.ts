@@ -1,29 +1,56 @@
-import Immutable from 'immutable';
+import { fromJS, List } from 'immutable';
 
 // Actions
+export const STACK_REQUEST = 'STACK_REQUEST';
+export const STACK_SUCCESS = 'STACK_SUCCESS';
+export const STACK_FAILURE = 'STACK_FAILURE';
+export const STACK_CLEAR = 'STACK_CLEAR';
+export const STACK_INITIALIZE = 'STACK_INITIALIZE';
 
-import { makeAction, createRequestTypes, REQUEST, SUCCESS, FAILURE, CLEAR } from '../utils/moduleUtils';
+export interface StackRequestAction {
+    type: typeof STACK_REQUEST
+}
 
-export const STACK = createRequestTypes('STACK', 'STACK', [REQUEST, SUCCESS, FAILURE, CLEAR]);
+export interface StackSuccessAction {
+    type: typeof STACK_SUCCESS
+    stack: List<string>
+}
 
-export const stack = {
-    request: () =>
-        makeAction(STACK.REQUEST),
-    success: stack =>
-        makeAction(STACK.SUCCESS, { stack }),
-    failure: error =>
-        makeAction(STACK.FAILURE, { error }),
-    clear: () => makeAction(STACK.CLEAR),
-};
+export interface StackFailureAction {
+    type: typeof STACK_FAILURE
+    error: string
+}
+
+export interface StackClearAction {
+    type: typeof STACK_CLEAR
+}
+
+export const stackRequest: () => StackRequestAction =
+    () => ({ type: STACK_REQUEST });
+
+export const stackSuccess: (stack: List<string>) => StackSuccessAction =
+    (stack) => ({ type: STACK_SUCCESS, stack });
+
+export const stackFailure: (error: string) => StackFailureAction =
+    (error) => ({ type: STACK_FAILURE, error });
+
+export const stackClear: () => StackClearAction = 
+    () => ({ type: STACK_CLEAR });
+
+
+export const initializeStack = () => ({ type: STACK_INITIALIZE });
+
+export type StackActionTypes
+    = StackSuccessAction
+    | StackClearAction;
 
 // State
-
-export default function stackListReducer(state = Immutable.List(), action) {
+export default function stackListReducer(state = List(), action: StackActionTypes) {
     switch (action.type) {
-    case STACK.SUCCESS:
-        return Immutable.fromJS(action.stack);
-    case STACK.CLEAR:
-        return Immutable.List();
+    case STACK_SUCCESS:
+        return fromJS(action.stack);
+    case STACK_CLEAR:
+        return List();
     default:
         return state;
     }

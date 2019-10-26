@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import propTypes from 'prop-types';
+import * as propTypes from 'prop-types';
 
 import { path as listPath } from '../StackList/StackListRoute';
 import { path as bookSearchPath } from '../BookSearch/BookSearchRoute';
@@ -9,7 +9,13 @@ import { path as loginPath } from '../Login/LoginRoute';
 
 import { logoff as logoffAction } from './appModule';
 
-export const App = ({ token, logoff, children }) => (
+export type AppProps = { 
+    token: string, 
+    logoff: () => void, 
+    children: React.ElementType
+}
+
+export const App = ({ token, logoff, children }: AppProps) => (
     <div className="container">
         <nav className="navbar" aria-label="main navigation">
             <li className="navbar-item"><Link to={listPath}>View Stacks</Link></li>

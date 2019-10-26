@@ -1,4 +1,4 @@
-import Immutable from 'immutable';
+import { fromJS, List } from 'immutable';
 
 import { makeAction, createRequestTypes, SET, REQUEST, SUCCESS, FAILURE, CLEAR } from '../utils/moduleUtils';
 
@@ -27,7 +27,7 @@ export const query = {
 
 // State
 
-export const initialState = Immutable.fromJS({
+export const initialState = fromJS({
     query: '',
     books: [],
 });
@@ -37,7 +37,7 @@ export default function BookSearchReducer(state = initialState, action) {
     case BOOK_SEARCH.SUCCESS:
         return state.set('books', action.books);
     case BOOK_SEARCH.CLEAR:
-        return state.set('books', new Immutable.List());
+        return state.set('books', List());
     case QUERY.SET:
         return state.set('query', action.query);
     case QUERY.CLEAR:

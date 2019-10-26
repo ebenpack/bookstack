@@ -1,28 +1,22 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import immutablePropTypes from 'react-immutable-proptypes';
+import * as immutablePropTypes from 'react-immutable-proptypes';
 import { Record } from 'immutable';
 
 import { makePublisherDetailPath } from '../PublisherDetail/PublisherDetailRoute';
-
-interface IPublisher {
-    id: number,
-    name: string
-}
-
-interface IPublisherRecord extends Record<IPublisher>, IPublisher {}
+import { IPublisher } from '../PublisherDetail/types';
 
 interface CategoryProps {
-    publisher: IPublisherRecord
+    publisher: IPublisher
 }
 
 const Publisher = ({ publisher }: CategoryProps) => (
     <div className="publisher">
-        {publisher.get('id') ? (
-            <Link to={makePublisherDetailPath(publisher.get('id'))}>
-                {publisher.get('name')}
+        {publisher.id ? (
+            <Link to={makePublisherDetailPath(publisher.id)}>
+                {publisher.name}
             </Link>) :
-            publisher.get('name')
+            publisher.name
         }
     </div>
 );

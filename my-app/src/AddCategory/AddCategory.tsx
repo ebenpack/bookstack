@@ -1,103 +1,101 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { connect } from 'react-redux';
-import propTypes from 'prop-types';
-import immutablePropTypes from 'react-immutable-proptypes';
-import { List } from 'immutable';
+import * as propTypes from 'prop-types';
+import * as immutablePropTypes from 'react-immutable-proptypes';
+import { List, Map } from 'immutable';
 
 import Autocomplete from '../Autocomplete/Autocomplete';
 
-import { categorySearch, categoryInput } from './addCategoryModule';
+import { 
+    searchCategoryRequest,
+    searchCategoryClear
+} from './addCategoryModule';
 import {
-    addCategory as addCategoryAction,
-    addNewCategory as addNewCategoryAction,
+    stackDetailAddNewCategoryRequest,
+    stackDetailAddCategoryRequest
 } from '../StackDetail/stackDetailModule';
+import { AppState } from '../store';
 
-interface AddCategoryProps {
-    id: number,
-    category: string,
-    addCategory: (id: number, suggestionId: number) => void,
-    setCategoryInput: (category: string) => void,
-    clearCategoryInput: () => void,
-    clearAutoSuggestCategories: () => void,
-    setAutoSuggestCategories: () => void,
-    addNewCategory: (id: number, category: string) => void,
-    autoSuggestCategories: List<string>,
+interface PropsFromState {
+    autoSuggestCategories: List<Map<string, any>>,
 }
 
-export const AddCategory = ({
-    id,
-    autoSuggestCategories,
-    category,
-    addCategory,
-    addNewCategory,
-    setAutoSuggestCategories,
-    clearAutoSuggestCategories,
-    setCategoryInput,
-    clearCategoryInput,
-}: AddCategoryProps) => (
-    <div>
-        <label>Add Category: <input
-            className="input"
-            type="text"
-            value={category}
-            onChange={(e) => {
-                const newCategory = e.target.value;
-                if (newCategory) {
-                    setCategoryInput(newCategory);
-                    setAutoSuggestCategories(newCategory);
-                } else {
-                    clearCategoryInput();
-                    clearAutoSuggestCategories();
-                }
-            }}
-            onKeyUp={(e) => {
-                if (e.key === 'Enter') {
-                    addNewCategory(id, category);
-                    clearCategoryInput();
-                    clearAutoSuggestCategories();
-                }
-            }}
-        /> {
-            (autoSuggestCategories.size > 0) ? (
-                <Autocomplete
-                    suggestions={autoSuggestCategories}
-                    displayProperty="category"
-                    onClick={(suggestionId) => {
-                        clearCategoryInput();
-                        clearAutoSuggestCategories();
-                        addCategory(id, suggestionId);
-                    }}
-                />
-            ) : null
-        }
-        </label>
-    </div>
-);
+interface PropsFromDispatch {
+    addCategory: typeof stackDetailAddCategoryRequest,
+    addNewCategory: typeof stackDetailAddNewCategoryRequest,
+    setAutoSuggestCategories: typeof searchCategoryRequest,
+    clearAutoSuggestCategories: typeof searchCategoryClear,
+}
 
-AddCategory.propTypes = {
-    category: propTypes.string.isRequired,
-    addCategory: propTypes.func.isRequired,
-    setCategoryInput: propTypes.func.isRequired,
-    clearCategoryInput: propTypes.func.isRequired,
-    clearAutoSuggestCategories: propTypes.func.isRequired,
-    setAutoSuggestCategories: propTypes.func.isRequired,
-    id: propTypes.number.isRequired,
-    addNewCategory: propTypes.func.isRequired,
-    autoSuggestCategories: immutablePropTypes.list.isRequired,
-};
+interface OwnProps {
+    id: number,
+    category: string,
+}
 
-const mapStateToProps = state => ({
-    autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories'),
-    category: state.addCategoryStore.get('category'),
+type AddCategoryProps = PropsFromState & PropsFromDispatch & OwnProps;
+
+export class AddCategory extends React.Component<AddCategoryProps> {
+    render() {
+        const {
+            id,
+            autoSuggestCategories,
+            addCategory,
+            addNewCategory,
+            setAutoSuggestCategories,
+            clearAutoSuggestCategories,
+        } = this.props;
+        const [category, setCategoryInput] = useState('');
+        const clearCategoryInput = () => setCategoryInput('');
+        return (
+            <div>
+                <label>Add Category:
+                    <input
+                        className="input"
+                        type="text"
+                        value={category}
+                        onChange={(e) => {
+                            const newCategory = e.target.value;
+                            if (newCategory) {
+                                setCategoryInput(newCategory);
+                                setAutoSuggestCategories(newCategory);
+                            } else {
+                                clearCategoryInput();
+                                clearAutoSuggestCategories();
+                            }
+                        }}
+                        onKeyUp={(e) => {
+                            if (e.key === 'Enter') {
+                                addNewCategory(id, category);
+                                clearCategoryInput();
+                                clearAutoSuggestCategories();
+                            }
+                        }}
+                    />
+                    <Autocomplete
+                        suggestions={autoSuggestCategories}
+                        displayProperty="category"
+                        onClick={(suggestionId) => {
+                            clearCategoryInput();
+                            clearAutoSuggestCategories();
+                            addCategory(id, suggestionId);
+                        }}
+                    />
+                </label>
+            </div>
+        )
+    };
+}
+
+const mapStateToProps = (state: AppState) => ({
+    autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories')
 });
 
 const mapDispatchToProps = {
-    addCategory: addCategoryAction.request,
-    addNewCategory: addNewCategoryAction.request,
-    setCategoryInput: categoryInput.set,
-    clearCategoryInput: categoryInput.clear,
-    setAutoSuggestCategories: categorySearch.request,
-    clearAutoSuggestCategories: categorySearch.clear,
+    addCategory: stackDetailAddCategoryRequest,
+    addNewCategory: stackDetailAddNewCategoryRequest,
+    setAutoSuggestCategories: searchCategoryRequest,
+    clearAutoSuggestCategories: searchCategoryClear,
 };
 
 export default connect(

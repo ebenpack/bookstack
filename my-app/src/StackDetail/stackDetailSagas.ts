@@ -2,49 +2,69 @@ import axios from 'axios';
 import { delay } from 'redux-saga/effects';
 import { put, call, select, take, takeEvery, race } from 'redux-saga/effects';
 
-import { getCredentials, getCurrentTime, initializeSaga } from '../utils/sagasUtils';
+import { axiosCall, getCredentials, getCurrentTime } from '../utils/sagasUtils';
 import { path } from './StackDetailRoute';
 import {
-    STACK_DETAIL,
-    POSITION,
-    READ_STATE,
-    ADD_BOOK,
-    REMOVE_BOOK,
-    ADD_CATEGORY,
-    ADD_NEW_CATEGORY,
-    REMOVE_CATEGORY,
-    addBook as addBookAction,
-    addCategory as addCategoryAction,
-    readState,
-    stackDetail,
-    position,
-    removeBook,
-    removeCategory,
+    stackDetailSuccess,
+    stackDetailFailure,
+    stackDetailClear,
+    stackDetailEditing,
+    stackDetailPositionSuccess,
+    stackDetailPositionFailure,
+    stackDetailReadStateSuccess,
+    stackDetailReadStateFailure,
+    stackDetailAddBookSuccess,
+    stackDetailAddBookFailure,
+    stackDetailRemoveBookSuccess,
+    stackDetailRemoveBookFailure,
+    stackDetailAddCategoryRequest,
+    stackDetailAddCategorySuccess,
+    stackDetailAddCategoryFailure,
+    stackDetailRemoveCategorySuccess,
+    stackDetailRemoveCategoryFailure,
+    StackDetailRequestAction,
+    StackDetailPositionRequestAction,
+    StackDetailReadStateRequestAction,
+    StackDetailAddBookRequestAction,
+    StackDetailRemoveBookRequestAction,
+    StackDetailAddCategoryRequestAction,
+    StackDetailAddNewCategoryRequestAction,
+    StackDetailRemoveCategoryRequestAction,
+    STACK_DETAIL_INITIALIZE,
+    STACK_DETAIL_REQUEST,
+    STACK_DETAIL_READ_STATE_REQUEST,
+    STACK_DETAIL_POSITION_REQUEST,
+    STACK_DETAIL_REMOVE_BOOK_REQUEST,
+    STACK_DETAIL_ADD_CATEGORY_REQUEST,
+    STACK_DETAIL_ADD_NEW_CATEGORY_REQUEST,
+    STACK_DETAIL_REMOVE_CATEGORY_REQUEST,
+    STACK_DETAIL_ADD_BOOK_REQUEST,
 } from './stackDetailModule';
-import * as categoryActions from '../AddCategory/addCategoryModule';
+import { 
+    ADD_CATEGORY_ADD_SUCCESS, 
+    addCategoryRequest 
+} from '../AddCategory/addCategoryModule';
 
-const { ADD } = categoryActions;
-
-export function* loadStack({ id }) {
+export function* loadStack({ id }: StackDetailRequestAction) {
     const { apiUrl } = yield select(getCredentials);
     try {
-        const stack = yield call(axios, {
+        const stack = yield call(axiosCall, {
             method: 'GET',
             url: `${apiUrl}/api/stack/${id}/`,
         });
-        yield put(stackDetail.success(stack.data));
+        yield put(stackDetailSuccess(stack.data));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(stackDetail.failure(error));
+        yield put(stackDetailFailure(error));
     }
 }
 
-export function* updateReadState({ bookId, newReadState }) {
+export function* updateReadState({ bookId, newReadState }: StackDetailReadStateRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
-        const response = yield call(axios, {
+        const response = yield call(axiosCall, {
             method: 'PATCH',
             url: `${apiUrl}/api/bookstack/${bookId}/`,
             data: {
@@ -56,22 +76,22 @@ export function* updateReadState({ bookId, newReadState }) {
             },
         });
         const { read } = response.data;
-        yield put(readState.success(bookId, read));
+        yield put(stackDetailReadStateSuccess(bookId, read));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(readState.failure(error));
+        yield put(stackDetailReadStateFailure(error));
     }
 }
 
-export function* updatePosition({ id, from, to }) {
+export function* updatePosition({ id, from, to }: StackDetailPositionRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     const stackLength = yield select(store =>
         store.stackDetailStore.getIn(['stackDetail', 'books']).size);
     try {
         if (to > 0 && to <= stackLength) {
-            yield call(axios, {
+            yield call(axiosCall, {
                 method: 'PATCH',
                 url: `${apiUrl}/api/bookstack/${id}/renumber/`,
                 data: {
@@ -83,19 +103,19 @@ export function* updatePosition({ id, from, to }) {
                 },
             });
         }
-        yield put(position.success(id, from, to));
+        yield put(stackDetailPositionSuccess(id, from, to));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(position.failure(error));
+        yield put(stackDetailPositionFailure(error));
     }
 }
 
-export function* deleteBook({ id }) {
+export function* deleteBook({ id }: StackDetailRemoveBookRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
-        yield call(axios, {
+        yield call(axiosCall, {
             method: 'DELETE',
             url: `${apiUrl}/api/bookstack/${id}/`,
             headers: {
@@ -103,39 +123,39 @@ export function* deleteBook({ id }) {
                 Authorization: `Token ${token}`,
             },
         });
-        yield put(removeBook.success(id));
+        yield put(stackDetailRemoveBookSuccess(id));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(removeBook.failure(error));
+        yield put(stackDetailRemoveBookFailure(error));
     }
 }
 
-export function* addNewCategory({ bookstackId, category }) {
-    yield put(categoryActions.addCategory.request(category));
+export function* addNewCategory({ bookstackId, category }: StackDetailAddNewCategoryRequestAction) {
+    yield put(addCategoryRequest(category));
     let now = yield call(getCurrentTime);
     const waitUntil = now + 2500;
     while (true) {
         now = yield call(getCurrentTime);
         const { action, timeout } = yield race({
-            action: yield take(ADD.SUCCESS),
+            action: yield take(ADD_CATEGORY_ADD_SUCCESS),
             timeout: yield delay(waitUntil - now),
         });
 
         if (timeout) {
             break;
         } else if (action.category.category === category) {
-            yield put(addCategoryAction.request(bookstackId, action.category.id));
+            yield put(stackDetailAddCategoryRequest(bookstackId, action.category.id));
             break;
         }
     }
 }
 
-export function* addCategory({ bookstackId, categoryId }) {
+export function* addCategory({ bookstackId, categoryId }: StackDetailAddCategoryRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
-        const response = yield call(axios, {
+        const response = yield call(axiosCall, {
             method: 'POST',
             url: `${apiUrl}/api/bookstackcategory/`,
             headers: {
@@ -147,19 +167,19 @@ export function* addCategory({ bookstackId, categoryId }) {
                 category: categoryId,
             },
         });
-        yield put(addCategoryAction.success(response.data.bookstack, response.data.category));
+        yield put(stackDetailAddCategorySuccess(response.data.bookstack, response.data.category));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(addCategoryAction.failure(error));
+        yield put(stackDetailAddCategoryFailure(error));
     }
 }
 
-export function* deleteCategory({ bookstackId, categoryId }) {
+export function* deleteCategory({ bookstackId, categoryId }: StackDetailRemoveCategoryRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
-        yield call(axios, {
+        yield call(axiosCall, {
             method: 'DELETE',
             url: `${apiUrl}/api/bookstackcategory/${categoryId}/`,
             headers: {
@@ -167,19 +187,19 @@ export function* deleteCategory({ bookstackId, categoryId }) {
                 Authorization: `Token ${token}`,
             },
         });
-        yield put(removeCategory.success(bookstackId, categoryId));
+        yield put(stackDetailRemoveCategorySuccess(bookstackId, categoryId));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(removeCategory.failure(error));
+        yield put(stackDetailRemoveCategoryFailure(error));
     }
 }
 
-export function* addBook({ bookId, stackId }) {
+export function* addBook({ bookId, stackId }: StackDetailAddBookRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
-        yield call(axios, {
+        yield call(axiosCall, {
             url: `${apiUrl}/api/bookstack/`,
             method: 'POST',
             headers: {
@@ -192,48 +212,50 @@ export function* addBook({ bookId, stackId }) {
                 stack_id: stackId,
             },
         });
-        yield put(stackDetail.editing());
-        yield put(addBookAction.success());
+        yield put(stackDetailEditing());
+        yield put(stackDetailAddBookSuccess());
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(addBookAction.failure(error));
+        yield put(stackDetailAddBookFailure(error));
     }
 }
 
-export const initialize = initializeSaga(path, loadStack, match => ({ id: match.params.id }));
+export function* initialize() {
+    yield takeEvery(STACK_DETAIL_INITIALIZE, loadStack);
+}
 
 export function* watchLoadStack() {
-    yield takeEvery(STACK_DETAIL.REQUEST, loadStack);
+    yield takeEvery(STACK_DETAIL_REQUEST, loadStack);
 }
 
 export function* watchUpdateReadState() {
-    yield takeEvery(READ_STATE.REQUEST, updateReadState);
+    yield takeEvery(STACK_DETAIL_READ_STATE_REQUEST, updateReadState);
 }
 
 export function* watchUpdatePosition() {
-    yield takeEvery(POSITION.REQUEST, updatePosition);
+    yield takeEvery(STACK_DETAIL_POSITION_REQUEST, updatePosition);
 }
 
 export function* watchDeleteBook() {
-    yield takeEvery(REMOVE_BOOK.REQUEST, deleteBook);
+    yield takeEvery(STACK_DETAIL_REMOVE_BOOK_REQUEST, deleteBook);
 }
 
 export function* watchAddCategory() {
-    yield takeEvery(ADD_CATEGORY.REQUEST, addCategory);
+    yield takeEvery(STACK_DETAIL_ADD_CATEGORY_REQUEST, addCategory);
 }
 
 export function* watchAddNewCategory() {
-    yield takeEvery(ADD_NEW_CATEGORY.REQUEST, addNewCategory);
+    yield takeEvery(STACK_DETAIL_ADD_NEW_CATEGORY_REQUEST, addNewCategory);
 }
 
 export function* watchDeleteCategory() {
-    yield takeEvery(REMOVE_CATEGORY.REQUEST, deleteCategory);
+    yield takeEvery(STACK_DETAIL_REMOVE_CATEGORY_REQUEST, deleteCategory);
 }
 
 export function* watchAddBook() {
-    yield takeEvery(ADD_BOOK.REQUEST, addBook);
+    yield takeEvery(STACK_DETAIL_ADD_BOOK_REQUEST, addBook);
 }
 
 export default [

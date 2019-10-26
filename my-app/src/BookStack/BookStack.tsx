@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import propTypes from 'prop-types';
-import immutablePropTypes from 'react-immutable-proptypes';
+import * as propTypes from 'prop-types';
+import * as immutablePropTypes from 'react-immutable-proptypes';
 
-import { IBookStackRecord } from './types';
+import { IBookStack } from './types';
 import * as stackDetailActions from '../StackDetail/stackDetailModule';
 import Book from '../Book/Book';
 import ConnectedAddCategory from '../AddCategory/AddCategory';
@@ -174,7 +174,7 @@ AddNewCategory.propTypes = {
 };
 
 interface BookStackProps {
-    bookStack: IBookStackRecord,
+    bookStack: IBookStack,
     staticPath: string,
     setEditing: (id: number, editing: boolean) => void,
     updatePosition: (id: number, fromPosition: number, toPosition: number) => void,
@@ -198,12 +198,12 @@ const BookStack = ({
     deleteBook,
     setReadState,
 }: BookStackProps) => {
-    const editing = bookStack.get('editing');
-    const removeConfirm = bookStack.get('removeConfirm');
-    const addingCategory = bookStack.get('addingCategory');
-    const newPosition = bookStack.get('newPosition');
-    const position = bookStack.get('position');
-    const id = bookStack.get('id');
+    const editing = bookStack.editing;
+    const removeConfirm = bookStack.removeConfirm;
+    const addingCategory = bookStack.addingCategory;
+    const newPosition = bookStack.newPosition;
+    const position = bookStack.position;
+    const id = bookStack.id;
     const move = (moveId: number, fromPosition: number, toPosition: number) => {
         if (toPosition > 0 && toPosition < bookStack.size && toPosition !== fromPosition) {
             updatePosition(moveId, fromPosition, toPosition);
@@ -212,7 +212,7 @@ const BookStack = ({
     const moveUp = () => move(id, position, position - 1);
     const moveDown = () => move(id, position, position + 1);
     let classString = 'bookstack columns';
-    if (bookStack.get('read')) {
+    if (bookStack.read) {
         classString += ' is-read';
     }
     return (
@@ -253,8 +253,8 @@ const BookStack = ({
                 <div className="">
                     <button
                         onClick={() =>
-                            setReadState(bookStack.get('id'), !bookStack.get('read'))}
-                        className={`button is-centered${bookStack.get('read') ? ' is-info is-active' : ''}`}
+                            setReadState(bookStack.id, !bookStack.read)}
+                        className={`button is-centered${bookStack.read ? ' is-info is-active' : ''}`}
                     >
                         Read
                     </button>
@@ -266,16 +266,16 @@ const BookStack = ({
                     />
                 </div>
             </div>
-            <Book book={bookStack.get('book')} staticPath={staticPath} />
+            <Book book={bookStack.book} staticPath={staticPath} />
             <div className="categories column">
                 <h5>Categories</h5>
                 <ul>
-                    {bookStack.get('categories').map(category =>
+                    {bookStack.categories.map(category =>
                         (
-                            <li key={category.get('id')}>
-                                {category.getIn(['detail', 'category'])} -
+                            <li key={category.id}>
+                                {category.detail.category} -
                                 <span onClick={() =>
-                                    removeCategory(bookStack.get('id'), category.get('id'))}
+                                    removeCategory(bookStack.id, category.id)}
                                 >
                                     Remove
                                 </span>

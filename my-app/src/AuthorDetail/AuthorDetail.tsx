@@ -1,27 +1,50 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import propTypes from 'prop-types';
-import immutablePropTypes from 'react-immutable-proptypes';
+import * as propTypes from 'prop-types';
+import * as immutablePropTypes from 'react-immutable-proptypes';
 
-import { IAuthor } from './authorDetailModule'
+import { IAuthor } from './types';
 import Book from '../Book/Book';
+import { initializeAuthor } from './authorDetailModule';
+import { AppState } from '../store';
+import { List } from 'immutable';
+import { IBook } from '../Book/types';
 
-export const AuthorDetail = ({ name, books }: IAuthor) => (
-    <div className="author">
-        <h2>{name}</h2>
-        {books.map(book => (<Book key={book.get('id')} book={book} />))}
-    </div>
-);
+interface PropsFromState {
+    name: string;
+    books: List<IBook>;
+}
 
-AuthorDetail.propTypes = {
-    name: propTypes.string.isRequired,
-    books: immutablePropTypes.list.isRequired,
+interface PropsFromDispatch {
+    initializeAuthor: typeof initializeAuthor
+}
+
+type AuthorDetailProps = PropsFromState & PropsFromDispatch;
+
+export class AuthorDetail extends React.Component<AuthorDetailProps> { 
+    render() {
+        const { name, books, initializeAuthor } = this.props;
+        useEffect(() => {
+            initializeAuthor()
+        }, []);
+        return (
+            <div className="author">
+                <h2>{name}</h2>
+                {books.map(book => (<Book key={book.id} book={book} />))}
+            </div>
+        );
+    };
 };
 
-const mapStateToProps = state => ({
-    apiUrl: state.appStore.get('apiUrl'),
-    name: state.authorDetailStore.get('name'),
-    books: state.authorDetailStore.get('books'),
+
+const mapStateToProps = (state: AppState) => ({
+    name: state.authorDetailStore.name,
+    books: state.authorDetailStore.books,
 });
 
-export default connect(mapStateToProps)(AuthorDetail);
+const mapDispatchToProps = {
+    initializeAuthor
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuthorDetail);

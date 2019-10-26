@@ -1,48 +1,47 @@
 import * as React from 'react';
-import propTypes from 'prop-types';
-import immutablePropTypes from 'react-immutable-proptypes';
+import * as propTypes from 'prop-types';
+import * as immutablePropTypes from 'react-immutable-proptypes';
 
-import { IBookRecord } from '../Book/types';
+import { IBook } from '../Book/types';
 import Author from '../Author/Author';
 import Publisher from '../Publisher/Publisher';
 
 interface BookProps {
     staticPath: string,
-    book: IBookRecord,
+    book: IBook,
 }
-
 
 const Book = ({ staticPath, book }: BookProps) => (
     <div className="columns">
         <div className="column">
             <img
-                src={book.get('img', `${staticPath}bookstack/images/defaultbook.jpg`)}
-                alt={`${book.get('title')} Cover`}
+                src={book.img || `${staticPath}bookstack/images/defaultbook.jpg`}
+                alt={`${book.title} Cover`}
             />
-            <div className="title">{book.get('title')}</div>
+            <div className="title">{book.title}</div>
         </div>
         <div className="column">
             By:
-            <ul className="authors">{book.get('authors').map(author => (
+            <ul className="authors">{book.authors.map(author => (
                 <Author
                     key={
-                        author.get('id', `${book.get('title')}|${author.get('name')}`)
+                        author.id || `${book.title}|${author.name}`
                     }
                     author={author}
                 />
             ))}
             </ul>
             Publshed by:
-            {book.get('publishers').map(publisher => (
+            {book.publishers.map(publisher => (
                 <Publisher
                     key={
-                        publisher.get('id', `${book.get('title')}|${publisher.get('name')}`)
+                        publisher.id || `${book.title}|${publisher.name}`
                     }
                     publisher={publisher}
                 />
             ))}
-            <div className="pages">{book.get('pages')} pages</div>
-            <div className="isbn">ISBN: {book.get('isbn')}</div>
+            <div className="pages">{book.pages} pages</div>
+            <div className="isbn">ISBN: {book.isbn}</div>
         </div>
     </div>
 );

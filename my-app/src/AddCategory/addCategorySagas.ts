@@ -1,13 +1,22 @@
 import axios from 'axios';
 import { put, call, select, takeEvery } from 'redux-saga/effects';
 
-import { getCredentials } from '../utils/sagasUtils';
-import * as categoryActions from './addCategoryModule';
+import { axiosCall, getCredentials } from '../utils/sagasUtils';
+import {
+    addCategorySuccess,
+    addCategoryFailure,
+    searchCategorySuccess,
+    searchCategoryFailure,
+    AddCategoryRequestAction,
+    SearchCategoryRequestAction,
+    ADD_CATEGORY_ADD_REQUEST,
+    ADD_CATEGORY_SEARCH_REQUEST
+} from './addCategoryModule';
 
-export function* addCategory({ category }) {
+export function* addCategory({ category }: AddCategoryRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
-        const { data } = yield call(axios, {
+        const { data } = yield call(axiosCall, {
             method: 'POST',
             url: `${apiUrl}/api/category/`,
             headers: {
@@ -18,37 +27,37 @@ export function* addCategory({ category }) {
                 category,
             },
         });
-        yield put(categoryActions.addCategory.success(data));
+        yield put(addCategorySuccess(data));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Add category request failed' };
-        yield put(categoryActions.addCategory.failure(error));
+        yield put(addCategoryFailure(error));
     }
 }
 
-export function* setAutoSuggestCategories({ query }) {
+export function* setAutoSuggestCategories({ query }: SearchCategoryRequestAction) {
     const { apiUrl } = yield select(getCredentials);
     try {
-        const { data } = yield call(axios, {
+        const { data } = yield call(axiosCall, {
             method: 'GET',
             url: `${apiUrl}/api/category/?search=${query}`,
         });
-        yield put(categoryActions.categorySearch.success(data));
+        yield put(searchCategorySuccess(data));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
             : { error: 'Category search request failed' };
-        yield put(categoryActions.categorySearch.failure(error));
+        yield put(searchCategoryFailure(error));
     }
 }
 
 export function* watchAddCategory() {
-    yield takeEvery(categoryActions.ADD.REQUEST, addCategory);
+    yield takeEvery(ADD_CATEGORY_ADD_REQUEST, addCategory);
 }
 
 export function* watchSetAutoSuggestCategories() {
-    yield takeEvery(categoryActions.SEARCH.REQUEST, setAutoSuggestCategories);
+    yield takeEvery(ADD_CATEGORY_SEARCH_REQUEST, setAutoSuggestCategories);
 }
 
 

@@ -1,6 +1,6 @@
-import Immutable, { Record, List } from 'immutable';
+import { Record, List } from 'immutable';
 
-import { IAuthor, IAuthorRecord } from '../AuthorDetail/types'; 
+import { IAuthor } from '../AuthorDetail/types'; 
 import { IBook } from '../Book/types'; 
 
 const defaultAuthorProps: IAuthor = {
@@ -9,44 +9,60 @@ const defaultAuthorProps: IAuthor = {
     books: List(),
 }
 
-export class AuthorRecord extends Record(defaultAuthorProps) implements IAuthorRecord {
-    public readonly id!: number
-    public readonly name!: string
-    public readonly books!: List<IBook>
+type AuthorParams = {
+    id?: number;
+    name?: string;
+    books?: List<IBook>;
 }
 
-const AUTHOR_REQUEST = 'AUTHOR_REQUEST';
-const AUTHOR_SUCCESS = 'AUTHOR_SUCCESS';
-const AUTHOR_FAILURE = 'AUTHOR_FAILURE';
+export class AuthorRecord extends Record(defaultAuthorProps) implements IAuthor {
+    constructor(params?: AuthorParams) {
+        params ? super(params) : super();
+    }
+    with(values: AuthorParams) {
+        return this.merge(values) as this;
+    }
+}
+
+export const AUTHOR_INITIALIZE = 'AUTHOR_INITIALIZE';
+
+export const AUTHOR_REQUEST = 'AUTHOR_REQUEST';
+export const AUTHOR_SUCCESS = 'AUTHOR_SUCCESS';
+export const AUTHOR_FAILURE = 'AUTHOR_FAILURE';
 
 // Actions
-export type FetchAuthor = {
-    type: 'AUTHOR_REQUEST',
-    id: number,
-};
-export type FetchAuthorSuccess = {
-    type: 'AUTHOR_SUCCESS',
-    author: IAuthor,
-};
-export type FetchAuthorFailure = {
-    type: 'AUTHOR_FAILURE',
-    error: Error
-};
 
-export type AuthorAction =
-    | FetchAuthor
-    | FetchAuthorSuccess
-    | FetchAuthorFailure;
+export const initializeAuthor = () => ({ type: AUTHOR_INITIALIZE });
+
+export interface AuthorRequestAction {
+    type: typeof AUTHOR_REQUEST
+    id: string
+}
+
+export interface AuthorSuccessAction {
+    type: typeof AUTHOR_SUCCESS
+    author: IAuthor,
+}
+
+export interface AuthorFailureAction {
+    type: typeof AUTHOR_FAILURE
+    error: string
+}
 
 // Action Creators
-export const authorRequest = (id: number): FetchAuthor => 
-    ({ type: AUTHOR_REQUEST, id });
+export const authorRequest: (id: string) => AuthorRequestAction = 
+    (id) => ({ type: AUTHOR_REQUEST, id });
 
-export const authorSuccess = (author: IAuthor): FetchAuthorSuccess =>
-    ({ type: AUTHOR_SUCCESS, author });
+export const authorSuccess: (author: IAuthor) => AuthorSuccessAction =
+    (author) => ({ type: AUTHOR_SUCCESS, author });
 
-export const authorFailure = (error: Error): FetchAuthorFailure =>
-    ({ type: AUTHOR_FAILURE, error });
+export const authorFailure: (error: string) => AuthorFailureAction =
+    (error) => ({ type: AUTHOR_FAILURE, error });
+
+export type AuthorAction =
+    | AuthorRequestAction
+    | AuthorSuccessAction
+    | AuthorFailureAction;
 
 // State
 export const initialState = new AuthorRecord({
@@ -54,7 +70,7 @@ export const initialState = new AuthorRecord({
     name: '',
 });
 
-export default function AuthorDetailReducer(state = initialState, action: AuthorAction): IAuthorRecord {
+export default function AuthorDetailReducer(state = initialState, action: AuthorAction): IAuthor {
     switch (action.type) {
     case AUTHOR_SUCCESS:
         return new AuthorRecord(action.author);

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import propTypes from 'prop-types';
-import immutablePropTypes from 'react-immutable-proptypes';
+import * as propTypes from 'prop-types';
+import * as immutablePropTypes from 'react-immutable-proptypes';
 
 import { ICategoryRecord } from './types';
 

@@ -2,16 +2,26 @@ import axios from 'axios';
 import { put, call, select, takeEvery } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
-import { getCredentials } from '../utils/sagasUtils';
+import { axiosCall, getCredentials } from '../utils/sagasUtils';
 import { path } from '../StackList/StackListRoute';
-import * as appActions from './appModule';
+import {
+    appLoginSuccess,
+    appLoginFailure,
+    setToken,
+    clearLogin,
+    deleteToken,
+    AppLoginRequestAction,
+    APP_LOGIN_REQUEST,
+    APP_INITIALIZE,
+    APP_LOGOFF
+} from './appModule';
 
 function* getStoredToken() {
     const token = yield call([window.localStorage, window.localStorage.getItem], 'token');
     return token;
 }
 
-function* storeToken(token) {
+function* storeToken(token: string) {
     yield call([window.localStorage, window.localStorage.setItem], 'token', token);
 }
 
@@ -21,13 +31,13 @@ function* removeToken() {
 
 export function* initialize() {
     const token = yield call(getStoredToken);
-    yield put(appActions.setToken(token));
+    yield put(setToken(token));
 }
 
-export function* login({ user, pass, save }) {
+export function* login({ user, pass, save }: AppLoginRequestAction) {
     const { apiUrl } = yield select(getCredentials);
     try {
-        const response = yield call(axios, {
+        const response = yield call(axiosCall, {
             method: 'POST',
             url: `${apiUrl}/api-token-auth/`,
             data: {
@@ -42,30 +52,30 @@ export function* login({ user, pass, save }) {
         if (save) {
             yield call(storeToken, token);
         }
-        yield put(appActions.clearLogin());
+        yield put(clearLogin());
         yield put(push(path));
-        yield put(appActions.setToken(token));
-        yield put(appActions.login.success());
+        yield put(setToken(token));
+        yield put(appLoginSuccess());
     } catch (error) {
-        yield put(appActions.login.failure());
+        yield put(appLoginFailure(error));
     }
 }
 
 export function* logoff() {
     yield call(removeToken);
-    yield put(appActions.deleteToken());
+    yield put(deleteToken());
 }
 
 export function* watchInitialize() {
-    yield takeEvery(appActions.APP_INITIALIZE, initialize);
+    yield takeEvery(APP_INITIALIZE, initialize);
 }
 
 export function* watchLogin() {
-    yield takeEvery(appActions.APP_LOGIN.REQUEST, login);
+    yield takeEvery(APP_LOGIN_REQUEST, login);
 }
 
 export function* watchLogoff() {
-    yield takeEvery(appActions.APP_LOGOFF, logoff);
+    yield takeEvery(APP_LOGOFF, logoff);
 }
 
 export default [

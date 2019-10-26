@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import propTypes from 'prop-types';
+import * as propTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
 import { ConnectedRouter } from 'react-router-redux';
