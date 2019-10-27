@@ -8,36 +8,40 @@ import { List } from 'immutable';
 import Stack from '../Stack/Stack';
 import { IStackRecord } from '../Stack/types';
 import { initializeStack } from './stackListModule';
+import { AppState } from '../store';
 
-interface StackListProps {
+interface PropsFromState {
     stackList: List<IStackRecord>,
-    initializeStack: () => void
+    apiUrl: string,
+    staticPath: string,
 }
 
-export const StackList = ({ stackList, initializeStack }: StackListProps) => {
-    useEffect(() => initializeStack, []); // TODO: can this be point free, of will that weird up hook?
-    return (
-        <div className="stacklist">
-            {stackList.map((stack) => (
-                <Stack
-                    key={stack.get('id')}
-                    stack={stack}
-                />
-            ))}
-        </div>
-    );
-};
+interface PropsFromDispatch {
+    initializeStack: typeof initializeStack
+}
 
-StackList.defaultProps = {
-    staticPath: '',
-};
+type StackListProps = PropsFromState & PropsFromDispatch;
 
-StackList.propTypes = {
-    staticPath: propTypes.string,
-    stackList: immutablePropTypes.list.isRequired,
-};
+export class StackList extends React.Component<StackListProps> {
+    render() {
+        const { stackList, initializeStack } = this.props;
+        useEffect(() => {
+            initializeStack();
+        }, []); // TODO: can this be point free, of will that weird up hook?
+        return (
+            <div className="stacklist">
+                {stackList.map((stack) => (
+                    <Stack
+                        key={stack.get('id')}
+                        stack={stack}
+                    />
+                ))}
+            </div>
+        );
+    };
+}
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: AppState) => ({
     stackList: state.stackListStore,
     apiUrl: state.appStore.get('apiUrl'),
     staticPath: state.appStore.get('staticPath'),

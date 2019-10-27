@@ -30,7 +30,6 @@ interface PropsFromDispatch {
 
 interface OwnProps {
     id: number,
-    category: string,
 }
 
 type AddCategoryProps = PropsFromState & PropsFromDispatch & OwnProps;

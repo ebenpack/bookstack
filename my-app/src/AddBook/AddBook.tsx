@@ -30,7 +30,7 @@ interface PropsFromDispatch {
 }
 
 interface OwnProps {
-    title: number;
+    title?: string;
     stackId: string;
 }
 

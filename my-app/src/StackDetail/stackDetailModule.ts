@@ -95,14 +95,14 @@ export const stackDetailEditing: () => StackEditingClearAction =
 ********************/
 export interface StackDetailPositionRequestAction {
     type: typeof STACK_DETAIL_POSITION_REQUEST,
-    id: string,
+    id: number,
     from: number,
     to: number
 }
 
 export interface StackDetailPositionSuccessAction {
     type: typeof STACK_DETAIL_POSITION_SUCCESS
-    id: string,
+    id: number,
     from: number,
     to: number
 }
@@ -112,11 +112,11 @@ export interface StackDetailPositionFailureAction {
     error: string
 }
 
-export const stackDetailPositionRequest: (id: string, from: number, to: number) => StackDetailPositionRequestAction =
-    (id: string, from: number, to: number) => ({ type: STACK_DETAIL_POSITION_REQUEST, id, from, to });
+export const stackDetailPositionRequest: (id: number, from: number, to: number) => StackDetailPositionRequestAction =
+    (id, from, to) => ({ type: STACK_DETAIL_POSITION_REQUEST, id, from, to });
 
-export const stackDetailPositionSuccess: (id: string, from: number, to: number) => StackDetailPositionSuccessAction =
-    (id: string, from: number, to: number) => ({ type: STACK_DETAIL_POSITION_SUCCESS, id, from, to });
+export const stackDetailPositionSuccess: (id: number, from: number, to: number) => StackDetailPositionSuccessAction =
+    (id, from, to) => ({ type: STACK_DETAIL_POSITION_SUCCESS, id, from, to });
 
 export const stackDetailPositionFailure: (error: string) => StackDetailPositionFailureAction =
     (error) => ({ type: STACK_DETAIL_POSITION_FAILURE, error });
@@ -128,13 +128,13 @@ export const stackDetailPositionFailure: (error: string) => StackDetailPositionF
 
 export interface StackDetailReadStateRequestAction {
     type: typeof STACK_DETAIL_READ_STATE_REQUEST,
-    bookId: string,
+    bookId: number,
     newReadState: boolean,
 }
 
 export interface StackDetailReadStateSuccessAction {
     type: typeof STACK_DETAIL_READ_STATE_SUCCESS,
-    bookId: string,
+    bookId: number,
     readState: boolean,
 }
 
@@ -144,10 +144,10 @@ export interface StackDetailReadStateFailureAction {
 }
 
 
-export const stackDetailReadStateRequest: (bookId: string, newReadState: boolean) => StackDetailReadStateRequestAction =
+export const stackDetailReadStateRequest: (bookId: number, newReadState: boolean) => StackDetailReadStateRequestAction =
     (bookId, newReadState) => ({ type: STACK_DETAIL_READ_STATE_REQUEST, bookId, newReadState });
 
-export const stackDetailReadStateSuccess: (bookId: string, readState: boolean) => StackDetailReadStateSuccessAction =
+export const stackDetailReadStateSuccess: (bookId: number, readState: boolean) => StackDetailReadStateSuccessAction =
     (bookId, readState) => ({ type: STACK_DETAIL_READ_STATE_SUCCESS, bookId, readState });
 
 export const stackDetailReadStateFailure: (error: string) => StackDetailReadStateFailureAction =
@@ -187,12 +187,12 @@ export const stackDetailAddBookFailure: (error: string) => StackDetailAddBookFai
 *****************/
 export interface StackDetailRemoveBookRequestAction {
     type: typeof STACK_DETAIL_REMOVE_BOOK_REQUEST,
-    id: string,
+    id: number,
 }
 
 export interface StackDetailRemoveBookSuccessAction {
     type: typeof STACK_DETAIL_REMOVE_BOOK_SUCCESS,
-    id: string,
+    id: number,
 }
 
 export interface StackDetailRemoveBookFailureAction {
@@ -200,10 +200,10 @@ export interface StackDetailRemoveBookFailureAction {
     error: string
 }
 
-export const stackDetailRemoveBookRequest: (id: string) => StackDetailRemoveBookRequestAction =
+export const stackDetailRemoveBookRequest: (id: number) => StackDetailRemoveBookRequestAction =
     (id) => ({ type: STACK_DETAIL_REMOVE_BOOK_REQUEST, id });
 
-export const stackDetailRemoveBookSuccess: (id: string) => StackDetailRemoveBookSuccessAction =
+export const stackDetailRemoveBookSuccess: (id: number) => StackDetailRemoveBookSuccessAction =
     (id) => ({ type: STACK_DETAIL_REMOVE_BOOK_SUCCESS, id });
 
 export const stackDetailRemoveBookFailure: (error: string) => StackDetailRemoveBookFailureAction =
@@ -273,14 +273,14 @@ export const stackDetailAddNewCategoryFailure: (error: string) => StackDetailAdd
 *********************/
 export interface StackDetailRemoveCategoryRequestAction {
     type: typeof STACK_DETAIL_REMOVE_CATEGORY_REQUEST,
-    bookstackId: string,
-    categoryId: string,
+    bookstackId: number,
+    categoryId: number,
 }
 
 export interface StackDetailRemoveCategorySuccessAction {
     type: typeof STACK_DETAIL_REMOVE_CATEGORY_SUCCESS,
-    bookstackId: string,
-    categoryId: string,
+    bookstackId: number,
+    categoryId: number,
 }
 
 export interface StackDetailRemoveCategoryFailureAction {
@@ -288,10 +288,10 @@ export interface StackDetailRemoveCategoryFailureAction {
     error: string
 }
 
-export const stackDetailRemoveCategoryRequest: (bookstackId: string, categoryId: string) => StackDetailRemoveCategoryRequestAction = 
+export const stackDetailRemoveCategoryRequest: (bookstackId: number, categoryId: number) => StackDetailRemoveCategoryRequestAction = 
     (bookstackId, categoryId) => ({ type: STACK_DETAIL_REMOVE_CATEGORY_REQUEST, bookstackId, categoryId });
 
-export const stackDetailRemoveCategorySuccess: (bookstackId: string, categoryId: string) => StackDetailRemoveCategorySuccessAction = 
+export const stackDetailRemoveCategorySuccess: (bookstackId: number, categoryId: number) => StackDetailRemoveCategorySuccessAction = 
     (bookstackId, categoryId) => ({ type: STACK_DETAIL_REMOVE_CATEGORY_SUCCESS, bookstackId, categoryId });
 
 export const stackDetailRemoveCategoryFailure: (error: string) => StackDetailRemoveCategoryFailureAction = 
@@ -303,17 +303,41 @@ export const stackDetailRemoveCategoryFailure: (error: string) => StackDetailRem
 ** SET CRAP, PROBABLY WILL DO THIS WITH HOOKS INSTEAD **
 ********************************************************/
 
-export const setEditing = (bookId: string, editing: boolean) =>
-    ({ type: SET_EDITING, editing, bookId });
+export interface StackDetailSetEditingAction {
+    type: typeof SET_EDITING
+    bookId: number;
+    editing: boolean
+}
 
-export const setRemoveConfig = (bookId: string, removeConfig: boolean) =>
-    ({ type: SET_REMOVE_CONFIRM, removeConfig, bookId });
+export interface StackDetailSetRemoveConfigAction {
+    type: typeof SET_REMOVE_CONFIRM
+    bookId: number;
+    removeConfirm: boolean;
+}
 
-export const setAddingCategory = (bookId: string, addingCategory: boolean) =>
-    ({ type: SET_ADDING_CATEGORY, addingCategory, bookId });
+export interface StackDetailSetAddingCategoryAction {
+    type: typeof SET_ADDING_CATEGORY
+    bookId: number;
+    addingCategory: boolean;
+}
 
-export const setNewPosition = (bookId: string, newPosition: number) =>
-    ({ type: SET_NEW_POSITION, newPosition, bookId });
+export interface StackDetailSetANewPositionAction {
+    type: typeof SET_NEW_POSITION
+    bookId: number;
+    newPosition: number | null
+}
+
+export const setEditing: (bookId: number, editing: boolean) => StackDetailSetEditingAction =
+    (bookId, editing) => ({ type: SET_EDITING, bookId, editing });
+
+export const setRemoveConfig: (bookId: number, removeConfirm: boolean) => StackDetailSetRemoveConfigAction =
+    (bookId, removeConfirm) => ({ type: SET_REMOVE_CONFIRM, bookId, removeConfirm });
+
+export const setAddingCategory: (bookId: number, addingCategory: boolean) => StackDetailSetAddingCategoryAction =
+    (bookId, addingCategory) => ({ type: SET_ADDING_CATEGORY, bookId, addingCategory });
+
+export const setNewPosition: (bookId: number, newPosition: number | null) => StackDetailSetANewPositionAction =
+    (bookId, newPosition) => ({ type: SET_NEW_POSITION, bookId, newPosition });
 
 
 // State
@@ -376,7 +400,7 @@ export class FullStackDetailRecord extends Record(defaultFullStackDetailRecordVa
 
 const initialState = new FullStackDetailRecord();
 
-const setInBook = (state: FullStackDetailRecord, bookId: string, path, value) => state.setIn(
+const setInBook = (state: FullStackDetailRecord, bookId: number, path, value) => state.setIn(
     [
         'stackDetail',
         'books',
@@ -413,7 +437,12 @@ type StackDetailActionTypes
     | StackDetailAddNewCategoryFailureAction
     | StackDetailRemoveCategoryRequestAction
     | StackDetailRemoveCategorySuccessAction
-    | StackDetailRemoveCategoryFailureAction;
+    | StackDetailRemoveCategoryFailureAction
+    | StackDetailSetEditingAction
+    | StackDetailSetRemoveConfigAction
+    | StackDetailSetAddingCategoryAction
+    | StackDetailSetANewPositionAction
+    ;
 
 // TODO: This is probably too big, should be broken up
 export default function stackDetailReducer(state = initialState, action: StackDetailActionTypes) {
@@ -479,7 +508,7 @@ export default function stackDetailReducer(state = initialState, action: StackDe
                 'categories',
             ],
             categories =>
-                categories.remove(categories.findIndex(book => book.get('id') === action.categoryId)),
+                categories.remove(categories.findIndex(book => book.id === action.categoryId)),
         );
     case STACK_DETAIL_POSITION_SUCCESS: {
         const from = action.from - 1; // Damn this inconsistent indexing

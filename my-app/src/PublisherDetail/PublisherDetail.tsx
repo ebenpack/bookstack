@@ -9,32 +9,37 @@ import Book from '../Book/Book';
 import { initializePublisher } from './publisherDetailModule';
 import { List } from 'immutable';
 import { IBook } from '../Book/types';
+import { AppState } from '../store';
 
-interface PublisherDetailProps {
-    name: string,
-    books: List<IBook>,
-    initializePublisher: () => void,
+interface StateFromProps {
+    name: string;
+    books: List<IBook>;
 }
 
-export const PublisherDetail = ({ name, books, initializePublisher }: PublisherDetailProps) => {
-    useEffect(initializePublisher, [])
-    return (
-        <div className="author">
-            <h2>{name}</h2>
-            {books.map(book => (<Book key={book.id} book={book} />))}
-        </div>
-    );
-};
+interface StateFromDispatch {
+    initializePublisher: typeof initializePublisher;
+}
 
-PublisherDetail.propTypes = {
-    name: propTypes.string.isRequired,
-    books: immutablePropTypes.list.isRequired,
-};
+type PublisherDetailProps = StateFromProps & StateFromDispatch;
 
-const mapStateToProps = state => ({
-    name: state.publisherDetailStore.get('name'),
-    id: state.publisherDetailStore.get('id'),
-    books: state.publisherDetailStore.get('books'),
+export class PublisherDetail extends React.Component<PublisherDetailProps> { 
+    render() {
+        const { name, books, initializePublisher } = this.props;
+        useEffect(() => {
+            initializePublisher()
+        }, [])
+        return (
+            <div className="author">
+                <h2>{name}</h2>
+                {books.map(book => (<Book key={book.id} book={book} />))}
+            </div>
+        );
+    };
+}
+
+const mapStateToProps = (state: AppState) => ({
+    name: state.publisherDetailStore.name,
+    books: state.publisherDetailStore.books,
 });
 
 const mapDispatchToProps = {
