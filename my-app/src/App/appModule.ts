@@ -1,7 +1,6 @@
 import { Record } from 'immutable';
 import { AnyAction } from 'redux';
 
-import { makeAction, createRequestTypes } from '../utils/moduleUtils';
 import { IApp } from './types';
 
 // Actions
@@ -23,19 +22,19 @@ export const APP_LOGIN_SUCCESS = 'APP_LOGIN_LOGIN_SUCCESS';
 export const APP_LOGIN_FAILURE = 'APP_LOGIN_LOGIN_FAILURE';
 
 export const initialize = () =>
-    makeAction(APP_INITIALIZE);
+    ({ type: APP_INITIALIZE });
 
 export const setStaticPath = (staticPath: string) =>
-    makeAction(APP_SET_STATIC_PATH, { staticPath });
+    ({ type: APP_SET_STATIC_PATH, staticPath });
 
 export const setApiUrl = (apiUrl: string) =>
-    makeAction(APP_SET_API_URL, { apiUrl });
+    ({ type: APP_SET_API_URL, apiUrl });
 
 export const setToken = (token: string) =>
-    makeAction(APP_SET_TOKEN, { token });
+    ({ type: APP_SET_TOKEN, token });
 
 export const deleteToken = () =>
-    makeAction(APP_DELETE_TOKEN);
+    ({ type: APP_DELETE_TOKEN });
 
 export interface AppLoginRequestAction {
     type: typeof APP_LOGIN_REQUEST
@@ -63,19 +62,19 @@ export const appLoginFailure: (error: string) => AppLoginFailureAction =
     (error) => ({ type: APP_LOGIN_FAILURE, error });
 
 export const logoff = () =>
-    makeAction(APP_LOGOFF);
+    ({ type: APP_LOGOFF });
 
 export const updateUser = (user: string) =>
-    makeAction(APP_LOGIN_SET_USER, { user });
+    ({ type: APP_LOGIN_SET_USER, user });
 
 export const updatePass = (pass: string) =>
-    makeAction(APP_LOGIN_SET_PASS, { pass });
+    ({ type: APP_LOGIN_SET_PASS, pass });
 
 export const updateSave = (save: boolean) =>
-    makeAction(APP_LOGIN_SET_SAVE, { save });
+    ({ type: APP_LOGIN_SET_SAVE, save });
 
 export const clearLogin = () =>
-    makeAction(APP_LOGIN_CLEAR);
+    ({ type: APP_LOGIN_CLEAR });
 
 // State
 

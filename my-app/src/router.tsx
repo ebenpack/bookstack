@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import * as propTypes from 'prop-types';
-import { withRouter } from 'react-router';
-
-import { ConnectedRouter } from 'react-router-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import { History } from 'history';
 
 import ConnectedApp from './App/App';
 import AuthorDetailRoute from './AuthorDetail/AuthorDetailRoute';
@@ -12,29 +10,27 @@ import LoginRoute from './Login/LoginRoute';
 import PublisherDetailRoute from './PublisherDetail/PublisherDetailRoute';
 import StackListRoute from './StackList/StackListRoute';
 import StackDetailRoute from './StackDetail/StackDetailRoute';
+import { AppStore } from './store';
 
-const ConnectedAppWithRouter = withRouter(ConnectedApp);
 
-const AppRouter = ({ store, history }) => (
+interface AppRouterProps {
+    store: AppStore;
+    history: History<any>
+}
+
+const AppRouter = ({ store, history }: AppRouterProps) => (
     <Provider store={store}>
         <ConnectedRouter history={history}>
-            <ConnectedAppWithRouter>
+            <ConnectedApp>
                 <StackDetailRoute />
                 <StackListRoute />
                 <LoginRoute />
                 <AuthorDetailRoute />
                 <PublisherDetailRoute />
                 <BookSearchRoute />
-            </ConnectedAppWithRouter>
+            </ConnectedApp>
         </ConnectedRouter>
     </Provider>
 );
-
-AppRouter.propTypes = {
-    /* eslint-disable react/forbid-prop-types */
-    store: propTypes.object.isRequired,
-    history: propTypes.object.isRequired,
-    /* eslint-enable react/forbid-prop-types */
-};
 
 export default AppRouter;

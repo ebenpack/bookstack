@@ -1,4 +1,4 @@
-import { List, Record } from 'immutable';
+import { List } from 'immutable';
 
 import { IBook } from '../Book/types';
 

@@ -1,6 +1,5 @@
-import axios from 'axios';
 import { put, call, select, takeEvery } from 'redux-saga/effects';
-import { push } from 'react-router-redux';
+import { push } from 'connected-react-router';
 
 import { axiosCall, getCredentials } from '../utils/sagasUtils';
 import { path } from '../StackList/StackListRoute';

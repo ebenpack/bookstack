@@ -1,6 +1,4 @@
 import * as React from 'react';
-import * as propTypes from 'prop-types';
-import * as immutablePropTypes from 'react-immutable-proptypes';
 
 import { IBook } from '../Book/types';
 import Author from '../Author/Author';
@@ -45,14 +43,5 @@ const Book = ({ staticPath, book }: BookProps) => (
         </div>
     </div>
 );
-
-Book.defaultProps = {
-    staticPath: '',
-};
-
-Book.propTypes = {
-    staticPath: propTypes.string,
-    book: immutablePropTypes.map.isRequired,
-};
 
 export default Book;

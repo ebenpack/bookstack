@@ -2,7 +2,7 @@ import { List, Record } from 'immutable';
 
 import { IAddBook } from './types';
 import { IBook } from '../Book/types';
-import { BookRecord, defaultBookRecordValue } from '../Book/bookModule';
+import { BookRecord } from '../Book/bookModule';
 
 // Actions
 export const ADD_BOOK_REQUEST = 'ADD_BOOK_ADD_BOOK_REQUEST';
@@ -156,10 +156,11 @@ export type AddBookActionTypes
     | SelectBookSuccessAction
     | SelectBookClearAction;
 
-// TODO USE HOOKS?
+// TODO use component state?
 export default function addBookReducer(state = initialState, action: AddBookActionTypes) {
     switch (action.type) {
         case SELECT_BOOK_SUCCESS:
+            // tODO: convert data in saga
             return state.with({ selectedBook: new BookRecord(action.book) });
         case SEARCH_BOOK_SUCCESS:
             return state.with({ booksAutocomplete: action.books });

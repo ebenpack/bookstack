@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import * as immutablePropTypes from 'react-immutable-proptypes';
 
 import { makeAuthorDetailPath } from '../AuthorDetail/AuthorDetailRoute';
 import { IAuthor } from '../AuthorDetail/types';
@@ -19,9 +18,5 @@ const Author = ({ author }: AuthorProps) => (
         }
     </li>
 );
-
-Author.propTypes = {
-    author: immutablePropTypes.map.isRequired,
-};
 
 export default Author;

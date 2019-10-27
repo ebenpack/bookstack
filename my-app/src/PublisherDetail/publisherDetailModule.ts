@@ -39,30 +39,26 @@ export const publisherFailure: (error: string) => PublisherFailureAction =
 export type PublisherAction =
     | PublisherRequestAction
     | PublisherSuccessAction
-    | PublisherFailureAction;
+    | PublisherFailureAction
+    ;
 
 
 // State
 const defaultValue = { id: 0, name: '', books: List() };
 
-export class PublisherRecord extends Record(defaultValue) implements IPublisher {
-    id: number;
-    name: string;
-    books: List<IBook>;
+type PublisherRecordParams = {
+    id?: number;
+    name?: string;
+    books?: List<IBook>;
+} 
 
-    constructor(params: IPublisher) {
-        super(params);
-        this.id = params.id;
-        this.name = params.name;
-        this.books = params.books;
+export class PublisherRecord extends Record(defaultValue) implements IPublisher {
+    constructor(params?: PublisherRecordParams) {
+        params ? super(params) : super();
     }
 }
 
-export const initialState = new PublisherRecord({
-    books: List(),
-    name: '',
-    id: 0,
-});
+export const initialState = new PublisherRecord();
 
 export default function PublisherDetailReducer(state = initialState, action: PublisherAction) {
     switch (action.type) {

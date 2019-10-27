@@ -1,9 +1,8 @@
-import { combineReducers, createStore, applyMiddleware } from 'redux';
+import { combineReducers, createStore, applyMiddleware, AnyAction, Store } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { routerReducer, routerMiddleware, RouterState } from 'react-router-redux';
+import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
-import createBrowserHistory from 'history/createBrowserHistory';
-import { History } from 'history';
+import { createBrowserHistory } from 'history';
 
 // Sagas
 import AddBookSaga from './AddBook/addBookSagas';
@@ -16,32 +15,19 @@ import StackDetailSaga from './StackDetail/stackDetailSagas';
 import StackListSaga from './StackList/stackListSagas';
 
 // Reducers
-import publisherDetailStore from './PublisherDetail/publisherDetailModule';
-import bookSearchStore from './BookSearch/bookSearchModule';
-import addBookStore from './AddBook/addBookModule';
-import addCategoryStore from './AddCategory/addCategoryModule';
-import authorDetailStore from './AuthorDetail/authorDetailModule';
-import stackDetailStore from './StackDetail/stackDetailModule';
+import publisherDetailStore, { PublisherRecord } from './PublisherDetail/publisherDetailModule';
+import bookSearchStore, { BookSearchRecord } from './BookSearch/bookSearchModule';
+import addBookStore, { AddBookRecord } from './AddBook/addBookModule';
+import addCategoryStore, { AddCategoryRecord } from './AddCategory/addCategoryModule';
+import authorDetailStore, { AuthorRecord } from './AuthorDetail/authorDetailModule';
+import stackDetailStore, { FullStackDetailRecord, StackDetailRecord } from './StackDetail/stackDetailModule';
 import stackListStore from './StackList/stackListModule';
-import appStore, { initialize, setApiUrl, setStaticPath } from './App/appModule';
-
-import { IAuthor } from './AuthorDetail/types';
+import appStore, { initialize, setApiUrl, setStaticPath, AppRecord } from './App/appModule';
+import { List } from 'immutable';
 
 declare global {
     interface Window { __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: () => void }
 }
-
-export const rootReducer = combineReducers({
-    appStore,
-    stackListStore,
-    stackDetailStore,
-    authorDetailStore,
-    publisherDetailStore,
-    bookSearchStore,
-    addBookStore,
-    addCategoryStore,
-    router: routerReducer,
-});
 
 const initializeStore = ({ apiUrl, staticPath }: { apiUrl: string, staticPath: string }) => {
     const sagas = [
@@ -56,6 +42,17 @@ const initializeStore = ({ apiUrl, staticPath }: { apiUrl: string, staticPath: s
     ];
     const sagaMiddleware = createSagaMiddleware();
     const history = createBrowserHistory({ basename: '/app' });
+    const rootReducer = combineReducers({
+        appStore,
+        stackListStore,
+        stackDetailStore,
+        authorDetailStore,
+        publisherDetailStore,
+        bookSearchStore,
+        addBookStore,
+        addCategoryStore,
+        router: connectRouter(history),
+    });
     const store = createStore(
         rootReducer,
         composeWithDevTools(
@@ -71,6 +68,18 @@ const initializeStore = ({ apiUrl, staticPath }: { apiUrl: string, staticPath: s
     };
 };
 
-export type AppState = ReturnType<typeof rootReducer>
+export type AppState = {
+    appStore: AppRecord;
+    stackListStore: List<StackDetailRecord>;
+    stackDetailStore: FullStackDetailRecord;
+    authorDetailStore: AuthorRecord;
+    publisherDetailStore: PublisherRecord;
+    bookSearchStore: BookSearchRecord;
+    addBookStore: AddBookRecord;
+    addCategoryStore: AddCategoryRecord;
+    router: RouterState;
+};
+
+export type AppStore = Store<AppState, AnyAction>;
 
 export default initializeStore;

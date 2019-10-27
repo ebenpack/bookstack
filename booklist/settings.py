@@ -82,6 +82,9 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
         },
+        'DIRS': [
+            os.path.join(PROJECT_PATH, "../my-app/build/"),
+        ]
     }
 ]
 
@@ -95,9 +98,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATICDIRS = (
-    PROJECT_PATH + "static/",
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_PATH, "../bookstack/static/"),
+    os.path.join(PROJECT_PATH, "../my-app/build/static/"),
+    os.path.join(PROJECT_PATH, "../my-app/build/"),
 )
+print(STATICFILES_DIRS)
 
 STATIC_URL = '/static/'
 

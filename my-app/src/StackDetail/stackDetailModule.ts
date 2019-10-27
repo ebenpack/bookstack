@@ -2,6 +2,8 @@ import { fromJS, List, Record } from 'immutable';
 import { IStackDetail, IFullStackDetail } from './types';
 import { IBook } from '../Book/types';
 import { BookRecord } from '../Book/bookModule';
+import { BookStackRecord, makeBookstack } from '../BookStack/bookstackModule';
+import { ICategory } from '../Category/types';
 
 // Actions
 export const STACK_DETAIL_INITIALIZE = 'STACK_DETAIL_INITIALIZE';
@@ -47,7 +49,8 @@ export const SET_REMOVE_CONFIRM = 'SET_REMOVE_CONFIRM';
 export const SET_ADDING_CATEGORY = 'SET_ADDING_CATEGORY';
 export const SET_NEW_POSITION = 'SET_NEW_POSITION';
 
-export const stackDetailInitialize = () => ({ type: STACK_DETAIL_INITIALIZE });
+export const stackDetailInitialize = (id: number) =>
+    ({ type: STACK_DETAIL_INITIALIZE, id });
 
 /*****************
 ** Stack Detail **
@@ -159,8 +162,8 @@ export const stackDetailReadStateFailure: (error: string) => StackDetailReadStat
 **************/
 export interface StackDetailAddBookRequestAction {
     type: typeof STACK_DETAIL_ADD_BOOK_REQUEST,
-    bookId: string,
-    stackId: string,
+    bookId: number,
+    stackId: number,
 }
 
 export interface StackDetailAddBookSuccessAction {
@@ -173,7 +176,7 @@ export interface StackDetailAddBookFailureAction {
     error: string
 }
 
-export const stackDetailAddBookRequest: (bookId: string, stackId: string) => StackDetailAddBookRequestAction =
+export const stackDetailAddBookRequest: (bookId: number, stackId: number) => StackDetailAddBookRequestAction =
     (bookId, stackId) => ({ type: STACK_DETAIL_ADD_BOOK_REQUEST, bookId, stackId });
 
 export const stackDetailAddBookSuccess: (book: BookRecord) => StackDetailAddBookSuccessAction =
@@ -221,7 +224,7 @@ export interface StackDetailAddCategoryRequestAction {
 export interface StackDetailAddCategorySuccessAction {
     type: typeof STACK_DETAIL_ADD_CATEGORY_SUCCESS,
     bookstackId: string,
-    category: string,
+    category: ICategory,
 }
 
 export interface StackDetailAddCategoryFailureAction {
@@ -232,7 +235,7 @@ export interface StackDetailAddCategoryFailureAction {
 export const stackDetailAddCategoryRequest: (bookstackId: number, categoryId: number) => StackDetailAddCategoryRequestAction =
     (bookstackId, categoryId) => ({ type: STACK_DETAIL_ADD_CATEGORY_REQUEST, bookstackId, categoryId });
 
-export const stackDetailAddCategorySuccess: (bookstackId: string, category: string) => StackDetailAddCategorySuccessAction =
+export const stackDetailAddCategorySuccess: (bookstackId: string, category: ICategory) => StackDetailAddCategorySuccessAction =
     (bookstackId, category) => ({ type: STACK_DETAIL_ADD_CATEGORY_SUCCESS, bookstackId, category });
 
 export const stackDetailAddCategoryFailure: (error: string) => StackDetailAddCategoryFailureAction =
@@ -288,20 +291,20 @@ export interface StackDetailRemoveCategoryFailureAction {
     error: string
 }
 
-export const stackDetailRemoveCategoryRequest: (bookstackId: number, categoryId: number) => StackDetailRemoveCategoryRequestAction = 
+export const stackDetailRemoveCategoryRequest: (bookstackId: number, categoryId: number) => StackDetailRemoveCategoryRequestAction =
     (bookstackId, categoryId) => ({ type: STACK_DETAIL_REMOVE_CATEGORY_REQUEST, bookstackId, categoryId });
 
-export const stackDetailRemoveCategorySuccess: (bookstackId: number, categoryId: number) => StackDetailRemoveCategorySuccessAction = 
+export const stackDetailRemoveCategorySuccess: (bookstackId: number, categoryId: number) => StackDetailRemoveCategorySuccessAction =
     (bookstackId, categoryId) => ({ type: STACK_DETAIL_REMOVE_CATEGORY_SUCCESS, bookstackId, categoryId });
 
-export const stackDetailRemoveCategoryFailure: (error: string) => StackDetailRemoveCategoryFailureAction = 
+export const stackDetailRemoveCategoryFailure: (error: string) => StackDetailRemoveCategoryFailureAction =
     (error) => ({ type: STACK_DETAIL_REMOVE_CATEGORY_FAILURE, error });
 
 
 
-/*******************************************************
-** SET CRAP, PROBABLY WILL DO THIS WITH HOOKS INSTEAD **
-********************************************************/
+/********************************************************************
+** SET CRAP, PROBABLY WILL DO THIS WITH INTERNAL COMPONENT INSTEAD **
+*********************************************************************/
 
 export interface StackDetailSetEditingAction {
     type: typeof SET_EDITING
@@ -342,10 +345,8 @@ export const setNewPosition: (bookId: number, newPosition: number | null) => Sta
 
 // State
 
-const bookLocation = List(['stackDetail', 'books']);
-
 export const defaultStackDetailRecordValue = {
-    id: '',
+    id: 0,
     name: '',
     private: false,
     user: '',
@@ -354,8 +355,8 @@ export const defaultStackDetailRecordValue = {
 };
 
 
-type StackDetailParams = {
-    id?: string;
+export type StackDetailParams = {
+    id?: number;
     name?: string;
     private?: boolean;
     user?: string;
@@ -400,18 +401,18 @@ export class FullStackDetailRecord extends Record(defaultFullStackDetailRecordVa
 
 const initialState = new FullStackDetailRecord();
 
-const setInBook = (state: FullStackDetailRecord, bookId: number, path, value) => state.setIn(
+const setInBook = (state: FullStackDetailRecord, bookId: number, path: string[], value: any) => state.setIn(
     [
         'stackDetail',
         'books',
-        state.getIn(bookLocation)
+        state.stackDetail.books
             .findIndex(book => book.get('id') === bookId),
         ...path,
     ],
     value,
 );
 
-type StackDetailActionTypes 
+type StackDetailActionTypes
     = StackDetailRequestAction
     | StackDetailSuccessAction
     | StackDetailFailureAction
@@ -446,98 +447,96 @@ type StackDetailActionTypes
 
 // TODO: This is probably too big, should be broken up
 export default function stackDetailReducer(state = initialState, action: StackDetailActionTypes) {
+    let fullStackDetailRecord: FullStackDetailRecord;
+    let stackDetail: StackDetailRecord = state.stackDetail;
+    let books: List<IBook> = state.stackDetail.books;
     switch (action.type) {
-    case STACK_DETAIL_SUCCESS:
-        const books: List<IBook> = state.stackDetail.books.map(book => book.with({
-            editing: false,
-            newPosition: null,
-            removeConfirm: false,
-            addingCategory: false,
-        }));
-        const { id, name, user, creation_date } = action.stack;
-        const newStack = new StackDetailRecord({
-            id, 
-            name, 
-            user, 
-            creation_date,
-            books,
-            private: action.stack.private,
-        })
-        return state.with({ stackDetail: newStack });
-    case STACK_DETAIL_CLEAR:
-        return state.set('stackDetail', fromJS({ books: [] }));
-    case STACK_DETAIL_ADD_BOOK_SUCCESS:
-        return state.updateIn(
-            bookLocation,
-            books => books.push(fromJS(action.book).merge({
-                editing: false,
-                newPosition: null,
-                removeConfirm: false,
-                addingCategory: false,
-            })),
-        );
-    case STACK_DETAIL_EDITING:
-        return state.set('editing', !state.get('editing'));
-    case STACK_DETAIL_READ_STATE_SUCCESS:
-        return setInBook(state, action.bookId, ['read'], action.readState);
-    case STACK_DETAIL_REMOVE_BOOK_SUCCESS:
-        return state.updateIn(
-            bookLocation,
-            books =>
-                books.remove(books.findIndex(book => book.id === action.id)),
-        );
-    case STACK_DETAIL_ADD_CATEGORY_SUCCESS:
-        return state.updateIn(
-            [
-                'stackDetail',
-                'books',
-                state.getIn(bookLocation)
-                    .findIndex(book => book.get('id') === action.bookstackId),
-                'categories',
-            ],
-            categories =>
-                categories.push(fromJS(action.category)),
-        );
-    case STACK_DETAIL_REMOVE_CATEGORY_SUCCESS:
-        return state.updateIn(
-            [
-                'stackDetail',
-                'books',
-                state.getIn(bookLocation)
-                    .findIndex(book => book.get('id') === action.bookstackId),
-                'categories',
-            ],
-            categories =>
-                categories.remove(categories.findIndex(book => book.id === action.categoryId)),
-        );
-    case STACK_DETAIL_POSITION_SUCCESS: {
-        const from = action.from - 1; // Damn this inconsistent indexing
-        const to = action.to - 1;
-        // TODO: Profile, possibly find a more
-        // efficient / less icky way of doing this
-        const books = state.getIn(bookLocation).toJS();
-        const moved = books[from];
-        books.splice(from, 1);
-        books.splice(to, 0, moved);
+        case STACK_DETAIL_SUCCESS:
+            const newStack = action.stack;
+            fullStackDetailRecord = state.with({ stackDetail: newStack });
+            return fullStackDetailRecord;
+        case STACK_DETAIL_CLEAR:
+            fullStackDetailRecord = state.set('stackDetail', fromJS({ books: [] }));
+            return fullStackDetailRecord;
+        case STACK_DETAIL_ADD_BOOK_SUCCESS:
+            books = state.stackDetail.books.push(
+                fromJS(action.book).merge({
+                    editing: false,
+                    newPosition: null,
+                    removeConfirm: false,
+                    addingCategory: false,
+                }));
+            stackDetail = state.stackDetail;
+            fullStackDetailRecord = state.with({ stackDetail: stackDetail.set('books', books) });
+            return fullStackDetailRecord;
+        case STACK_DETAIL_EDITING:
+            fullStackDetailRecord = state.set('editing', !state.get('editing'));
+            return fullStackDetailRecord;
+        case STACK_DETAIL_READ_STATE_SUCCESS:
+            fullStackDetailRecord = setInBook(state, action.bookId, ['read'], action.readState);
+            return fullStackDetailRecord;
+        case STACK_DETAIL_REMOVE_BOOK_SUCCESS:
+            books = state.stackDetail.books.remove(books.findIndex(book => book.id === action.id));
+            stackDetail = state.stackDetail.set('books', books);
+            fullStackDetailRecord = state.with({ stackDetail });
+            return fullStackDetailRecord;
+        case STACK_DETAIL_ADD_CATEGORY_SUCCESS:
+            fullStackDetailRecord = state.updateIn(
+                [
+                    'stackDetail',
+                    'books',
+                    state.stackDetail.books
+                        .findIndex(book => book.get('id') === action.bookstackId),
+                    'categories',
+                ],
+                categories =>
+                    categories.push(action.category),
+            );
+            return fullStackDetailRecord;
+        case STACK_DETAIL_REMOVE_CATEGORY_SUCCESS:
+            fullStackDetailRecord = state.updateIn(
+                [
+                    'stackDetail',
+                    'books',
+                    state.stackDetail.books
+                        .findIndex(book => book.get('id') === action.bookstackId),
+                    'categories',
+                ],
+                categories =>
+                    categories.remove(categories.findIndex((book: BookStackRecord) => book.id === action.categoryId)),
+            );
+            return fullStackDetailRecord;
+        case STACK_DETAIL_POSITION_SUCCESS: {
+            const from = action.from - 1; // Damn this inconsistent indexing
+            const to = action.to - 1;
+            // TODO: Profile, possibly find a more
+            // efficient / less icky way of doing this
+            const books = state.stackDetail.books.toJS();
+            const moved = books[from];
+            books.splice(from, 1);
+            books.splice(to, 0, moved);
 
-        return state.setIn(
-            bookLocation,
-            fromJS(books).map((book, index) => book.set('position', index + 1)),
-        );
-    }
-    // TODO: HOOKS?
-    case SET_EDITING:
-        return setInBook(state, action.bookId, ['editing'], Boolean(action.editing));
-    case SET_REMOVE_CONFIRM:
-        return setInBook(state, action.bookId, ['removeConfirm'], Boolean(action.removeConfirm));
-    case SET_ADDING_CATEGORY:
-        return setInBook(state, action.bookId, ['addingCategory'], Boolean(action.addingCategory));
-    case SET_NEW_POSITION:
-        if (Number.isInteger(action.newPosition) || action.newPosition === null) {
-            return setInBook(state, action.bookId, ['newPosition'], action.newPosition);
+            stackDetail = state.stackDetail.set(
+                'books',
+                List(books).map((book, index: number) => makeBookstack(book).set('position', index + 1)),
+            );
+            fullStackDetailRecord = state.with({ stackDetail })
+            return fullStackDetailRecord;
         }
-        return state;
-    default:
-        return state;
+        // TODO: component state?
+        case SET_EDITING:
+            fullStackDetailRecord = setInBook(state, action.bookId, ['editing'], Boolean(action.editing));
+            return fullStackDetailRecord;
+        case SET_REMOVE_CONFIRM:
+            fullStackDetailRecord = setInBook(state, action.bookId, ['removeConfirm'], Boolean(action.removeConfirm));
+            return fullStackDetailRecord;
+        case SET_ADDING_CATEGORY:
+            fullStackDetailRecord = setInBook(state, action.bookId, ['addingCategory'], Boolean(action.addingCategory));
+            return fullStackDetailRecord;
+        case SET_NEW_POSITION:
+            fullStackDetailRecord = setInBook(state, action.bookId, ['newPosition'], action.newPosition);
+            return fullStackDetailRecord;
+        default:
+            return state;
     }
 }

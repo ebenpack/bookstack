@@ -36,4 +36,5 @@ urlpatterns = [
     re_path(r'docs(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
     path('docs/', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
     path('app/', app_view),
+    path('app/<path:path>', app_view),
 ]

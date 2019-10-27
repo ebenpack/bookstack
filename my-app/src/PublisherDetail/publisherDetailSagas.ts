@@ -1,8 +1,6 @@
-import axios from 'axios';
 import { put, call, select, takeEvery } from 'redux-saga/effects';
 
 import { axiosCall, getCredentials } from '../utils/sagasUtils';
-import { path } from './PublisherDetailRoute';
 import { 
     publisherSuccess,
     publisherFailure,

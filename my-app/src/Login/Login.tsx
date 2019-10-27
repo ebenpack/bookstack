@@ -4,11 +4,12 @@ import * as propTypes from 'prop-types';
 
 import { LoginProps } from './types';
 import {
-    login,
+    appLoginRequest,
     updateUser as updateUserAction,
     updatePass as updatePassAction,
     updateSave as updateSaveAction,
 } from '../App/appModule';
+import { AppState } from '../store';
 
 export const Login = ({
     user,
@@ -71,7 +72,7 @@ Login.propTypes = {
     updateSave: propTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: AppState) => ({
     user: state.appStore.get('user'),
     pass: state.appStore.get('pass'),
     save: state.appStore.get('save'),
@@ -79,7 +80,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-    submitLogin: login.request,
+    submitLogin: appLoginRequest,
     updateUser: updateUserAction,
     updatePass: updatePassAction,
     updateSave: updateSaveAction,

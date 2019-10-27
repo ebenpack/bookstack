@@ -5,9 +5,11 @@ import { getCredentials } from '../utils/sagasUtils';
 import { 
     stackSuccess,
     stackFailure,
-    STACK_REQUEST 
+    STACK_REQUEST, 
+    STACK_INITIALIZE
 } from './stackListModule';
-import { path } from './StackListRoute';
+import { List } from 'immutable';
+import { StackDetailRecord, StackDetailParams } from '../StackDetail/stackDetailModule';
 
 export function* loadStackList() {
     const { apiUrl } = yield select(getCredentials);
@@ -16,7 +18,9 @@ export function* loadStackList() {
             method: 'GET',
             url: `${apiUrl}/api/stack/`,
         });
-        yield put(stackSuccess(data));
+        yield put(stackSuccess(
+            List(data.map((stack: StackDetailParams) => new StackDetailRecord(stack)))
+        ));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
@@ -26,7 +30,7 @@ export function* loadStackList() {
 }
 
 export function* watchLoadStacklist() {
-    yield takeEvery(STACK_REQUEST, loadStackList);
+    yield takeEvery([STACK_REQUEST, STACK_INITIALIZE], loadStackList);
 }
 
 export default [

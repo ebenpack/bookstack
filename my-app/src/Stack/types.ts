@@ -4,7 +4,7 @@ export interface IStack {
     id: number,
     name: string,
     user: string,
-    creation_date: string
+    creation_date: Date
 }
 
 export interface IStackRecord extends Record<IStack>, IStack {}

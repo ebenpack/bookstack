@@ -1,10 +1,6 @@
-import axios from 'axios';
 import { put, call, select, takeEvery } from 'redux-saga/effects';
-import { SagaIterator } from 'redux-saga';
-import { match } from 'react-router';
 
 import { axiosCall, getCredentials } from '../utils/sagasUtils';
-import { path } from './AuthorDetailRoute';
 import {
     authorSuccess,
     authorFailure,

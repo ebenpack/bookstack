@@ -1,47 +1,107 @@
-import { fromJS, List } from 'immutable';
+import { List, Record } from 'immutable';
 
-import { makeAction, createRequestTypes, SET, REQUEST, SUCCESS, FAILURE, CLEAR } from '../utils/moduleUtils';
+import { IBook } from '../Book/types';
+import { IBookSearch } from './types';
 
 // Actions
 
 // TODO: CONSOLIDATE ALL BOOK STUFF?
-export const BOOK_SEARCH = createRequestTypes('BOOK_SEARCH', 'SEARCH', [REQUEST, SUCCESS, FAILURE, CLEAR]);
+export const BOOK_SEARCH_REQUEST = 'BOOK_SEARCH_REQUEST';
+export const BOOK_SEARCH_SUCCESS = 'BOOK_SEARCH_SUCCESS';
+export const BOOK_SEARCH_FAILURE = 'BOOK_SEARCH_FAILURE';
+export const BOOK_SEARCH_CLEAR = 'BOOK_SEARCH_CLEAR';
 
-export const QUERY = createRequestTypes('BOOK_SEARCH', 'QUERY', [SET, CLEAR]);
+export const BOOK_SEARCH_QUERY_SET = 'BOOK_SEARCH_QUERY_SET';
+export const BOOK_SEARCH_QUERY_CLEAR = 'BOOK_SEARCH_QUERY_CLEAR';
 
-export const bookSearch = {
-    request: query =>
-        makeAction(BOOK_SEARCH.REQUEST, { query }),
-    success: books =>
-        makeAction(BOOK_SEARCH.SUCCESS, { books }),
-    failure: error =>
-        makeAction(BOOK_SEARCH.FAILURE, { error }),
-    clear: () =>
-        makeAction(BOOK_SEARCH.CLEAR),
-};
+export interface BookSearchRequestAction {
+    type: typeof BOOK_SEARCH_REQUEST
+    query: string
+}
 
-export const query = {
-    set: value => makeAction(QUERY.SET, { query: value }),
-    clear: () => makeAction(QUERY.CLEAR, {}),
-};
+export interface BookSearchSuccessAction {
+    type: typeof BOOK_SEARCH_SUCCESS
+    books: List<IBook>,
+}
+
+export interface BookSearchFailureAction {
+    type: typeof BOOK_SEARCH_FAILURE
+    error: string
+}
+
+export interface BookSearchClearAction {
+    type: typeof BOOK_SEARCH_CLEAR
+}
+
+
+export const bookSearchRequest: (query: string) => BookSearchRequestAction =
+    (query) => ({ type: BOOK_SEARCH_REQUEST, query });
+
+export const bookSearchSuccess: (books: List<IBook>) => BookSearchSuccessAction =
+    (books) => ({ type: BOOK_SEARCH_SUCCESS, books });
+
+export const bookSearchFailure: (error: string) => BookSearchFailureAction =
+    (error) => ({ type: BOOK_SEARCH_FAILURE, error });
+
+export const bookSearchClear: () => BookSearchClearAction =
+    () => ({ type: BOOK_SEARCH_CLEAR });
+
+export interface BookSearchQuerySetAction {
+    type: typeof BOOK_SEARCH_QUERY_SET
+    query: string
+}
+
+export interface BookSearchQueryClearAction {
+    type: typeof BOOK_SEARCH_QUERY_CLEAR
+}
+
+export const bookSearchQuerySet: (query: string) => BookSearchQuerySetAction =
+    (query) => ({ type: BOOK_SEARCH_QUERY_SET, query });
+
+export const bookSearchQueryClear: () => BookSearchQueryClearAction =
+    () => ({ type: BOOK_SEARCH_QUERY_CLEAR, });
+
 
 // State
 
-export const initialState = fromJS({
+export const defaultBookSearchRecordValue = {
     query: '',
-    books: [],
-});
+    books: List(),
+};
 
-export default function BookSearchReducer(state = initialState, action) {
+type BookSearchParams = {
+    query?: string;
+    books?: List<IBook>;
+}
+
+export class BookSearchRecord extends Record(defaultBookSearchRecordValue) implements IBookSearch {
+    constructor(params?: BookSearchParams) {
+        params ? super(params) : super();
+    }
+    with(values: BookSearchParams) {
+        return this.merge(values) as this;
+    }
+}
+
+export const initialState = new BookSearchRecord();
+
+export type BookSearchActions
+    = BookSearchSuccessAction
+    | BookSearchClearAction
+    | BookSearchQuerySetAction
+    | BookSearchQueryClearAction
+    ;
+
+export default function BookSearchReducer(state = initialState, action: BookSearchActions) {
     switch (action.type) {
-    case BOOK_SEARCH.SUCCESS:
-        return state.set('books', action.books);
-    case BOOK_SEARCH.CLEAR:
-        return state.set('books', List());
-    case QUERY.SET:
-        return state.set('query', action.query);
-    case QUERY.CLEAR:
-        return state.set('query', '');
+    case BOOK_SEARCH_SUCCESS:
+        return state.with({ books: action.books });
+    case BOOK_SEARCH_CLEAR:
+        return state.with({ books: List() });
+    case BOOK_SEARCH_QUERY_SET:
+        return state.with({ query: action.query });
+    case BOOK_SEARCH_QUERY_CLEAR:
+        return state.with({ query: '' });
     default:
         return state;
     }

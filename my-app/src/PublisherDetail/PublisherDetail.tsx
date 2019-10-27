@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import * as propTypes from 'prop-types';
-import * as immutablePropTypes from 'react-immutable-proptypes';
 
 import Book from '../Book/Book';
 
@@ -14,6 +11,7 @@ import { AppState } from '../store';
 interface StateFromProps {
     name: string;
     books: List<IBook>;
+    staticPath: string;
 }
 
 interface StateFromDispatch {
@@ -23,15 +21,16 @@ interface StateFromDispatch {
 type PublisherDetailProps = StateFromProps & StateFromDispatch;
 
 export class PublisherDetail extends React.Component<PublisherDetailProps> { 
+    componentDidMount() {
+        const { initializePublisher } = this.props;
+        initializePublisher();
+    }
     render() {
-        const { name, books, initializePublisher } = this.props;
-        useEffect(() => {
-            initializePublisher()
-        }, [])
+        const { name, books, staticPath } = this.props;
         return (
             <div className="author">
                 <h2>{name}</h2>
-                {books.map(book => (<Book key={book.id} book={book} />))}
+                {books.map(book => (<Book key={book.id} book={book} staticPath={staticPath} />))}
             </div>
         );
     };
@@ -40,6 +39,7 @@ export class PublisherDetail extends React.Component<PublisherDetailProps> {
 const mapStateToProps = (state: AppState) => ({
     name: state.publisherDetailStore.name,
     books: state.publisherDetailStore.books,
+    staticPath: state.appStore.staticPath
 });
 
 const mapDispatchToProps = {

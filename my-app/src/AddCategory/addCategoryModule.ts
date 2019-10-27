@@ -1,6 +1,6 @@
-import { fromJS, List, Record } from 'immutable';
-
-import { makeAction, createRequestTypes, SET, REQUEST, SUCCESS, FAILURE, CLEAR } from '../utils/moduleUtils';
+import { List, Record } from 'immutable';
+import { IAddCategory } from './types';
+import { ICategoryDetail } from '../Category/types';
 
 // Actions
 export const ADD_CATEGORY_ADD_REQUEST = 'ADD_CATEGORY_ADD_REQUEST';
@@ -52,7 +52,7 @@ export interface SearchCategoryRequestAction {
 
 export interface SearchCategorySuccessAction {
     type: typeof ADD_CATEGORY_SEARCH_SUCCESS
-    suggestions: List<string>
+    suggestions: List<ICategoryDetail>
 }
 
 export interface SearchCategoryFailureAction {
@@ -69,7 +69,7 @@ export interface SearchCategoryClearAction {
 export const searchCategoryRequest: (query: string) => SearchCategoryRequestAction =
     query => ({ type: ADD_CATEGORY_SEARCH_REQUEST, query });
 
-export const searchCategorySuccess: (suggestions: List<string>) => SearchCategorySuccessAction =
+export const searchCategorySuccess: (suggestions: List<ICategoryDetail>) => SearchCategorySuccessAction =
     suggestions => ({ type: ADD_CATEGORY_SEARCH_SUCCESS, suggestions });
 
 export const searchCategoryFailure: (error: string) => SearchCategoryFailureAction =
@@ -84,17 +84,32 @@ export type AddCategoryActionTypes
 
 
 // State
-export const initialState = fromJS({
-    autoSuggestCategories: []
-});
+const defaultAddCategoryProps = {
+    autoSuggestCategories: List(),
+}
 
-// TODO: HOOK IT?
+export type AddCategoryParams = {
+    autoSuggestCategories?: List<ICategoryDetail>;
+}
+
+export class AddCategoryRecord extends Record(defaultAddCategoryProps) implements IAddCategory {
+    constructor(params?: AddCategoryParams) {
+        params ? super(params) : super();
+    }
+    with(values: AddCategoryParams) {
+        return this.merge(values) as this;
+    }
+}
+
+export const initialState = new AddCategoryRecord();
+
+// TODO: use component state?
 export default function categoryReducer(state = initialState, action: AddCategoryActionTypes) {
     switch (action.type) {
     case ADD_CATEGORY_SEARCH_SUCCESS:
-        return state.set('autoSuggestCategories', fromJS(action.suggestions));
+        return state.with({ autoSuggestCategories: action.suggestions });
     case ADD_CATEGORY_SEARCH_FAILURE:
-        return state.set('autoSuggestCategories', List());
+        return state.with({ autoSuggestCategories: List() });
     default:
         return state;
     }

@@ -1,14 +1,9 @@
-import { Record } from 'immutable';
-
 export interface ICategoryDetail {
+    id: number;
     category: string
 }
 
-export interface ICategoryDetailRecord extends Record<ICategoryDetail>, ICategoryDetail {}
-
 export interface ICategory {
     id: number,
-    detail: ICategoryDetailRecord,
+    detail: ICategoryDetail,
 }
-  
-export interface ICategoryRecord extends Record<ICategory>, ICategory {}

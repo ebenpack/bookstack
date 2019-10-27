@@ -1,9 +1,6 @@
 import * as React from 'react';
-import { useState } from 'react';
 import { connect } from 'react-redux';
-import * as propTypes from 'prop-types';
-import * as immutablePropTypes from 'react-immutable-proptypes';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 
 import Autocomplete from '../Autocomplete/Autocomplete';
 
@@ -16,9 +13,10 @@ import {
     stackDetailAddCategoryRequest
 } from '../StackDetail/stackDetailModule';
 import { AppState } from '../store';
+import { ICategoryDetail } from '../Category/types';
 
 interface PropsFromState {
-    autoSuggestCategories: List<Map<string, any>>,
+    autoSuggestCategories: List<ICategoryDetail>,
 }
 
 interface PropsFromDispatch {
@@ -28,13 +26,31 @@ interface PropsFromDispatch {
     clearAutoSuggestCategories: typeof searchCategoryClear,
 }
 
+interface IState {
+    category: string;
+}
+
 interface OwnProps {
     id: number,
 }
 
 type AddCategoryProps = PropsFromState & PropsFromDispatch & OwnProps;
 
-export class AddCategory extends React.Component<AddCategoryProps> {
+export class AddCategory extends React.Component<AddCategoryProps, IState> {
+    constructor(props: AddCategoryProps){
+        super(props);
+        this.state = {
+            category: '',
+        };
+        this.setCategoryInput = this.setCategoryInput.bind(this);
+        this.clearCategoryInput = this.clearCategoryInput.bind(this);
+    }
+    setCategoryInput(category: string) {
+        this.setState({ category })
+    }
+    clearCategoryInput() {
+        this.setCategoryInput('');
+    }
     render() {
         const {
             id,
@@ -44,8 +60,7 @@ export class AddCategory extends React.Component<AddCategoryProps> {
             setAutoSuggestCategories,
             clearAutoSuggestCategories,
         } = this.props;
-        const [category, setCategoryInput] = useState('');
-        const clearCategoryInput = () => setCategoryInput('');
+        const { category } = this.state;
         return (
             <div>
                 <label>Add Category:
@@ -56,26 +71,27 @@ export class AddCategory extends React.Component<AddCategoryProps> {
                         onChange={(e) => {
                             const newCategory = e.target.value;
                             if (newCategory) {
-                                setCategoryInput(newCategory);
+                                this.setCategoryInput(newCategory);
                                 setAutoSuggestCategories(newCategory);
                             } else {
-                                clearCategoryInput();
+                                this.clearCategoryInput();
                                 clearAutoSuggestCategories();
                             }
                         }}
                         onKeyUp={(e) => {
                             if (e.key === 'Enter') {
                                 addNewCategory(id, category);
-                                clearCategoryInput();
+                                this.clearCategoryInput();
                                 clearAutoSuggestCategories();
                             }
                         }}
                     />
                     <Autocomplete
+                        getDisplayProperty={suggestion => suggestion.category}
+                        getId={suggestion => suggestion.id}
                         suggestions={autoSuggestCategories}
-                        displayProperty="category"
                         onClick={(suggestionId) => {
-                            clearCategoryInput();
+                            this.clearCategoryInput();
                             clearAutoSuggestCategories();
                             addCategory(id, suggestionId);
                         }}
@@ -87,7 +103,7 @@ export class AddCategory extends React.Component<AddCategoryProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-    autoSuggestCategories: state.addCategoryStore.get('autoSuggestCategories')
+    autoSuggestCategories: state.addCategoryStore.autoSuggestCategories
 });
 
 const mapDispatchToProps = {

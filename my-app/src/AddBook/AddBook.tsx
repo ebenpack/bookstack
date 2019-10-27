@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import * as propTypes from 'prop-types';
-import * as immutablePropTypes from 'react-immutable-proptypes';
 import { List } from 'immutable';
 
 import Book from '../Book/Book';
@@ -14,12 +12,13 @@ import {
     selectBookClear
 } from './addBookModule';
 import { stackDetailAddBookRequest } from '../StackDetail/stackDetailModule';
-import { IBook } from '../Book/types';
 import { BookRecord } from '../Book/bookModule';
+import { IBook } from '../Book/types';
 
 interface PropsFromState {
-    booksAutocomplete: List<any>;
-    selectedBook: BookRecord;
+    booksAutocomplete: List<BookRecord>;
+    selectedBook: IBook;
+    staticPath: string;
 }
 
 interface PropsFromDispatch {
@@ -31,7 +30,7 @@ interface PropsFromDispatch {
 
 interface OwnProps {
     title?: string;
-    stackId: string;
+    stackId: number;
 }
 
 type StackDetailProps = PropsFromState & PropsFromDispatch & OwnProps;
@@ -47,19 +46,21 @@ class AddBook extends React.Component<StackDetailProps> {
             searchBooks,
             title,
             stackId,
+            staticPath,
         } = this.props;
         let autocompleteResults = null;
         if (booksAutocomplete.size > 0) {
             autocompleteResults = (
                 <Autocomplete
+                    getDisplayProperty={suggestion => suggestion.title}
+                    getId={suggestion => suggestion.id}
                     suggestions={booksAutocomplete}
-                    displayProperty="title"
                     onClick={bookId => getBook(bookId)}
                 />
             );
         }
         const bookId = selectedBook.id;
-        if (bookId && bookId !== '') {
+        if (bookId && bookId !== null) {
             autocompleteResults = (
                 <div className="modal is-active">
                     <div className="modal-background" />
@@ -72,7 +73,7 @@ class AddBook extends React.Component<StackDetailProps> {
                             />
                         </header>
                         <div className="modal-card-body">
-                            <Book book={selectedBook} />
+                            <Book book={selectedBook} staticPath={staticPath} />
                         </div>
                         <footer className="modal-card-foot">
                             <button className="button" onClick={() => addBook(bookId, stackId)}>
@@ -102,6 +103,7 @@ class AddBook extends React.Component<StackDetailProps> {
 const mapStateToProps = (state: AppState) => ({
     booksAutocomplete: state.addBookStore.booksAutocomplete,
     selectedBook: state.addBookStore.selectedBook,
+    staticPath: state.appStore.staticPath,
 });
 
 const mapDispatchToProps = {

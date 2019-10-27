@@ -200,5 +200,5 @@ schema_view = get_schema_view(
    permission_classes=(),
 )
 
-def app_view(request):
-    return render(request, 'bookstack_react.html')
+def app_view(request, *args, **kwargs):
+    return render(request, 'index.html')

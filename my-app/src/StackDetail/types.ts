@@ -1,11 +1,10 @@
-import { List, Record } from 'immutable';
+import { List } from 'immutable';
 
-import { IAuthor } from '../AuthorDetail/types';
-import { IPublisher } from '../PublisherDetail/types';
 import { IBook } from '../Book/types';
+import { IStack } from '../Stack/types';
 
-export interface IStackDetail {
-    id: string;
+export interface IStackDetail extends IStack {
+    id: number;
     name: string;
     private: boolean;
     user: string;

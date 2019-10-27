@@ -4,7 +4,7 @@ import { IAuthor } from '../AuthorDetail/types';
 import { IPublisher } from '../PublisherDetail/types';
 
 export interface IBook {
-    id: string,
+    id: number,
     img: string,
     authors: List<IAuthor>,
     publishers: List<IPublisher>,

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { put, call, select, takeEvery } from 'redux-saga/effects';
 
 import { axiosCall, getCredentials } from '../utils/sagasUtils';
@@ -16,6 +15,9 @@ import {
     GET_BOOK_REQUEST,
     ADD_BOOK_REQUEST
 } from './addBookModule';
+import { makeBook } from '../BookStack/bookstackModule';
+import { List } from 'immutable';
+import { IBook } from '../Book/types';
 
 export function* searchBooks({ query }: SearchBookRequestAction) {
     const { apiUrl } = yield select(getCredentials);
@@ -24,7 +26,8 @@ export function* searchBooks({ query }: SearchBookRequestAction) {
             method: 'GET',
             url: `${apiUrl}/api/book/?search=${query}`,
         });
-        yield put(searchBooksSuccess(data));
+        const autocompleteBooks: List<IBook> = List(data.map(makeBook));
+        yield put(searchBooksSuccess(autocompleteBooks));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data

@@ -1,10 +1,6 @@
 import * as React from 'react';
-import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import * as propTypes from 'prop-types';
-import * as immutablePropTypes from 'react-immutable-proptypes';
 
-import { IAuthor } from './types';
 import Book from '../Book/Book';
 import { initializeAuthor } from './authorDetailModule';
 import { AppState } from '../store';
@@ -14,6 +10,7 @@ import { IBook } from '../Book/types';
 interface PropsFromState {
     name: string;
     books: List<IBook>;
+    staticPath: string;
 }
 
 interface PropsFromDispatch {
@@ -23,15 +20,16 @@ interface PropsFromDispatch {
 type AuthorDetailProps = PropsFromState & PropsFromDispatch;
 
 export class AuthorDetail extends React.Component<AuthorDetailProps> { 
+    componentDidMount() {
+        const { initializeAuthor } = this.props;
+        initializeAuthor();
+    }
     render() {
-        const { name, books, initializeAuthor } = this.props;
-        useEffect(() => {
-            initializeAuthor()
-        }, []);
+        const { name, books, staticPath } = this.props;
         return (
             <div className="author">
                 <h2>{name}</h2>
-                {books.map(book => (<Book key={book.id} book={book} />))}
+                {books.map(book => (<Book key={book.id} book={book} staticPath={staticPath} />))}
             </div>
         );
     };
@@ -41,6 +39,7 @@ export class AuthorDetail extends React.Component<AuthorDetailProps> {
 const mapStateToProps = (state: AppState) => ({
     name: state.authorDetailStore.name,
     books: state.authorDetailStore.books,
+    staticPath: state.appStore.staticPath,
 });
 
 const mapDispatchToProps = {

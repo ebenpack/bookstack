@@ -70,7 +70,7 @@ export const initialState = new AuthorRecord({
     name: '',
 });
 
-export default function AuthorDetailReducer(state = initialState, action: AuthorAction): IAuthor {
+export default function AuthorDetailReducer(state = initialState, action: AuthorAction) {
     switch (action.type) {
     case AUTHOR_SUCCESS:
         return new AuthorRecord(action.author);

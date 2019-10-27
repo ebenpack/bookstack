@@ -1,17 +1,15 @@
 import * as React from 'react';
-import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import * as propTypes from 'prop-types';
-import * as immutablePropTypes from 'react-immutable-proptypes';
 import { List } from 'immutable';
 
 import Stack from '../Stack/Stack';
-import { IStackRecord } from '../Stack/types';
 import { initializeStack } from './stackListModule';
 import { AppState } from '../store';
 
+import { IStackDetail } from '../StackDetail/types';
+
 interface PropsFromState {
-    stackList: List<IStackRecord>,
+    stackList: List<IStackDetail>,
     apiUrl: string,
     staticPath: string,
 }
@@ -23,19 +21,21 @@ interface PropsFromDispatch {
 type StackListProps = PropsFromState & PropsFromDispatch;
 
 export class StackList extends React.Component<StackListProps> {
+    componentDidMount() {
+        const { initializeStack } = this.props;
+        initializeStack();
+    }
     render() {
-        const { stackList, initializeStack } = this.props;
-        useEffect(() => {
-            initializeStack();
-        }, []); // TODO: can this be point free, of will that weird up hook?
+        const { stackList } = this.props;
         return (
             <div className="stacklist">
-                {stackList.map((stack) => (
+                {stackList.map((stack: IStackDetail) => {
+                    return (
                     <Stack
-                        key={stack.get('id')}
+                        key={stack.id}
                         stack={stack}
                     />
-                ))}
+                )})}
             </div>
         );
     };
@@ -43,8 +43,8 @@ export class StackList extends React.Component<StackListProps> {
 
 const mapStateToProps = (state: AppState) => ({
     stackList: state.stackListStore,
-    apiUrl: state.appStore.get('apiUrl'),
-    staticPath: state.appStore.get('staticPath'),
+    apiUrl: state.appStore.apiUrl,
+    staticPath: state.appStore.staticPath,
 });
 
 const mapDispatchToProps = {

@@ -1,7 +1,5 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import * as propTypes from 'prop-types';
-import * as immutablePropTypes from 'react-immutable-proptypes';
 
 import { IBookStack } from './types';
 import * as stackDetailActions from '../StackDetail/stackDetailModule';
@@ -184,7 +182,7 @@ export class BookStack extends React.Component<BookStackProps> {
         const position = bookStack.position;
         const id = bookStack.id;
         const move = (moveId: number, fromPosition: number, toPosition: number) => {
-            if (toPosition > 0 && toPosition < bookStack.size && toPosition !== fromPosition) {
+            if (toPosition > 0 && toPosition !== fromPosition) {
                 updatePosition(moveId, fromPosition, toPosition);
             }
         };

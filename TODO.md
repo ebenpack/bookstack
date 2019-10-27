@@ -1,5 +1,15 @@
 # TODO
 
+# Typescript
+* Add book
+* Author
+* Author List
+* Publisher
+* Publisher List
+* Remove(?)
+
+* JSON in add book modal (name & publisher)
+
 # Back-end
 * Unit tests
 

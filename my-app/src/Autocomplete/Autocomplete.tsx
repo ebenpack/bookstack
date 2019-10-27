@@ -1,43 +1,32 @@
 import * as React from 'react';
-import * as propTypes from 'prop-types';
-import * as immutablePropTypes from 'react-immutable-proptypes';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 
-export interface AutocompleteProps {
+export interface AutocompleteProps<T> {
     onClick: (id: number) => void,
-    suggestions: List<Map<string, any>>,
-    displayProperty: string
+    suggestions: List<T>,
+    getDisplayProperty: (item: T) => string,
+    getId: (item: T) => number,
+
 };
 
-const Autocomplete = ({ onClick, suggestions, displayProperty }: AutocompleteProps) => (
-    suggestions.size ? null : (
+function Autocomplete<T>({ onClick, suggestions, getDisplayProperty, getId }: AutocompleteProps<T>) {
+    return suggestions.size <= 0 ? null :(
         <div className="autocomplete dropdown is-active">
             <div className="dropdown-menu" role="menu">
                 <div className="dropdown-content">
                     {suggestions.map(suggestion => (
-                        <a
-                            href="#"
+                        <button
                             className="dropdown-item"
-                            key={suggestion.get('id')}
-                            onClick={() => onClick(suggestion.get('id'))}
+                            key={getId(suggestion)}
+                            onClick={() => onClick(getId(suggestion))}
                         >
-                            {suggestion.get(displayProperty)}
-                        </a>
+                            {getDisplayProperty(suggestion)}
+                        </button>
                     ))}
                 </div>
             </div>
         </div>
     )
-);
-
-Autocomplete.defaultProps = {
-    onClick: () => { },
-};
-
-Autocomplete.propTypes = {
-    onClick: propTypes.func,
-    suggestions: immutablePropTypes.list.isRequired,
-    displayProperty: propTypes.string.isRequired,
 };
 
 export default Autocomplete;

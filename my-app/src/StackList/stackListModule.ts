@@ -1,4 +1,5 @@
 import { fromJS, List } from 'immutable';
+import { StackDetailRecord } from '../StackDetail/stackDetailModule';
 
 // Actions
 export const STACK_REQUEST = 'STACK_REQUEST';
@@ -13,7 +14,7 @@ export interface StackRequestAction {
 
 export interface StackSuccessAction {
     type: typeof STACK_SUCCESS
-    stack: List<string>
+    stack: List<StackDetailRecord>
 }
 
 export interface StackFailureAction {
@@ -28,7 +29,7 @@ export interface StackClearAction {
 export const stackRequest: () => StackRequestAction =
     () => ({ type: STACK_REQUEST });
 
-export const stackSuccess: (stack: List<string>) => StackSuccessAction =
+export const stackSuccess: (stack: List<StackDetailRecord>) => StackSuccessAction =
     (stack) => ({ type: STACK_SUCCESS, stack });
 
 export const stackFailure: (error: string) => StackFailureAction =
@@ -44,8 +45,10 @@ export type StackActionTypes
     = StackSuccessAction
     | StackClearAction;
 
+const initialState: List<StackDetailRecord> = List()
+
 // State
-export default function stackListReducer(state = List(), action: StackActionTypes) {
+export default function stackListReducer(state = initialState, action: StackActionTypes) {
     switch (action.type) {
     case STACK_SUCCESS:
         return fromJS(action.stack);

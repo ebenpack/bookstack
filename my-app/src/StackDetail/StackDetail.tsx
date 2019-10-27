@@ -1,12 +1,8 @@
 import * as React from 'react';
-import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import * as propTypes from 'prop-types';
-import * as immutablePropTypes from 'react-immutable-proptypes';
 import { RouteComponentProps } from 'react-router';
 import { List } from 'immutable';
-import { IBook} from '../Book/types';
-import { IStackRecord } from '../Stack/types';
+import { IBookStack } from '../BookStack/types';
 
 import BookStack from '../BookStack/BookStack';
 import ConnectedAddBook from '../AddBook/AddBook';
@@ -23,7 +19,6 @@ import {
     StackDetailRecord
 } from '../StackDetail/stackDetailModule';
 import { AppState } from '../store';
-import { render } from 'react-dom';
 
 interface IUrlParams {
     id: string;
@@ -32,7 +27,7 @@ interface IUrlParams {
 interface PropsFromState {
     staticPath: string;
     stackDetail: StackDetailRecord;
-    books: List<IBook>;
+    books: List<IBookStack>;
     editing: boolean;
 }
 
@@ -49,9 +44,14 @@ interface PropsFromDispatch {
 
 interface OwnProps extends RouteComponentProps<IUrlParams> {}
 
-type StackDetailProps = PropsFromState & PropsFromDispatch & RouteComponentProps<IUrlParams> & OwnProps;
+type StackDetailProps = PropsFromState & PropsFromDispatch & OwnProps;
 
 class StackDetail extends React.Component<StackDetailProps> {
+    componentDidMount() {
+        const { stackDetailInitialize, match } = this.props;
+        const { id } = match.params;
+        stackDetailInitialize(parseInt(id));
+    }
     render() {
         const {
             staticPath,
@@ -64,17 +64,13 @@ class StackDetail extends React.Component<StackDetailProps> {
             deleteBook,
             deleteCategory,
             updatePosition,
-            stackDetailInitialize,
         } = this.props;
-        useEffect(() => {
-            stackDetailInitialize()
-        }, []);
         const { id } = match.params;
         const addBook = editing ?
             (
                 <div>
                     <div onClick={toggleEditing}>Close -</div>
-                    <ConnectedAddBook stackId={id} />
+                    <ConnectedAddBook stackId={parseInt(id)} />
                 </div>
             ) :
             (
@@ -88,13 +84,13 @@ class StackDetail extends React.Component<StackDetailProps> {
                     <div className="column">
                         <h1 className="stackName">{stackDetail.name}</h1>
                         <div className="user">{stackDetail.user}</div>
-                        <div className="creationDate">{stackDetail.creation_date}</div>
+                        <div className="creationDate">{stackDetail.creation_date.toDateString()}</div>
                         <div className="addBook">
                             {addBook}
                         </div>
                     </div>
                 </div>
-                {books.map(bookStack =>
+                {books.map((bookStack: IBookStack) =>
                     (<BookStack
                         key={bookStack.id}
                         bookStack={bookStack}

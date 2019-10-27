@@ -1,13 +1,10 @@
-import axios from 'axios';
 import { delay } from 'redux-saga/effects';
 import { put, call, select, take, takeEvery, race } from 'redux-saga/effects';
 
 import { axiosCall, getCredentials, getCurrentTime } from '../utils/sagasUtils';
-import { path } from './StackDetailRoute';
 import {
     stackDetailSuccess,
     stackDetailFailure,
-    stackDetailClear,
     stackDetailEditing,
     stackDetailPositionSuccess,
     stackDetailPositionFailure,
@@ -39,20 +36,29 @@ import {
     STACK_DETAIL_ADD_NEW_CATEGORY_REQUEST,
     STACK_DETAIL_REMOVE_CATEGORY_REQUEST,
     STACK_DETAIL_ADD_BOOK_REQUEST,
+    StackDetailRecord,
 } from './stackDetailModule';
 import { 
     ADD_CATEGORY_ADD_SUCCESS, 
     addCategoryRequest 
 } from '../AddCategory/addCategoryModule';
+import { List } from 'immutable';
+import { makeBookstack, makeCategory } from '../BookStack/bookstackModule';
 
 export function* loadStack({ id }: StackDetailRequestAction) {
     const { apiUrl } = yield select(getCredentials);
     try {
-        const stack = yield call(axiosCall, {
+        const { data } = yield call(axiosCall, {
             method: 'GET',
             url: `${apiUrl}/api/stack/${id}/`,
         });
-        yield put(stackDetailSuccess(stack.data));
+        const books = List(data.books.map(makeBookstack));
+        const stackDetail = new StackDetailRecord({
+            ...data,
+            creation_date: new Date(data.creation_date),
+            books
+        });
+        yield put(stackDetailSuccess(stackDetail));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
@@ -88,7 +94,7 @@ export function* updateReadState({ bookId, newReadState }: StackDetailReadStateR
 export function* updatePosition({ id, from, to }: StackDetailPositionRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     const stackLength = yield select(store =>
-        store.stackDetailStore.getIn(['stackDetail', 'books']).size);
+        store.stackDetailStore.stackDetail.books.size );
     try {
         if (to > 0 && to <= stackLength) {
             yield call(axiosCall, {
@@ -102,8 +108,8 @@ export function* updatePosition({ id, from, to }: StackDetailPositionRequestActi
                     Authorization: `Token ${token}`,
                 },
             });
+            yield put(stackDetailPositionSuccess(id, from, to));
         }
-        yield put(stackDetailPositionSuccess(id, from, to));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
@@ -155,7 +161,7 @@ export function* addNewCategory({ bookstackId, category }: StackDetailAddNewCate
 export function* addCategory({ bookstackId, categoryId }: StackDetailAddCategoryRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
-        const response = yield call(axiosCall, {
+        const { data } = yield call(axiosCall, {
             method: 'POST',
             url: `${apiUrl}/api/bookstackcategory/`,
             headers: {
@@ -167,7 +173,8 @@ export function* addCategory({ bookstackId, categoryId }: StackDetailAddCategory
                 category: categoryId,
             },
         });
-        yield put(stackDetailAddCategorySuccess(response.data.bookstack, response.data.category));
+        const category = makeCategory(data);
+        yield put(stackDetailAddCategorySuccess(data.bookstack, category));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data
@@ -199,7 +206,7 @@ export function* deleteCategory({ bookstackId, categoryId }: StackDetailRemoveCa
 export function* addBook({ bookId, stackId }: StackDetailAddBookRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
-        yield call(axiosCall, {
+        const { data } = yield call(axiosCall, {
             url: `${apiUrl}/api/bookstack/`,
             method: 'POST',
             headers: {
@@ -213,7 +220,7 @@ export function* addBook({ bookId, stackId }: StackDetailAddBookRequestAction) {
             },
         });
         yield put(stackDetailEditing());
-        yield put(stackDetailAddBookSuccess());
+        yield put(stackDetailAddBookSuccess(data.book));
     } catch (err) {
         const error = err && err.response && err.response.data
             ? err.response.data

@@ -5,7 +5,7 @@ import { IPublisher } from '../PublisherDetail/types';
 import { IAuthor } from '../AuthorDetail/types';
 
 export const defaultBookRecordValue = {
-    id: '',
+    id: 0,
     img: '',
     authors: List(),
     publishers: List(),
@@ -14,8 +14,8 @@ export const defaultBookRecordValue = {
     isbn: '',
 };
 
-type BookParams = {
-    id?: string;
+export type BookParams = {
+    id?: number;
     img?: string;
     authors?: List<IAuthor>;
     publishers?: List<IPublisher>;
