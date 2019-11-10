@@ -6,7 +6,7 @@ import {
     authorFailure,
     AuthorRequestAction,
     AUTHOR_REQUEST,
-    AUTHOR_INITIALIZE
+    AUTHOR_INITIALIZE,
 } from './authorDetailModule';
 
 export function* loadAuthor({ id }: AuthorRequestAction) {
@@ -18,9 +18,10 @@ export function* loadAuthor({ id }: AuthorRequestAction) {
         });
         yield put(authorSuccess(author.data));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(authorFailure(error));
     }
 }
@@ -29,6 +30,4 @@ export function* watchLoadAuthor() {
     yield takeEvery([AUTHOR_REQUEST, AUTHOR_INITIALIZE], loadAuthor);
 }
 
-export default [
-    watchLoadAuthor,
-];
+export default [watchLoadAuthor];

@@ -26,118 +26,129 @@ export const SELECT_BOOK_CLEAR = 'ADD_BOOK_SELECT_BOOK_CLEAR';
 // Action Creators
 
 /*************
-** Add Book **
-**************/
+ ** Add Book **
+ **************/
 export interface AddBookRequestAction {
-    type: typeof ADD_BOOK_REQUEST
-    book: IBook
+    type: typeof ADD_BOOK_REQUEST;
+    book: IBook;
 }
 
 export interface AddBookSuccessAction {
-    type: typeof ADD_BOOK_SUCCESS
-    book: IBook
+    type: typeof ADD_BOOK_SUCCESS;
+    book: IBook;
 }
 
 export interface AddBookFailureAction {
-    type: typeof ADD_BOOK_FAILURE
-    error: string
+    type: typeof ADD_BOOK_FAILURE;
+    error: string;
 }
 
-export const addBookRequest: (book: IBook) => AddBookRequestAction =
-    (book) => ({ type: ADD_BOOK_REQUEST,  book });
+export const addBookRequest: (book: IBook) => AddBookRequestAction = book => ({
+    type: ADD_BOOK_REQUEST,
+    book,
+});
 
-export const addBookSuccess: (book: IBook) => AddBookSuccessAction =
-    (book) => ({ type: ADD_BOOK_SUCCESS,  book });
+export const addBookSuccess: (book: IBook) => AddBookSuccessAction = book => ({
+    type: ADD_BOOK_SUCCESS,
+    book,
+});
 
-export const addBookFailure: (error: string) => AddBookFailureAction =
-    (error) => ({ type: ADD_BOOK_FAILURE,  error });
-
+export const addBookFailure: (
+    error: string
+) => AddBookFailureAction = error => ({ type: ADD_BOOK_FAILURE, error });
 
 /*************
-** Get Book **
-**************/
+ ** Get Book **
+ **************/
 export interface GetBookRequestAction {
-    type: typeof GET_BOOK_REQUEST
-    id: number
+    type: typeof GET_BOOK_REQUEST;
+    id: number;
 }
 
-export const getBookRequest: (id: number) => GetBookRequestAction =
-    (id) => ({ type: GET_BOOK_REQUEST, id });
-
+export const getBookRequest: (id: number) => GetBookRequestAction = id => ({
+    type: GET_BOOK_REQUEST,
+    id,
+});
 
 /*****************
-** Search Books **
-******************/
+ ** Search Books **
+ ******************/
 export interface SearchBookRequestAction {
-    type: typeof SEARCH_BOOK_REQUEST
-    query: string
+    type: typeof SEARCH_BOOK_REQUEST;
+    query: string;
 }
 
 export interface SearchBookSuccessAction {
-    type: typeof SEARCH_BOOK_SUCCESS
-    books: List<IBook>
+    type: typeof SEARCH_BOOK_SUCCESS;
+    books: List<IBook>;
 }
 
 export interface SearchBookFailureAction {
-    type: typeof SEARCH_BOOK_FAILURE
-    error: string
+    type: typeof SEARCH_BOOK_FAILURE;
+    error: string;
 }
 
 export interface SearchBookClearAction {
-    type: typeof SEARCH_BOOK_CLEAR
+    type: typeof SEARCH_BOOK_CLEAR;
 }
 
-export const searchBooksRequest: (query: string) => SearchBookRequestAction =
-    (query) => ({ type: SEARCH_BOOK_REQUEST, query });
+export const searchBooksRequest: (
+    query: string
+) => SearchBookRequestAction = query => ({ type: SEARCH_BOOK_REQUEST, query });
 
-export const searchBooksSuccess: (books: List<IBook>) => SearchBookSuccessAction =
-    (books) => ({ type: SEARCH_BOOK_SUCCESS, books });
+export const searchBooksSuccess: (
+    books: List<IBook>
+) => SearchBookSuccessAction = books => ({ type: SEARCH_BOOK_SUCCESS, books });
 
-export const searchBooksFailure: (error: string) => SearchBookFailureAction =
-    (error) => ({ type: SEARCH_BOOK_FAILURE, error });
+export const searchBooksFailure: (
+    error: string
+) => SearchBookFailureAction = error => ({ type: SEARCH_BOOK_FAILURE, error });
 
-export const searchBooksClear: () => SearchBookClearAction =
-    () => ({ type: SEARCH_BOOK_CLEAR });
-
-
+export const searchBooksClear: () => SearchBookClearAction = () => ({
+    type: SEARCH_BOOK_CLEAR,
+});
 
 /****************
-** Select Book **
-*****************/
+ ** Select Book **
+ *****************/
 export interface SelectBookSuccessAction {
-    type: typeof SELECT_BOOK_SUCCESS
-    book: BookRecord
+    type: typeof SELECT_BOOK_SUCCESS;
+    book: BookRecord;
 }
 
 export interface SelectBookFailureAction {
-    type: typeof SELECT_BOOK_FAILURE
-    error: string
+    type: typeof SELECT_BOOK_FAILURE;
+    error: string;
 }
 
 export interface SelectBookClearAction {
-    type: typeof SELECT_BOOK_CLEAR
+    type: typeof SELECT_BOOK_CLEAR;
 }
 
-export const selectBookSuccess: (book: BookRecord) => SelectBookSuccessAction =
-    (book) => ({ type: SELECT_BOOK_SUCCESS, book });
+export const selectBookSuccess: (
+    book: BookRecord
+) => SelectBookSuccessAction = book => ({ type: SELECT_BOOK_SUCCESS, book });
 
-export const selectBookFailure: (error: string) => SelectBookFailureAction =
-    (error) => ({ type: SELECT_BOOK_FAILURE, error });
+export const selectBookFailure: (
+    error: string
+) => SelectBookFailureAction = error => ({ type: SELECT_BOOK_FAILURE, error });
 
-export const selectBookClear: () => SelectBookClearAction =
-    () => ({ type: SELECT_BOOK_CLEAR });
+export const selectBookClear: () => SelectBookClearAction = () => ({
+    type: SELECT_BOOK_CLEAR,
+});
 
 export const defaultAddBookRecordValue = {
     selectedBook: new BookRecord(),
     booksAutocomplete: List(),
 };
 
-type AddBookRecordParams = {
+interface AddBookRecordParams {
     selectedBook?: BookRecord;
     booksAutocomplete?: List<IBook>;
 }
 
-export class AddBookRecord extends Record(defaultAddBookRecordValue) implements IAddBook {
+export class AddBookRecord extends Record(defaultAddBookRecordValue)
+    implements IAddBook {
     constructor(params?: AddBookRecordParams) {
         params ? super(params) : super();
     }
@@ -146,18 +157,20 @@ export class AddBookRecord extends Record(defaultAddBookRecordValue) implements 
     }
 }
 
-
 // State
 export const initialState = new AddBookRecord(defaultAddBookRecordValue);
 
-export type AddBookActionTypes
-    = SearchBookSuccessAction
+export type AddBookActionTypes =
+    | SearchBookSuccessAction
     | SearchBookClearAction
     | SelectBookSuccessAction
     | SelectBookClearAction;
 
 // TODO use component state?
-export default function addBookReducer(state = initialState, action: AddBookActionTypes) {
+export default function addBookReducer(
+    state = initialState,
+    action: AddBookActionTypes
+) {
     switch (action.type) {
         case SELECT_BOOK_SUCCESS:
             // tODO: convert data in saga

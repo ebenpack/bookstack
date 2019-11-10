@@ -1,10 +1,6 @@
 import { sagaTest } from '../../utils/testUtils';
 import { watchLoadPublisher } from '../publisherDetailSagas';
-import {
-    initialState,
-    PUBLISHER,
-    publisher,
-} from '../publisherDetailModule';
+import { initialState, PUBLISHER, publisher } from '../publisherDetailModule';
 
 sagaTest(
     'loadPublisher',
@@ -19,5 +15,5 @@ sagaTest(
     publisher.success('foo'),
     publisher.failure('Error message'),
     PUBLISHER.SUCCESS,
-    PUBLISHER.FAILURE,
+    PUBLISHER.FAILURE
 );

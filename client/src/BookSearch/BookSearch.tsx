@@ -13,9 +13,9 @@ import { List } from 'immutable';
 import { IBook } from '../Book/types';
 
 interface PropsFromDispatch {
-    setQuery: typeof bookSearchQuerySet,
-    bookSearch: typeof bookSearchRequest,
-    addBook: typeof addBookRequest,
+    setQuery: typeof bookSearchQuerySet;
+    bookSearch: typeof bookSearchRequest;
+    addBook: typeof addBookRequest;
 }
 
 interface PropsFromState {
@@ -40,12 +40,13 @@ export class BookSearch extends React.Component<BookSearchProps> {
             <div className="bookSearch">
                 <div className="columns">
                     <div className="column">
-                        <label>Search
-                    <input
+                        <label>
+                            Search
+                            <input
                                 className="input"
                                 type="text"
                                 value={query}
-                                onChange={(e) => {
+                                onChange={e => {
                                     const queryValue = e.target.value;
                                     setQuery(queryValue);
                                     bookSearch(queryValue);
@@ -58,7 +59,10 @@ export class BookSearch extends React.Component<BookSearchProps> {
                     {books.map((book, idx) => {
                         const key = book.isbn || idx;
                         return (
-                            <div key={key} className="column is-half search-result">
+                            <div
+                                key={key}
+                                className="column is-half search-result"
+                            >
                                 <div className="box">
                                     <Book book={book} staticPath={staticPath} />
                                     <button
@@ -66,16 +70,16 @@ export class BookSearch extends React.Component<BookSearchProps> {
                                         onClick={() => addBook(book)}
                                     >
                                         Add Book
-                            </button>
+                                    </button>
                                 </div>
                             </div>
                         );
                     })}
                 </div>
             </div>
-        )
+        );
     }
-};
+}
 
 const mapStateToProps = (state: AppState) => ({
     books: state.bookSearchStore.get('books'),
@@ -89,7 +93,4 @@ const mapDispatchToProps = {
     addBook: addBookRequest,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(BookSearch);
+export default connect(mapStateToProps, mapDispatchToProps)(BookSearch);

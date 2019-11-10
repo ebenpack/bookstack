@@ -9,23 +9,21 @@ import {
 } from '../App/appModule';
 import { AppState } from '../store';
 
-
 interface PropsFromDispatch {
-    submitLogin: typeof appLoginRequest,
-    updateUser: typeof updateUserAction,
-    updatePass: typeof updatePassAction,
-    updateSave: typeof updateSaveAction
+    submitLogin: typeof appLoginRequest;
+    updateUser: typeof updateUserAction;
+    updatePass: typeof updatePassAction;
+    updateSave: typeof updateSaveAction;
 }
 
 interface PropsFromState {
-    user: string,
-    pass: string,
-    save: boolean,
-    loginError: boolean,
+    user: string;
+    pass: string;
+    save: boolean;
+    loginError: boolean;
 }
 
 type LoginProps = PropsFromDispatch & PropsFromState;
-
 
 export const Login = ({
     user,
@@ -38,31 +36,36 @@ export const Login = ({
     updateSave,
 }: LoginProps) => (
     <div>
-        <div>Username:
+        <div>
+            Username:
             <input
-                onChange={e => (
+                onChange={e =>
                     e.target.value ? updateUser(e.target.value) : updateUser('')
-                )}
+                }
                 type="text"
                 className={`input${loginError ? ' error' : ''}`}
                 value={user}
             />
         </div>
-        <div>Password:
+        <div>
+            Password:
             <input
-                onChange={e => (
+                onChange={e =>
                     e.target.value ? updatePass(e.target.value) : updatePass('')
-                )}
+                }
                 type="password"
                 className={`input${loginError ? ' error' : ''}`}
                 value={pass}
             />
         </div>
-        <div>Stay logged in:
+        <div>
+            Stay logged in:
             <input
-                onChange={e => (
-                    e.target.checked ? updateSave(e.target.checked) : updateSave(false)
-                )}
+                onChange={e =>
+                    e.target.checked
+                        ? updateSave(e.target.checked)
+                        : updateSave(false)
+                }
                 type="checkbox"
                 className="checkbox"
                 checked={save}
@@ -91,7 +94,4 @@ const mapDispatchToProps = {
     updateSave: updateSaveAction,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

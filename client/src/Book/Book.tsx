@@ -5,36 +5,35 @@ import Author from '../Author/Author';
 import Publisher from '../Publisher/Publisher';
 
 interface BookProps {
-    staticPath: string,
-    book: IBook,
+    staticPath: string;
+    book: IBook;
 }
 
 const Book = ({ staticPath, book }: BookProps) => (
     <div className="columns">
         <div className="column">
             <img
-                src={book.img || `${staticPath}bookstack/images/defaultbook.jpg`}
+                src={
+                    book.img || `${staticPath}bookstack/images/defaultbook.jpg`
+                }
                 alt={`${book.title} Cover`}
             />
             <div className="title">{book.title}</div>
         </div>
         <div className="column">
             By:
-            <ul className="authors">{book.authors.map(author => (
-                <Author
-                    key={
-                        author.id || `${book.title}|${author.name}`
-                    }
-                    author={author}
-                />
-            ))}
+            <ul className="authors">
+                {book.authors.map(author => (
+                    <Author
+                        key={author.id || `${book.title}|${author.name}`}
+                        author={author}
+                    />
+                ))}
             </ul>
             Publshed by:
             {book.publishers.map(publisher => (
                 <Publisher
-                    key={
-                        publisher.id || `${book.title}|${publisher.name}`
-                    }
+                    key={publisher.id || `${book.title}|${publisher.name}`}
                     publisher={publisher}
                 />
             ))}

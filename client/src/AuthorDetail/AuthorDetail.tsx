@@ -19,13 +19,12 @@ interface PropsFromState {
 }
 
 interface PropsFromDispatch {
-    authorRequest: typeof authorRequest
+    authorRequest: typeof authorRequest;
 }
 
 interface OwnProps extends RouteComponentProps<IUrlParams> {}
 
 type AuthorDetailProps = PropsFromState & PropsFromDispatch & OwnProps;
-
 
 export class AuthorDetail extends React.Component<AuthorDetailProps> {
     componentDidMount() {
@@ -38,12 +37,13 @@ export class AuthorDetail extends React.Component<AuthorDetailProps> {
         return (
             <div className="author">
                 <h2>{name}</h2>
-                {books.map(book => (<Book key={book.id} book={book} staticPath={staticPath} />))}
+                {books.map(book => (
+                    <Book key={book.id} book={book} staticPath={staticPath} />
+                ))}
             </div>
         );
-    };
-};
-
+    }
+}
 
 const mapStateToProps = (state: AppState) => ({
     name: state.authorDetailStore.name,
@@ -52,7 +52,7 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = {
-    authorRequest
-}
+    authorRequest,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AuthorDetail);

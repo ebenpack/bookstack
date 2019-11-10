@@ -13,86 +13,104 @@ export const ADD_CATEGORY_SEARCH_FAILURE = 'ADD_CATEGORY_SEARCH_FAILURE';
 export const ADD_CATEGORY_SEARCH_CLEAR = 'ADD_CATEGORY_SEARCH_CLEAR';
 
 /*****************
-** Add Category **
-******************/
+ ** Add Category **
+ ******************/
 export interface AddCategoryRequestAction {
-    type: typeof ADD_CATEGORY_ADD_REQUEST
-    category: string
+    type: typeof ADD_CATEGORY_ADD_REQUEST;
+    category: string;
 }
 
 export interface AddCategorySuccessAction {
-    type: typeof ADD_CATEGORY_ADD_SUCCESS
-    category: string
+    type: typeof ADD_CATEGORY_ADD_SUCCESS;
+    category: string;
 }
 
 export interface AddCategoryFailureAction {
-    type: typeof ADD_CATEGORY_ADD_FAILURE
-    error: string
+    type: typeof ADD_CATEGORY_ADD_FAILURE;
+    error: string;
 }
 
+export const addCategoryRequest: (
+    category: string
+) => AddCategoryRequestAction = (category: string) => ({
+    type: ADD_CATEGORY_ADD_REQUEST,
+    category,
+});
 
-export const addCategoryRequest: (category: string) => AddCategoryRequestAction =
-        (category: string) => ({ type: ADD_CATEGORY_ADD_REQUEST, category });
+export const addCategorySuccess: (
+    category: string
+) => AddCategorySuccessAction = (category: string) => ({
+    type: ADD_CATEGORY_ADD_SUCCESS,
+    category,
+});
 
-export const addCategorySuccess: (category: string) => AddCategorySuccessAction =
-        (category: string) => ({ type: ADD_CATEGORY_ADD_SUCCESS, category });
-
-export const addCategoryFailure: (error: string) => AddCategoryFailureAction =
-        (error: string) => ({ type: ADD_CATEGORY_ADD_FAILURE, error });
-
+export const addCategoryFailure: (error: string) => AddCategoryFailureAction = (
+    error: string
+) => ({ type: ADD_CATEGORY_ADD_FAILURE, error });
 
 /********************
-** Search Category **
-*********************/
+ ** Search Category **
+ *********************/
 
 export interface SearchCategoryRequestAction {
-    type: typeof ADD_CATEGORY_SEARCH_REQUEST
-    query: string
+    type: typeof ADD_CATEGORY_SEARCH_REQUEST;
+    query: string;
 }
 
 export interface SearchCategorySuccessAction {
-    type: typeof ADD_CATEGORY_SEARCH_SUCCESS
-    suggestions: List<ICategoryDetail>
+    type: typeof ADD_CATEGORY_SEARCH_SUCCESS;
+    suggestions: List<ICategoryDetail>;
 }
 
 export interface SearchCategoryFailureAction {
-    type: typeof ADD_CATEGORY_SEARCH_FAILURE
-    error: string
+    type: typeof ADD_CATEGORY_SEARCH_FAILURE;
+    error: string;
 }
 
 export interface SearchCategoryClearAction {
-    type: typeof ADD_CATEGORY_SEARCH_CLEAR
+    type: typeof ADD_CATEGORY_SEARCH_CLEAR;
 }
 
+export const searchCategoryRequest: (
+    query: string
+) => SearchCategoryRequestAction = query => ({
+    type: ADD_CATEGORY_SEARCH_REQUEST,
+    query,
+});
 
+export const searchCategorySuccess: (
+    suggestions: List<ICategoryDetail>
+) => SearchCategorySuccessAction = suggestions => ({
+    type: ADD_CATEGORY_SEARCH_SUCCESS,
+    suggestions,
+});
 
-export const searchCategoryRequest: (query: string) => SearchCategoryRequestAction =
-    query => ({ type: ADD_CATEGORY_SEARCH_REQUEST, query });
+export const searchCategoryFailure: (
+    error: string
+) => SearchCategoryFailureAction = error => ({
+    type: ADD_CATEGORY_SEARCH_FAILURE,
+    error,
+});
 
-export const searchCategorySuccess: (suggestions: List<ICategoryDetail>) => SearchCategorySuccessAction =
-    suggestions => ({ type: ADD_CATEGORY_SEARCH_SUCCESS, suggestions });
+export const searchCategoryClear: () => SearchCategoryClearAction = () => ({
+    type: ADD_CATEGORY_SEARCH_CLEAR,
+});
 
-export const searchCategoryFailure: (error: string) => SearchCategoryFailureAction =
-    error => ({ type: ADD_CATEGORY_SEARCH_FAILURE, error });
-
-export const searchCategoryClear: () => SearchCategoryClearAction =
-    () => ({ type: ADD_CATEGORY_SEARCH_CLEAR });
-
-export type AddCategoryActionTypes
-    = SearchCategorySuccessAction
+export type AddCategoryActionTypes =
+    | SearchCategorySuccessAction
     | SearchCategoryFailureAction;
-
 
 // State
 const defaultAddCategoryProps = {
     autoSuggestCategories: List(),
-}
+};
 
-export type AddCategoryParams = {
+export interface AddCategoryParams {
     autoSuggestCategories?: List<ICategoryDetail>;
 }
 
-export class AddCategoryRecord extends Record(defaultAddCategoryProps) implements IAddCategory {
+export class AddCategoryRecord extends Record(defaultAddCategoryProps)
+    implements IAddCategory {
     constructor(params?: AddCategoryParams) {
         params ? super(params) : super();
     }
@@ -104,13 +122,16 @@ export class AddCategoryRecord extends Record(defaultAddCategoryProps) implement
 export const initialState = new AddCategoryRecord();
 
 // TODO: use component state?
-export default function categoryReducer(state = initialState, action: AddCategoryActionTypes) {
+export default function categoryReducer(
+    state = initialState,
+    action: AddCategoryActionTypes
+) {
     switch (action.type) {
-    case ADD_CATEGORY_SEARCH_SUCCESS:
-        return state.with({ autoSuggestCategories: action.suggestions });
-    case ADD_CATEGORY_SEARCH_FAILURE:
-        return state.with({ autoSuggestCategories: List() });
-    default:
-        return state;
+        case ADD_CATEGORY_SEARCH_SUCCESS:
+            return state.with({ autoSuggestCategories: action.suggestions });
+        case ADD_CATEGORY_SEARCH_FAILURE:
+            return state.with({ autoSuggestCategories: List() });
+        default:
+            return state;
     }
 }

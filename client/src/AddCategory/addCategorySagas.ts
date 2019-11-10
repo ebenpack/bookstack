@@ -12,7 +12,10 @@ import {
     ADD_CATEGORY_SEARCH_REQUEST,
 } from './addCategoryModule';
 import { List } from 'immutable';
-import { CategoryDetailParams, CategoryDetailRecord } from '../Category/categoryModule';
+import {
+    CategoryDetailParams,
+    CategoryDetailRecord,
+} from '../Category/categoryModule';
 
 export function* addCategory({ category }: AddCategoryRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
@@ -30,26 +33,35 @@ export function* addCategory({ category }: AddCategoryRequestAction) {
         });
         yield put(addCategorySuccess(data));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(addCategoryFailure(error));
     }
 }
 
-export function* setAutoSuggestCategories({ query }: SearchCategoryRequestAction) {
+export function* setAutoSuggestCategories({
+    query,
+}: SearchCategoryRequestAction) {
     const { apiUrl } = yield select(getCredentials);
     try {
         const { data } = yield call(axiosCall, {
             method: 'GET',
             url: `${apiUrl}/api/category/?search=${query}`,
         });
-        const categories: List<CategoryDetailRecord> = List(data.map((category: CategoryDetailParams) => new CategoryDetailRecord(category)))
+        const categories: List<CategoryDetailRecord> = List(
+            data.map(
+                (category: CategoryDetailParams) =>
+                    new CategoryDetailRecord(category)
+            )
+        );
         yield put(searchCategorySuccess(categories));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Category search request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Category search request failed' };
         yield put(searchCategoryFailure(error));
     }
 }
@@ -62,8 +74,4 @@ export function* watchSetAutoSuggestCategories() {
     yield takeEvery(ADD_CATEGORY_SEARCH_REQUEST, setAutoSuggestCategories);
 }
 
-
-export default [
-    watchAddCategory,
-    watchSetAutoSuggestCategories,
-];
+export default [watchAddCategory, watchSetAutoSuggestCategories];

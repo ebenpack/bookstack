@@ -16,7 +16,7 @@ import {
     stackDetailRemoveCategoryRequest,
     stackDetailPositionRequest,
     stackDetailInitialize,
-    StackDetailRecord
+    StackDetailRecord,
 } from '../StackDetail/stackDetailModule';
 import { AppState } from '../store';
 
@@ -50,7 +50,8 @@ class StackDetail extends React.Component<StackDetailProps> {
     componentDidMount() {
         const { stackDetailInitialize, match } = this.props;
         const { id } = match.params;
-        stackDetailInitialize(parseInt(id));
+        // tslint:disable-next-line: ban
+        stackDetailInitialize(parseInt(id, 10));
     }
     render() {
         const {
@@ -66,32 +67,31 @@ class StackDetail extends React.Component<StackDetailProps> {
             updatePosition,
         } = this.props;
         const { id } = match.params;
-        const addBook = editing ?
-            (
-                <div>
-                    <div onClick={toggleEditing}>Close -</div>
-                    <ConnectedAddBook stackId={parseInt(id)} />
-                </div>
-            ) :
-            (
-                <div>
-                    <div onClick={toggleEditing}>Add book +</div>
-                </div>
-            );
+        const addBook = editing ? (
+            <div>
+                <div onClick={toggleEditing}>Close -</div>
+                {/* tslint:disable-next-line: ban */}
+                <ConnectedAddBook stackId={parseInt(id, 10)} />
+            </div>
+        ) : (
+            <div>
+                <div onClick={toggleEditing}>Add book +</div>
+            </div>
+        );
         return (
             <div className="stack">
                 <div className="columns">
                     <div className="column">
                         <h1 className="stackName">{stackDetail.name}</h1>
                         <div className="user">{stackDetail.user}</div>
-                        <div className="creationDate">{stackDetail.creation_date.toDateString()}</div>
-                        <div className="addBook">
-                            {addBook}
+                        <div className="creationDate">
+                            {stackDetail.creation_date.toDateString()}
                         </div>
+                        <div className="addBook">{addBook}</div>
                     </div>
                 </div>
-                {books.map((bookStack: IBookStack) =>
-                    (<BookStack
+                {books.map((bookStack: IBookStack) => (
+                    <BookStack
                         key={bookStack.id}
                         bookStack={bookStack}
                         staticPath={staticPath}
@@ -99,10 +99,11 @@ class StackDetail extends React.Component<StackDetailProps> {
                         deleteBook={deleteBook}
                         removeCategory={deleteCategory}
                         updatePosition={updatePosition}
-                    />))}
+                    />
+                ))}
             </div>
         );
-    };
+    }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -120,10 +121,7 @@ const mapDispatchToProps = {
     deleteBook: stackDetailRemoveBookRequest,
     deleteCategory: stackDetailRemoveCategoryRequest,
     updatePosition: stackDetailPositionRequest,
-    stackDetailInitialize
+    stackDetailInitialize,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(StackDetail);
+export default connect(mapStateToProps, mapDispatchToProps)(StackDetail);

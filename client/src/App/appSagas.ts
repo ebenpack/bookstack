@@ -12,16 +12,23 @@ import {
     AppLoginRequestAction,
     APP_LOGIN_REQUEST,
     APP_INITIALIZE,
-    APP_LOGOFF
+    APP_LOGOFF,
 } from './appModule';
 
 function* getStoredToken() {
-    const token = yield call([window.localStorage, window.localStorage.getItem], 'token');
+    const token = yield call(
+        [window.localStorage, window.localStorage.getItem],
+        'token'
+    );
     return token;
 }
 
 function* storeToken(token: string) {
-    yield call([window.localStorage, window.localStorage.setItem], 'token', token);
+    yield call(
+        [window.localStorage, window.localStorage.setItem],
+        'token',
+        token
+    );
 }
 
 function* removeToken() {
@@ -77,8 +84,4 @@ export function* watchLogoff() {
     yield takeEvery(APP_LOGOFF, logoff);
 }
 
-export default [
-    watchInitialize,
-    watchLogin,
-    watchLogoff,
-];
+export default [watchInitialize, watchLogin, watchLogoff];

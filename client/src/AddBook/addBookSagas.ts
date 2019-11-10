@@ -12,7 +12,7 @@ import {
     SearchBookRequestAction,
     SEARCH_BOOK_REQUEST,
     GET_BOOK_REQUEST,
-    ADD_BOOK_REQUEST
+    ADD_BOOK_REQUEST,
 } from './addBookModule';
 import { makeBook } from '../BookStack/bookstackModule';
 import { List } from 'immutable';
@@ -29,9 +29,10 @@ export function* searchBooks({ query }: SearchBookRequestAction) {
         const autocompleteBooks: List<IBook> = List(data.map(makeBook));
         yield put(searchBooksSuccess(autocompleteBooks));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Search books request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Search books request failed' };
         yield put(searchBooksFailure(error));
     }
 }
@@ -46,9 +47,10 @@ export function* getBook({ id }: GetBookRequestAction) {
         const book = makeBook(data);
         yield put(selectBookSuccess(book));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Get book request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Get book request failed' };
         yield put(selectBookFailure(error));
     }
 }
@@ -68,9 +70,10 @@ export function* addBook({ book }: AddBookRequestAction) {
 
         yield put(stackDetailAddBookSuccess(data));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add book request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add book request failed' };
         yield put(addBookFailure(error));
     }
 }
@@ -87,8 +90,4 @@ export function* watchAddBook() {
     yield takeEvery(ADD_BOOK_REQUEST, addBook);
 }
 
-export default [
-    watchBookSearch,
-    watchGetBook,
-    watchAddBook,
-];
+export default [watchBookSearch, watchGetBook, watchAddBook];

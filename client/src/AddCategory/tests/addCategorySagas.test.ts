@@ -29,7 +29,7 @@ sagaTest(
     addCategory.success('foo'),
     addCategory.failure('Error message'),
     ADD.SUCCESS,
-    ADD.FAILURE,
+    ADD.FAILURE
 );
 
 sagaTest(
@@ -45,5 +45,5 @@ sagaTest(
     categorySearch.success('foo'),
     categorySearch.failure('Error message'),
     SEARCH.SUCCESS,
-    SEARCH.FAILURE,
+    SEARCH.FAILURE
 );

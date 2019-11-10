@@ -9,14 +9,13 @@ import { path as loginPath } from '../Login/LoginRoute';
 import { logoff as logoffAction } from './appModule';
 import { AppState } from '../store';
 
-
-interface StateFromProps{
+interface StateFromProps {
     token: string;
 }
 
-interface StateFromProps  {
+interface StateFromProps {
     logoff: typeof logoffAction;
-};
+}
 
 type AppProps = StateFromProps & StateFromProps;
 
@@ -26,11 +25,21 @@ export class App extends React.Component<AppProps> {
         return (
             <div className="container">
                 <nav className="navbar" aria-label="main navigation">
-                    <li className="navbar-item"><Link to={listPath}>View Stacks</Link></li>
-                    <li className="navbar-item"><Link to={bookSearchPath}>Search Books</Link></li>
-                    {token ?
-                        <li className="navbar-item"><button onClick={logoff}>Logoff</button></li> :
-                        <li className="navbar-item"><Link to={loginPath}>Login</Link></li>}
+                    <li className="navbar-item">
+                        <Link to={listPath}>View Stacks</Link>
+                    </li>
+                    <li className="navbar-item">
+                        <Link to={bookSearchPath}>Search Books</Link>
+                    </li>
+                    {token ? (
+                        <li className="navbar-item">
+                            <button onClick={logoff}>Logoff</button>
+                        </li>
+                    ) : (
+                        <li className="navbar-item">
+                            <Link to={loginPath}>Login</Link>
+                        </li>
+                    )}
                 </nav>
                 {children}
             </div>
@@ -46,7 +55,4 @@ const mapDispatchToProps = {
     logoff: logoffAction,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);

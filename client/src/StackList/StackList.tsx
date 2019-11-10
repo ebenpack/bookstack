@@ -9,13 +9,13 @@ import { AppState } from '../store';
 import { IStackDetail } from '../StackDetail/types';
 
 interface PropsFromState {
-    stackList: List<IStackDetail>,
-    apiUrl: string,
-    staticPath: string,
+    stackList: List<IStackDetail>;
+    apiUrl: string;
+    staticPath: string;
 }
 
 interface PropsFromDispatch {
-    initializeStack: typeof initializeStack
+    initializeStack: typeof initializeStack;
 }
 
 type StackListProps = PropsFromState & PropsFromDispatch;
@@ -30,15 +30,11 @@ export class StackList extends React.Component<StackListProps> {
         return (
             <div className="stacklist">
                 {stackList.map((stack: IStackDetail) => {
-                    return (
-                    <Stack
-                        key={stack.id}
-                        stack={stack}
-                    />
-                )})}
+                    return <Stack key={stack.id} stack={stack} />;
+                })}
             </div>
         );
-    };
+    }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -48,7 +44,7 @@ const mapStateToProps = (state: AppState) => ({
 });
 
 const mapDispatchToProps = {
-    initializeStack
-}
+    initializeStack,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(StackList);

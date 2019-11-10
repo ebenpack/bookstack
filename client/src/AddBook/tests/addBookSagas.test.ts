@@ -1,10 +1,6 @@
 import { fromJS } from 'immutable';
 import { sagaTest } from '../../utils/testUtils';
-import {
-    watchBookSearch,
-    watchGetBook,
-    watchAddBook,
-} from '../addBookSagas';
+import { watchBookSearch, watchGetBook, watchAddBook } from '../addBookSagas';
 import {
     initialState,
     addBook,
@@ -29,7 +25,7 @@ sagaTest(
     searchBooks.success('foo'),
     searchBooks.failure('Error message'),
     SEARCH_BOOK.SUCCESS,
-    SEARCH_BOOK.FAILURE,
+    SEARCH_BOOK.FAILURE
 );
 
 sagaTest(
@@ -45,7 +41,7 @@ sagaTest(
     selectBook.success('foo'),
     selectBook.failure('Error message'),
     SELECT_BOOK.SUCCESS,
-    SELECT_BOOK.FAILURE,
+    SELECT_BOOK.FAILURE
 );
 
 sagaTest(
@@ -66,5 +62,5 @@ sagaTest(
     addBook.success('foo'),
     addBook.failure('Error message'),
     ADD_BOOK.SUCCESS,
-    ADD_BOOK.FAILURE,
+    ADD_BOOK.FAILURE
 );

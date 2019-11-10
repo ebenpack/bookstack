@@ -5,7 +5,7 @@ import { IStack } from './types';
 import { makeStackDetailPath } from '../StackDetail/StackDetailRoute';
 
 interface StackProps {
-    stack: IStack
+    stack: IStack;
 }
 
 const Stack = ({ stack }: StackProps) => (

@@ -5,21 +5,23 @@ import AppRouter from './router';
 import './sass/react.scss';
 
 export interface BootstrapData {
-    el: string,
-    staticPath: string,
-    apiUrl: string
+    el: string;
+    staticPath: string;
+    apiUrl: string;
 }
 
 declare global {
-    interface Window { BOOTSTRAP_DATA: BootstrapData; }
+    interface Window {
+        BOOTSTRAP_DATA: BootstrapData;
+    }
 }
 
 const runApp = async ({ el, staticPath, apiUrl }: BootstrapData) => {
     const { store, history } = initializeStore({ apiUrl, staticPath });
     render(
-        (<React.Suspense fallback={<div>Loading...</div>}>
+        <React.Suspense fallback={<div>Loading...</div>}>
             <AppRouter store={store} history={history} />
-        </React.Suspense>),
+        </React.Suspense>,
         document.querySelector(el)
     );
 };

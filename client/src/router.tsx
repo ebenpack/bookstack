@@ -12,10 +12,10 @@ import StackListRoute from './StackList/StackListRoute';
 import StackDetailRoute from './StackDetail/StackDetailRoute';
 import { AppStore } from './store';
 
-
 interface AppRouterProps {
     store: AppStore;
-    history: History<any>
+    // tslint:disable-next-line: no-any
+    history: History<any>;
 }
 
 const AppRouter = ({ store, history }: AppRouterProps) => (

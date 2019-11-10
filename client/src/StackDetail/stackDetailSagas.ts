@@ -40,7 +40,7 @@ import {
 } from './stackDetailModule';
 import {
     ADD_CATEGORY_ADD_SUCCESS,
-    addCategoryRequest
+    addCategoryRequest,
 } from '../AddCategory/addCategoryModule';
 import { List } from 'immutable';
 import { makeBookstack, makeCategory } from '../BookStack/bookstackModule';
@@ -56,18 +56,22 @@ export function* loadStack({ id }: StackDetailRequestAction) {
         const stackDetail = new StackDetailRecord({
             ...data,
             creation_date: new Date(data.creation_date),
-            books
+            books,
         });
         yield put(stackDetailSuccess(stackDetail));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(stackDetailFailure(error));
     }
 }
 
-export function* updateReadState({ bookId, newReadState }: StackDetailReadStateRequestAction) {
+export function* updateReadState({
+    bookId,
+    newReadState,
+}: StackDetailReadStateRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
         const response = yield call(axiosCall, {
@@ -84,17 +88,23 @@ export function* updateReadState({ bookId, newReadState }: StackDetailReadStateR
         const { read } = response.data;
         yield put(stackDetailReadStateSuccess(bookId, read));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(stackDetailReadStateFailure(error));
     }
 }
 
-export function* updatePosition({ id, from, to }: StackDetailPositionRequestAction) {
+export function* updatePosition({
+    id,
+    from,
+    to,
+}: StackDetailPositionRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
-    const stackLength = yield select(store =>
-        store.stackDetailStore.stackDetail.books.size );
+    const stackLength = yield select(
+        store => store.stackDetailStore.stackDetail.books.size
+    );
     try {
         if (to > 0 && to <= stackLength) {
             yield call(axiosCall, {
@@ -111,9 +121,10 @@ export function* updatePosition({ id, from, to }: StackDetailPositionRequestActi
             yield put(stackDetailPositionSuccess(id, from, to));
         }
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(stackDetailPositionFailure(error));
     }
 }
@@ -131,14 +142,18 @@ export function* deleteBook({ id }: StackDetailRemoveBookRequestAction) {
         });
         yield put(stackDetailRemoveBookSuccess(id));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(stackDetailRemoveBookFailure(error));
     }
 }
 
-export function* addNewCategory({ bookstackId, category }: StackDetailAddNewCategoryRequestAction) {
+export function* addNewCategory({
+    bookstackId,
+    category,
+}: StackDetailAddNewCategoryRequestAction) {
     yield put(addCategoryRequest(category));
     let now = yield call(getCurrentTime);
     const waitUntil = now + 2500;
@@ -152,13 +167,18 @@ export function* addNewCategory({ bookstackId, category }: StackDetailAddNewCate
         if (timeout) {
             break;
         } else if (action.category.category === category) {
-            yield put(stackDetailAddCategoryRequest(bookstackId, action.category.id));
+            yield put(
+                stackDetailAddCategoryRequest(bookstackId, action.category.id)
+            );
             break;
         }
     }
 }
 
-export function* addCategory({ bookstackId, categoryId }: StackDetailAddCategoryRequestAction) {
+export function* addCategory({
+    bookstackId,
+    categoryId,
+}: StackDetailAddCategoryRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
         const { data } = yield call(axiosCall, {
@@ -176,14 +196,18 @@ export function* addCategory({ bookstackId, categoryId }: StackDetailAddCategory
         const category = makeCategory(data);
         yield put(stackDetailAddCategorySuccess(data.bookstack, category));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(stackDetailAddCategoryFailure(error));
     }
 }
 
-export function* deleteCategory({ bookstackId, categoryId }: StackDetailRemoveCategoryRequestAction) {
+export function* deleteCategory({
+    bookstackId,
+    categoryId,
+}: StackDetailRemoveCategoryRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
         yield call(axiosCall, {
@@ -196,9 +220,10 @@ export function* deleteCategory({ bookstackId, categoryId }: StackDetailRemoveCa
         });
         yield put(stackDetailRemoveCategorySuccess(bookstackId, categoryId));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(stackDetailRemoveCategoryFailure(error));
     }
 }
@@ -222,9 +247,10 @@ export function* addBook({ bookId, stackId }: StackDetailAddBookRequestAction) {
         yield put(stackDetailEditing());
         yield put(stackDetailAddBookSuccess(makeBookstack(data)));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(stackDetailAddBookFailure(error));
     }
 }

@@ -6,13 +6,14 @@ export const defaultCategoryDetailRecordValue = {
     category: '',
 };
 
-
-export type CategoryDetailParams = {
+export interface CategoryDetailParams {
     id?: number;
     category?: string;
-};
+}
 
-export class CategoryDetailRecord extends Record(defaultCategoryDetailRecordValue) implements ICategoryDetail {
+export class CategoryDetailRecord
+    extends Record(defaultCategoryDetailRecordValue)
+    implements ICategoryDetail {
     constructor(params?: CategoryDetailParams) {
         params ? super(params) : super();
     }
@@ -23,16 +24,16 @@ export class CategoryDetailRecord extends Record(defaultCategoryDetailRecordValu
 
 export const defaultCategoryRecordValue = {
     id: 0,
-    detail: new CategoryDetailRecord()
+    detail: new CategoryDetailRecord(),
 };
 
-
-export type CategoryParams = {
+export interface CategoryParams {
     id?: number;
     detail?: CategoryDetailRecord;
-};
+}
 
-export class CategoryRecord extends Record(defaultCategoryRecordValue) implements ICategory {
+export class CategoryRecord extends Record(defaultCategoryRecordValue)
+    implements ICategory {
     constructor(params?: CategoryParams) {
         params ? super(params) : super();
     }

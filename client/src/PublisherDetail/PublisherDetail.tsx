@@ -38,20 +38,22 @@ export class PublisherDetail extends React.Component<PublisherDetailProps> {
         return (
             <div className="author">
                 <h2>{name}</h2>
-                {books.map(book => (<Book key={book.id} book={book} staticPath={staticPath} />))}
+                {books.map(book => (
+                    <Book key={book.id} book={book} staticPath={staticPath} />
+                ))}
             </div>
         );
-    };
+    }
 }
 
 const mapStateToProps = (state: AppState) => ({
     name: state.publisherDetailStore.name,
     books: state.publisherDetailStore.books,
-    staticPath: state.appStore.staticPath
+    staticPath: state.appStore.staticPath,
 });
 
 const mapDispatchToProps = {
-    publisherRequest
-}
+    publisherRequest,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PublisherDetail);

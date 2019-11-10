@@ -6,24 +6,24 @@ import Autocomplete from '../Autocomplete/Autocomplete';
 
 import {
     searchCategoryRequest,
-    searchCategoryClear
+    searchCategoryClear,
 } from './addCategoryModule';
 import {
     stackDetailAddNewCategoryRequest,
-    stackDetailAddCategoryRequest
+    stackDetailAddCategoryRequest,
 } from '../StackDetail/stackDetailModule';
 import { AppState } from '../store';
 import { ICategoryDetail } from '../Category/types';
 
 interface PropsFromState {
-    autoSuggestCategories: List<ICategoryDetail>,
+    autoSuggestCategories: List<ICategoryDetail>;
 }
 
 interface PropsFromDispatch {
-    addCategory: typeof stackDetailAddCategoryRequest,
-    addNewCategory: typeof stackDetailAddNewCategoryRequest,
-    setAutoSuggestCategories: typeof searchCategoryRequest,
-    clearAutoSuggestCategories: typeof searchCategoryClear,
+    addCategory: typeof stackDetailAddCategoryRequest;
+    addNewCategory: typeof stackDetailAddNewCategoryRequest;
+    setAutoSuggestCategories: typeof searchCategoryRequest;
+    clearAutoSuggestCategories: typeof searchCategoryClear;
 }
 
 interface IState {
@@ -31,13 +31,13 @@ interface IState {
 }
 
 interface OwnProps {
-    id: number,
+    id: number;
 }
 
 type AddCategoryProps = PropsFromState & PropsFromDispatch & OwnProps;
 
 export class AddCategory extends React.Component<AddCategoryProps, IState> {
-    constructor(props: AddCategoryProps){
+    constructor(props: AddCategoryProps) {
         super(props);
         this.state = {
             category: '',
@@ -46,7 +46,7 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
         this.clearCategoryInput = this.clearCategoryInput.bind(this);
     }
     setCategoryInput(category: string) {
-        this.setState({ category })
+        this.setState({ category });
     }
     clearCategoryInput() {
         this.setCategoryInput('');
@@ -63,12 +63,13 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
         const { category } = this.state;
         return (
             <div>
-                <label>Add Category:
+                <label>
+                    Add Category:
                     <input
                         className="input"
                         type="text"
                         value={category}
-                        onChange={(e) => {
+                        onChange={e => {
                             const newCategory = e.target.value;
                             if (newCategory) {
                                 this.setCategoryInput(newCategory);
@@ -78,7 +79,7 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
                                 clearAutoSuggestCategories();
                             }
                         }}
-                        onKeyUp={(e) => {
+                        onKeyUp={e => {
                             if (e.key === 'Enter') {
                                 addNewCategory(id, category);
                                 this.clearCategoryInput();
@@ -90,7 +91,7 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
                         getDisplayProperty={suggestion => suggestion.category}
                         getId={suggestion => suggestion.id}
                         suggestions={autoSuggestCategories}
-                        onClick={(suggestionId) => {
+                        onClick={suggestionId => {
                             this.clearCategoryInput();
                             clearAutoSuggestCategories();
                             addCategory(id, suggestionId);
@@ -98,12 +99,12 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
                     />
                 </label>
             </div>
-        )
-    };
+        );
+    }
 }
 
 const mapStateToProps = (state: AppState) => ({
-    autoSuggestCategories: state.addCategoryStore.autoSuggestCategories
+    autoSuggestCategories: state.addCategoryStore.autoSuggestCategories,
 });
 
 const mapDispatchToProps = {
@@ -113,7 +114,4 @@ const mapDispatchToProps = {
     clearAutoSuggestCategories: searchCategoryClear,
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(AddCategory);
+export default connect(mapStateToProps, mapDispatchToProps)(AddCategory);

@@ -7,15 +7,16 @@ const defaultAuthorProps: IAuthor = {
     id: 0,
     name: '',
     books: List(),
-}
+};
 
-type AuthorParams = {
+interface AuthorParams {
     id?: number;
     name?: string;
     books?: List<IBook>;
 }
 
-export class AuthorRecord extends Record(defaultAuthorProps) implements IAuthor {
+export class AuthorRecord extends Record(defaultAuthorProps)
+    implements IAuthor {
     constructor(params?: AuthorParams) {
         params ? super(params) : super();
     }
@@ -35,29 +36,34 @@ export const AUTHOR_FAILURE = 'AUTHOR_FAILURE';
 export const initializeAuthor = () => ({ type: AUTHOR_INITIALIZE });
 
 export interface AuthorRequestAction {
-    type: typeof AUTHOR_REQUEST
-    id: string
+    type: typeof AUTHOR_REQUEST;
+    id: string;
 }
 
 export interface AuthorSuccessAction {
-    type: typeof AUTHOR_SUCCESS
-    author: IAuthor,
+    type: typeof AUTHOR_SUCCESS;
+    author: IAuthor;
 }
 
 export interface AuthorFailureAction {
-    type: typeof AUTHOR_FAILURE
-    error: string
+    type: typeof AUTHOR_FAILURE;
+    error: string;
 }
 
 // Action Creators
-export const authorRequest: (id: string) => AuthorRequestAction =
-    (id) => ({ type: AUTHOR_REQUEST, id });
+export const authorRequest: (id: string) => AuthorRequestAction = id => ({
+    type: AUTHOR_REQUEST,
+    id,
+});
 
-export const authorSuccess: (author: IAuthor) => AuthorSuccessAction =
-    (author) => ({ type: AUTHOR_SUCCESS, author });
+export const authorSuccess: (
+    author: IAuthor
+) => AuthorSuccessAction = author => ({ type: AUTHOR_SUCCESS, author });
 
-export const authorFailure: (error: string) => AuthorFailureAction =
-    (error) => ({ type: AUTHOR_FAILURE, error });
+export const authorFailure: (error: string) => AuthorFailureAction = error => ({
+    type: AUTHOR_FAILURE,
+    error,
+});
 
 export type AuthorAction =
     | AuthorRequestAction
@@ -70,11 +76,14 @@ export const initialState = new AuthorRecord({
     name: '',
 });
 
-export default function AuthorDetailReducer(state = initialState, action: AuthorAction) {
+export default function AuthorDetailReducer(
+    state = initialState,
+    action: AuthorAction
+) {
     switch (action.type) {
-    case AUTHOR_SUCCESS:
-        return new AuthorRecord(action.author);
-    default:
-        return state;
+        case AUTHOR_SUCCESS:
+            return new AuthorRecord(action.author);
+        default:
+            return state;
     }
 }

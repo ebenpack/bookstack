@@ -5,7 +5,7 @@ import { makePublisherDetailPath } from '../PublisherDetail/PublisherDetailRoute
 import { IPublisher } from '../PublisherDetail/types';
 
 interface PublisherProps {
-    publisher: IPublisher
+    publisher: IPublisher;
 }
 
 const Publisher = ({ publisher }: PublisherProps) => (
@@ -13,9 +13,10 @@ const Publisher = ({ publisher }: PublisherProps) => (
         {publisher.id ? (
             <Link to={makePublisherDetailPath(publisher.id)}>
                 {publisher.name}
-            </Link>) :
+            </Link>
+        ) : (
             publisher.name
-        }
+        )}
     </div>
 );
 

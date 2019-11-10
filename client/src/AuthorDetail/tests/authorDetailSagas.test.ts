@@ -1,10 +1,6 @@
 import { sagaTest } from '../../utils/testUtils';
 import { watchLoadAuthor } from '../authorDetailSagas';
-import {
-    initialState,
-    AUTHOR,
-    author,
-} from '../authorDetailModule';
+import { initialState, AUTHOR, author } from '../authorDetailModule';
 
 sagaTest(
     'loadAuthor',
@@ -19,5 +15,5 @@ sagaTest(
     author.success('foo'),
     author.failure('Error message'),
     AUTHOR.SUCCESS,
-    AUTHOR.FAILURE,
+    AUTHOR.FAILURE
 );

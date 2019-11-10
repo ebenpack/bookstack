@@ -9,8 +9,8 @@ export interface IStackDetail extends IStack {
     private: boolean;
     user: string;
     creation_date: Date;
-    books: List<IBook>
-};
+    books: List<IBook>;
+}
 
 export interface IFullStackDetail {
     stackDetail: IStackDetail;

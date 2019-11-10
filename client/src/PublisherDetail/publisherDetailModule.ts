@@ -13,46 +13,52 @@ export const PUBLISHER_FAILURE = 'PUBLISHER_FAILURE';
 export const initializePublisher = () => ({ type: PUBLISHER_INITIALIZE });
 
 export interface PublisherRequestAction {
-    type: typeof PUBLISHER_REQUEST
-    id: string
+    type: typeof PUBLISHER_REQUEST;
+    id: string;
 }
 
 export interface PublisherSuccessAction {
-    type: typeof PUBLISHER_SUCCESS
-    publisher: IPublisher,
+    type: typeof PUBLISHER_SUCCESS;
+    publisher: IPublisher;
 }
 
 export interface PublisherFailureAction {
-    type: typeof PUBLISHER_FAILURE
-    error: string
+    type: typeof PUBLISHER_FAILURE;
+    error: string;
 }
 
-export const publisherRequest: (id: string) => PublisherRequestAction =
-    (id) => ({ type: PUBLISHER_REQUEST, id });
+export const publisherRequest: (id: string) => PublisherRequestAction = id => ({
+    type: PUBLISHER_REQUEST,
+    id,
+});
 
-export const publisherSuccess: (publisher: IPublisher) => PublisherSuccessAction =
-    (publisher) => ({ type: PUBLISHER_SUCCESS, publisher });
+export const publisherSuccess: (
+    publisher: IPublisher
+) => PublisherSuccessAction = publisher => ({
+    type: PUBLISHER_SUCCESS,
+    publisher,
+});
 
-export const publisherFailure: (error: string) => PublisherFailureAction =
-    (error) => ({ type: PUBLISHER_FAILURE, error });
+export const publisherFailure: (
+    error: string
+) => PublisherFailureAction = error => ({ type: PUBLISHER_FAILURE, error });
 
 export type PublisherAction =
     | PublisherRequestAction
     | PublisherSuccessAction
-    | PublisherFailureAction
-    ;
-
+    | PublisherFailureAction;
 
 // State
 const defaultValue = { id: 0, name: '', books: List() };
 
-type PublisherRecordParams = {
+interface PublisherRecordParams {
     id?: number;
     name?: string;
     books?: List<IBook>;
 }
 
-export class PublisherRecord extends Record(defaultValue) implements IPublisher {
+export class PublisherRecord extends Record(defaultValue)
+    implements IPublisher {
     constructor(params?: PublisherRecordParams) {
         params ? super(params) : super();
     }
@@ -60,11 +66,14 @@ export class PublisherRecord extends Record(defaultValue) implements IPublisher 
 
 export const initialState = new PublisherRecord();
 
-export default function PublisherDetailReducer(state = initialState, action: PublisherAction) {
+export default function PublisherDetailReducer(
+    state = initialState,
+    action: PublisherAction
+) {
     switch (action.type) {
-    case PUBLISHER_SUCCESS:
-        return new PublisherRecord(action.publisher);
-    default:
-        return state;
+        case PUBLISHER_SUCCESS:
+            return new PublisherRecord(action.publisher);
+        default:
+            return state;
     }
 }

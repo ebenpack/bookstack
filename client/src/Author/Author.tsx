@@ -5,17 +5,16 @@ import { makeAuthorDetailPath } from '../AuthorDetail/AuthorDetailRoute';
 import { IAuthor } from '../AuthorDetail/types';
 
 interface AuthorProps {
-    author: IAuthor
+    author: IAuthor;
 }
 
 const Author = ({ author }: AuthorProps) => (
     <li className="author">
         {author.id ? (
-            <Link to={makeAuthorDetailPath(author.id)}>
-                {author.name}
-            </Link>) :
+            <Link to={makeAuthorDetailPath(author.id)}>{author.name}</Link>
+        ) : (
             author.name
-        }
+        )}
     </li>
 );
 

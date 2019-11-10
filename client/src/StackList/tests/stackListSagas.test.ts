@@ -1,10 +1,6 @@
 import { sagaTest } from '../../utils/testUtils';
 import { watchLoadStacklist } from '../stackListSagas';
-import {
-    initialState,
-    stack,
-    STACK,
-} from '../stackListModule';
+import { initialState, stack, STACK } from '../stackListModule';
 
 sagaTest(
     'loadStacklist',
@@ -19,5 +15,5 @@ sagaTest(
     stack.success('foo'),
     stack.failure('Error message'),
     STACK.SUCCESS,
-    STACK.FAILURE,
+    STACK.FAILURE
 );

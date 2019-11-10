@@ -2,7 +2,13 @@
   "extends": "gts/tslint.json",
   "linterOptions": {
     "exclude": [
-      "**/*.json"
+      "**/*.json",
+      "**/*.js"
     ]
+  },
+  "rules": {
+      "interface-name": [false],
+      "no-default-export": [false],
+      "variable-name": [false]
   }
 }

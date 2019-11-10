@@ -40,7 +40,7 @@ sagaTest(
     stackDetail.success('foo'),
     stackDetail.failure('Error message'),
     STACK_DETAIL.SUCCESS,
-    STACK_DETAIL.FAILURE,
+    STACK_DETAIL.FAILURE
 );
 
 sagaTest(
@@ -63,7 +63,7 @@ sagaTest(
     readState.success('foobarbaz', true),
     readState.failure('Error message'),
     READ_STATE.SUCCESS,
-    READ_STATE.FAILURE,
+    READ_STATE.FAILURE
 );
 
 sagaTest(
@@ -71,7 +71,7 @@ sagaTest(
     {
         stackDetailStore: initialState.setIn(
             ['stackDetail', 'books'],
-            fromJS([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]),
+            fromJS([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }])
         ),
     },
     watchUpdatePosition,
@@ -91,7 +91,7 @@ sagaTest(
     position.success('foobarbaz', 1, 3),
     position.failure('Error message'),
     POSITION.SUCCESS,
-    POSITION.FAILURE,
+    POSITION.FAILURE
 );
 
 sagaTest(
@@ -111,7 +111,7 @@ sagaTest(
     removeBook.success('foobarbaz'),
     removeBook.failure('Error message'),
     REMOVE_BOOK.SUCCESS,
-    REMOVE_BOOK.FAILURE,
+    REMOVE_BOOK.FAILURE
 );
 
 // TODO: addNewCategory
@@ -137,7 +137,7 @@ sagaTest(
     addCategoryAction.success('foobar', 'bazqux'),
     addCategoryAction.failure('Error message'),
     ADD_CATEGORY.SUCCESS,
-    ADD_CATEGORY.FAILURE,
+    ADD_CATEGORY.FAILURE
 );
 
 sagaTest(
@@ -157,7 +157,7 @@ sagaTest(
     removeCategory.success('foobar', 'bazqux'),
     removeCategory.failure('Error message'),
     REMOVE_CATEGORY.SUCCESS,
-    REMOVE_CATEGORY.FAILURE,
+    REMOVE_CATEGORY.FAILURE
 );
 
 sagaTest(
@@ -182,5 +182,5 @@ sagaTest(
     addBookAction.success('foo'),
     addBookAction.failure('Error message'),
     ADD_BOOK.SUCCESS,
-    ADD_BOOK.FAILURE,
+    ADD_BOOK.FAILURE
 );

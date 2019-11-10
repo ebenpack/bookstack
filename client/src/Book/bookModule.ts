@@ -1,4 +1,4 @@
-import { Record, List }  from 'immutable';
+import { Record, List } from 'immutable';
 
 import { IBook } from './types';
 import { IPublisher } from '../PublisherDetail/types';
@@ -14,7 +14,7 @@ export const defaultBookRecordValue = {
     isbn: '',
 };
 
-export type BookParams = {
+export interface BookParams {
     id?: number;
     img?: string;
     authors?: List<IAuthor>;
@@ -24,7 +24,8 @@ export type BookParams = {
     isbn?: string;
 }
 
-export class BookRecord extends Record(defaultBookRecordValue) implements IBook {
+export class BookRecord extends Record(defaultBookRecordValue)
+    implements IBook {
     constructor(params?: BookParams) {
         params ? super(params) : super();
     }

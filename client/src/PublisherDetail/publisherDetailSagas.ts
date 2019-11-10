@@ -6,9 +6,8 @@ import {
     publisherFailure,
     PublisherRequestAction,
     PUBLISHER_INITIALIZE,
-    PUBLISHER_REQUEST
+    PUBLISHER_REQUEST,
 } from './publisherDetailModule';
-
 
 export function* loadPublisher({ id }: PublisherRequestAction) {
     const { apiUrl } = yield select(getCredentials);
@@ -19,9 +18,10 @@ export function* loadPublisher({ id }: PublisherRequestAction) {
         });
         yield put(publisherSuccess(publisher.data));
     } catch (err) {
-        const error = err && err.response && err.response.data
-            ? err.response.data
-            : { error: 'Add category request failed' };
+        const error =
+            err && err.response && err.response.data
+                ? err.response.data
+                : { error: 'Add category request failed' };
         yield put(publisherFailure(error));
     }
 }
@@ -34,7 +34,4 @@ export function* watchLoadPublisher() {
     yield takeEvery(PUBLISHER_REQUEST, loadPublisher);
 }
 
-export default [
-    initialize,
-    watchLoadPublisher,
-];
+export default [initialize, watchLoadPublisher];

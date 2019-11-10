@@ -1,9 +1,9 @@
 export interface ICategoryDetail {
     id: number;
-    category: string
+    category: string;
 }
 
 export interface ICategory {
-    id: number,
-    detail: ICategoryDetail,
+    id: number;
+    detail: ICategoryDetail;
 }

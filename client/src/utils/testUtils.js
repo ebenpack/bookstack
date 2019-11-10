@@ -16,7 +16,7 @@ export const sagaTest = (
     successAction,
     failureAction,
     SUCCESS,
-    FAILURE,
+    FAILURE
 ) => {
     describe(testName, () => {
         let sagaTester = null;
@@ -39,17 +39,17 @@ export const sagaTest = (
             sagaTester.dispatch(requestAction);
             await sagaTester.waitFor(SUCCESS);
             expect(axios).toBeCalledWith(request);
-            expect(sagaTester.getLatestCalledAction())
-                .toEqual(successAction);
+            expect(sagaTester.getLatestCalledAction()).toEqual(successAction);
         });
         it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
             // eslint-disable-next-line prefer-promise-reject-errors
-            axios.mockReturnValue(Promise.reject({ response: { data: 'Error message' } }));
+            axios.mockReturnValue(
+                Promise.reject({ response: { data: 'Error message' } })
+            );
             sagaTester.dispatch(requestAction);
             await sagaTester.waitFor(FAILURE);
             expect(axios).toBeCalledWith(request);
-            expect(sagaTester.getLatestCalledAction())
-                .toEqual(failureAction);
+            expect(sagaTester.getLatestCalledAction()).toEqual(failureAction);
         });
     });
 };

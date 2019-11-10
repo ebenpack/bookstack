@@ -8,7 +8,7 @@ import { AppState } from '../store';
 import {
     searchBooksRequest,
     getBookRequest,
-    selectBookClear
+    selectBookClear,
 } from './addBookModule';
 import { stackDetailAddBookRequest } from '../StackDetail/stackDetailModule';
 import { BookRecord } from '../Book/bookModule';
@@ -75,7 +75,10 @@ class AddBook extends React.Component<AddBookProps> {
                             <Book book={selectedBook} staticPath={staticPath} />
                         </div>
                         <footer className="modal-card-foot">
-                            <button className="button" onClick={() => addBook(bookId, stackId)}>
+                            <button
+                                className="button"
+                                onClick={() => addBook(bookId, stackId)}
+                            >
                                 Add Book
                             </button>
                         </footer>
@@ -96,7 +99,7 @@ class AddBook extends React.Component<AddBookProps> {
                 </label>
             </div>
         );
-    };
+    }
 }
 
 const mapStateToProps = (state: AppState) => ({
@@ -114,7 +117,7 @@ const mapDispatchToProps = {
 
 export const ConnectedAddBook = connect(
     mapStateToProps,
-    mapDispatchToProps,
+    mapDispatchToProps
 )(AddBook);
 
 export default ConnectedAddBook;
