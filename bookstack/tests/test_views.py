@@ -39,7 +39,8 @@ api_data = [
          model=Stack,
          post_data=lambda: {
              "name": "Foobar",
-             "private": True
+             "private": True,
+             "user": User.objects.create(username="Jimmy James").username
          },
          patch_data=lambda: {
              "name": "Bazqux",
@@ -49,7 +50,7 @@ api_data = [
          url="/api/bookstack/",
          detail_viewname="bookstack:bookstack-detail",
          list_viewname="bookstack:bookstack-list",
-         expected_queries=5,
+         expected_queries=6,
          model=BookStack,
          post_data=lambda: {
              "read": True,
@@ -84,10 +85,10 @@ api_data = [
              "isbn": "foobarbaz",
              "img": "",
              "authors": [
-                 Author.objects.create(name="Jerry Lewis").id
+                 { "name": Author.objects.create(name="Jerry Lewis").name }
              ],
              "publishers": [
-                 Publisher.objects.create(name="Yoyodyne, Inc.").id
+                 {"name": Publisher.objects.create(name="Yoyodyne, Inc.").name }
              ]
          },
          patch_data=lambda: {
@@ -96,10 +97,10 @@ api_data = [
              "isbn": "foobarbazqux",
              "img": "",
              "authors": [
-                 Author.objects.create(name="Julius F. Kelp").id
+                 { "name": Author.objects.create(name="Julius F. Kelp").name }
              ],
              "publishers": [
-                 Publisher.objects.create(name="TThe Wing Kong Exchang").id
+                 { "name": Publisher.objects.create(name="TThe Wing Kong Exchang").name }
              ]
          }),
     View(name="author",

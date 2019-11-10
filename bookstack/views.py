@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import viewsets, status, filters
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
@@ -100,7 +100,7 @@ class BookStackViewSet(viewsets.ModelViewSet):
         bookstack.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    @detail_route(methods=['patch'])
+    @action(detail=True, methods=['patch'])
     def renumber(self, request, pk=None):
         try:
             position = int(request.data['position'])
@@ -188,17 +188,14 @@ class PublisherViewSet(viewsets.ModelViewSet):
         serializer = serializers.PublisherDetailSerializer(publisher_detail)
         return Response(serializer.data)
 
-schema_view = get_schema_view(
-   openapi.Info(
-      title="Bookstack API",
-      default_version='v1',
-      contact=openapi.Contact(email="contact@snippets.local"),
-      license=openapi.License(name="MIT License"),
-   ),
-   validators=['flex', 'ssv'],
-   public=True,
-   permission_classes=(),
+schema_info = openapi.Info(
+  title="Bookstack API",
+  default_version='v1',
+  contact=openapi.Contact(email="contact@snippets.local"),
+  license=openapi.License(name="MIT License"),
 )
+
+schema_view = get_schema_view(schema_info, validators=['flex', 'ssv'], public=True, permission_classes=())
 
 def app_view(request, *args, **kwargs):
     return render(request, 'index.html')

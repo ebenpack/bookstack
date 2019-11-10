@@ -50,11 +50,11 @@ class BookSerializer(serializers.ModelSerializer):
         book = Book.objects.create(**validated_data)
 
         for author in authors:
-            a, created = Author.objects.get_or_create(name=author)
+            a, created = Author.objects.get_or_create(name=author['name'])
             book.authors.add(a)
 
         for publisher in publishers:
-            p, created = Publisher.objects.get_or_create(name=publisher)
+            p, created = Publisher.objects.get_or_create(name=publisher['name'])
             book.publishers.add(p)
 
         return book
@@ -138,7 +138,7 @@ class StackListSerializer(serializers.ModelSerializer):
 
 
 class StackSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField(default=CurrentUserDefault())
+    user = serializers.SlugRelatedField(slug_field=User.USERNAME_FIELD, queryset=User.objects.all())
     books = BookStackSerializer(many=True, source='bookstack_set', read_only=True)
 
     class Meta:

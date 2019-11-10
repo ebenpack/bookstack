@@ -46,6 +46,10 @@ REST_FRAMEWORK = {
     ]
 }
 
+SWAGGER_SETTINGS = {
+    'DEFAULT_INFO': 'bookstack.views.schema_info'
+}
+
 MIDDLEWARE = (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -83,7 +87,7 @@ TEMPLATES = [
             ],
         },
         'DIRS': [
-            os.path.join(PROJECT_PATH, "../my-app/build/"),
+            os.path.join(PROJECT_PATH, "../client/build/"),
         ]
     }
 ]
@@ -100,10 +104,9 @@ USE_TZ = True
 
 STATICFILES_DIRS = (
     os.path.join(PROJECT_PATH, "../bookstack/static/"),
-    os.path.join(PROJECT_PATH, "../my-app/build/static/"),
-    os.path.join(PROJECT_PATH, "../my-app/build/"),
+    os.path.join(PROJECT_PATH, "../client/build/static/"),
+    os.path.join(PROJECT_PATH, "../client/build/"),
 )
-print(STATICFILES_DIRS)
 
 STATIC_URL = '/static/'
 
