@@ -34,8 +34,8 @@ const Position = ({
                 autoFocus
                 type="text"
                 onChange={e =>
-                    // tslint:disable-next-line: ban
                     e.target.value &&
+                    // tslint:disable-next-line: ban
                     setNewPosition(id, parseInt(e.target.value, 10))
                 }
                 value={newPosition}
