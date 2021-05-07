@@ -13,7 +13,7 @@
     "@types/react-router-dom": "^5.1.0",
     "@types/redux": "^3.6.0",
     "@types/redux-saga-tester": "^1.0.1",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bulma": "^0.8.0",
     "connected-react-router": "^6.5.2",
     "gts": "^1.1.0",
