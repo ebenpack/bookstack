@@ -1,16 +1,13 @@
 # BookStack
 
-Getting started:
+To get started, first, build the frontend:
 
-Backend:
+1. `npm install --prefix ./client`
+2. `npm run build --prefix ./client`
 
-1. `mkvirtualenv -p python3 bookstack`
-2. `workon bookstack`
+Then spin up the server:
+
+1. `python3 -m venv .env`
+2. `source .env/bin/activate`
 3. `pip install -r requirements.txt`
 4. `./manage.py runserver`
-
-Frontend:
-
-1. `cd client`
-2. `yarn install`
-3. `yarn run start`
