@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
+import * as React from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router";
 
-import Book from '../Book/Book';
-import { authorRequest } from './authorDetailModule';
-import { AppState } from '../store';
-import { List } from 'immutable';
-import { IBook } from '../Book/types';
+import Book from "../Book/Book";
+import { authorRequest } from "./authorDetailModule";
+import { AppState } from "../store";
+import { List } from "immutable";
+import { IBook } from "../Book/types";
 
 interface IUrlParams {
     id: string;
@@ -37,7 +37,7 @@ export class AuthorDetail extends React.Component<AuthorDetailProps> {
         return (
             <div className="author">
                 <h2>{name}</h2>
-                {books.map(book => (
+                {books.map((book) => (
                     <Book key={book.id} book={book} staticPath={staticPath} />
                 ))}
             </div>

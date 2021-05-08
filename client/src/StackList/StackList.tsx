@@ -1,12 +1,12 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { List } from 'immutable';
+import * as React from "react";
+import { connect } from "react-redux";
+import { List } from "immutable";
 
-import Stack from '../Stack/Stack';
-import { initializeStack } from './stackListModule';
-import { AppState } from '../store';
+import Stack from "../Stack/Stack";
+import { initializeStack } from "./stackListModule";
+import { AppState } from "../store";
 
-import { IStackDetail } from '../StackDetail/types';
+import { IStackDetail } from "../StackDetail/types";
 
 interface PropsFromState {
     stackList: List<IStackDetail>;

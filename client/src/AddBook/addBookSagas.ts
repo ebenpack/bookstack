@@ -1,6 +1,6 @@
-import { put, call, select, takeEvery } from 'redux-saga/effects';
+import { put, call, select, takeEvery } from "redux-saga/effects";
 
-import { axiosCall, getCredentials } from '../utils/sagasUtils';
+import { axiosCall, getCredentials } from "../utils/sagasUtils";
 import {
     searchBooksSuccess,
     searchBooksFailure,
@@ -13,17 +13,17 @@ import {
     SEARCH_BOOK_REQUEST,
     GET_BOOK_REQUEST,
     ADD_BOOK_REQUEST,
-} from './addBookModule';
-import { makeBook } from '../BookStack/bookstackModule';
-import { List } from 'immutable';
-import { IBook } from '../Book/types';
-import { stackDetailAddBookSuccess } from '../StackDetail/stackDetailModule';
+} from "./addBookModule";
+import { makeBook } from "../BookStack/bookstackModule";
+import { List } from "immutable";
+import { IBook } from "../Book/types";
+import { stackDetailAddBookSuccess } from "../StackDetail/stackDetailModule";
 
 export function* searchBooks({ query }: SearchBookRequestAction) {
     const { apiUrl } = yield select(getCredentials);
     try {
         const { data } = yield call(axiosCall, {
-            method: 'GET',
+            method: "GET",
             url: `${apiUrl}/api/book/?search=${query}`,
         });
         const autocompleteBooks: List<IBook> = List(data.map(makeBook));
@@ -32,7 +32,7 @@ export function* searchBooks({ query }: SearchBookRequestAction) {
         const error =
             err && err.response && err.response.data
                 ? err.response.data
-                : { error: 'Search books request failed' };
+                : { error: "Search books request failed" };
         yield put(searchBooksFailure(error));
     }
 }
@@ -41,7 +41,7 @@ export function* getBook({ id }: GetBookRequestAction) {
     const { apiUrl } = yield select(getCredentials);
     try {
         const { data } = yield call(axiosCall, {
-            method: 'GET',
+            method: "GET",
             url: `${apiUrl}/api/book/${id}/`,
         });
         const book = makeBook(data);
@@ -50,7 +50,7 @@ export function* getBook({ id }: GetBookRequestAction) {
         const error =
             err && err.response && err.response.data
                 ? err.response.data
-                : { error: 'Get book request failed' };
+                : { error: "Get book request failed" };
         yield put(selectBookFailure(error));
     }
 }
@@ -60,9 +60,9 @@ export function* addBook({ book }: AddBookRequestAction) {
     try {
         const { data } = yield call(axiosCall, {
             url: `${apiUrl}/api/book/`,
-            method: 'POST',
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 Authorization: `Token ${token}`,
             },
             data: book.toJS(),
@@ -73,7 +73,7 @@ export function* addBook({ book }: AddBookRequestAction) {
         const error =
             err && err.response && err.response.data
                 ? err.response.data
-                : { error: 'Add book request failed' };
+                : { error: "Add book request failed" };
         yield put(addBookFailure(error));
     }
 }

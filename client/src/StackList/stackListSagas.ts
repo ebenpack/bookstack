@@ -1,24 +1,24 @@
-import { put, call, select, takeEvery } from 'redux-saga/effects';
+import { put, call, select, takeEvery } from "redux-saga/effects";
 
-import { axiosCall } from '../utils/sagasUtils';
-import { getCredentials } from '../utils/sagasUtils';
+import { axiosCall } from "../utils/sagasUtils";
+import { getCredentials } from "../utils/sagasUtils";
 import {
     stackSuccess,
     stackFailure,
     STACK_REQUEST,
     STACK_INITIALIZE,
-} from './stackListModule';
-import { List } from 'immutable';
+} from "./stackListModule";
+import { List } from "immutable";
 import {
     StackDetailRecord,
     StackDetailParams,
-} from '../StackDetail/stackDetailModule';
+} from "../StackDetail/stackDetailModule";
 
 export function* loadStackList() {
     const { apiUrl } = yield select(getCredentials);
     try {
         const { data } = yield call(axiosCall, {
-            method: 'GET',
+            method: "GET",
             url: `${apiUrl}/api/stack/`,
         });
         yield put(
@@ -35,7 +35,7 @@ export function* loadStackList() {
         const error =
             err && err.response && err.response.data
                 ? err.response.data
-                : { error: 'Add category request failed' };
+                : { error: "Add category request failed" };
         yield put(stackFailure(error));
     }
 }

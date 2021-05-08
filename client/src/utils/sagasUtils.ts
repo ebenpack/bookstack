@@ -1,6 +1,6 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from "axios";
 
-import { AppState } from '../store';
+import { AppState } from "../store";
 
 export const getCredentials = (store: AppState) => ({
     apiUrl: store.appStore.apiUrl,

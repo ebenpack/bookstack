@@ -1,4 +1,4 @@
-import { List } from 'immutable';
+import { List } from "immutable";
 
 export interface AutocompleteProps<T> {
     onClick: (id: number) => void;
@@ -17,7 +17,7 @@ function Autocomplete<T>({
         <div className="autocomplete dropdown is-active">
             <div className="dropdown-menu" role="menu">
                 <div className="dropdown-content">
-                    {suggestions.map(suggestion => (
+                    {suggestions.map((suggestion) => (
                         <button
                             className="dropdown-item"
                             key={getId(suggestion)}

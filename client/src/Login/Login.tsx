@@ -1,12 +1,12 @@
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 import {
     appLoginRequest,
     updateUser as updateUserAction,
     updatePass as updatePassAction,
     updateSave as updateSaveAction,
-} from '../App/appModule';
-import { AppState } from '../store';
+} from "../App/appModule";
+import { AppState } from "../store";
 
 interface PropsFromDispatch {
     submitLogin: typeof appLoginRequest;
@@ -38,29 +38,29 @@ export const Login = ({
         <div>
             Username:
             <input
-                onChange={e =>
-                    e.target.value ? updateUser(e.target.value) : updateUser('')
+                onChange={(e) =>
+                    e.target.value ? updateUser(e.target.value) : updateUser("")
                 }
                 type="text"
-                className={`input${loginError ? ' error' : ''}`}
+                className={`input${loginError ? " error" : ""}`}
                 value={user}
             />
         </div>
         <div>
             Password:
             <input
-                onChange={e =>
-                    e.target.value ? updatePass(e.target.value) : updatePass('')
+                onChange={(e) =>
+                    e.target.value ? updatePass(e.target.value) : updatePass("")
                 }
                 type="password"
-                className={`input${loginError ? ' error' : ''}`}
+                className={`input${loginError ? " error" : ""}`}
                 value={pass}
             />
         </div>
         <div>
             Stay logged in:
             <input
-                onChange={e =>
+                onChange={(e) =>
                     e.target.checked
                         ? updateSave(e.target.checked)
                         : updateSave(false)
@@ -80,10 +80,10 @@ export const Login = ({
 );
 
 const mapStateToProps = (state: AppState) => ({
-    user: state.appStore.get('user'),
-    pass: state.appStore.get('pass'),
-    save: state.appStore.get('save'),
-    loginError: state.appStore.get('loginError'),
+    user: state.appStore.get("user"),
+    pass: state.appStore.get("pass"),
+    save: state.appStore.get("save"),
+    loginError: state.appStore.get("loginError"),
 });
 
 const mapDispatchToProps = {

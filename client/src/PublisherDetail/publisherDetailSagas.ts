@@ -1,20 +1,20 @@
-import { put, call, select, takeEvery } from 'redux-saga/effects';
+import { put, call, select, takeEvery } from "redux-saga/effects";
 
-import { axiosCall, getCredentials } from '../utils/sagasUtils';
+import { axiosCall, getCredentials } from "../utils/sagasUtils";
 import {
     publisherSuccess,
     publisherFailure,
     PublisherRequestAction,
     PUBLISHER_INITIALIZE,
     PUBLISHER_REQUEST,
-} from './publisherDetailModule';
-import {SagaIterator} from "redux-saga";
+} from "./publisherDetailModule";
+import { SagaIterator } from "redux-saga";
 
 export function* loadPublisher({ id }: PublisherRequestAction): SagaIterator {
     const { apiUrl } = yield select(getCredentials);
     try {
         const publisher = yield call(axiosCall, {
-            method: 'GET',
+            method: "GET",
             url: `${apiUrl}/api/publisher/${id}/`,
         });
         yield put(publisherSuccess(publisher.data));
@@ -22,7 +22,7 @@ export function* loadPublisher({ id }: PublisherRequestAction): SagaIterator {
         const error =
             err && err.response && err.response.data
                 ? err.response.data
-                : { error: 'Add category request failed' };
+                : { error: "Add category request failed" };
         yield put(publisherFailure(error));
     }
 }

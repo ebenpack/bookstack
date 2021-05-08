@@ -1,6 +1,6 @@
-import { put, call, select, takeEvery } from 'redux-saga/effects';
+import { put, call, select, takeEvery } from "redux-saga/effects";
 
-import { axiosCall, getCredentials } from '../utils/sagasUtils';
+import { axiosCall, getCredentials } from "../utils/sagasUtils";
 import {
     addCategorySuccess,
     addCategoryFailure,
@@ -10,21 +10,21 @@ import {
     SearchCategoryRequestAction,
     ADD_CATEGORY_ADD_REQUEST,
     ADD_CATEGORY_SEARCH_REQUEST,
-} from './addCategoryModule';
-import { List } from 'immutable';
+} from "./addCategoryModule";
+import { List } from "immutable";
 import {
     CategoryDetailParams,
     CategoryDetailRecord,
-} from '../Category/categoryModule';
+} from "../Category/categoryModule";
 
 export function* addCategory({ category }: AddCategoryRequestAction) {
     const { apiUrl, token } = yield select(getCredentials);
     try {
         const { data } = yield call(axiosCall, {
-            method: 'POST',
+            method: "POST",
             url: `${apiUrl}/api/category/`,
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 Authorization: `Token ${token}`,
             },
             data: {
@@ -36,7 +36,7 @@ export function* addCategory({ category }: AddCategoryRequestAction) {
         const error =
             err && err.response && err.response.data
                 ? err.response.data
-                : { error: 'Add category request failed' };
+                : { error: "Add category request failed" };
         yield put(addCategoryFailure(error));
     }
 }
@@ -47,7 +47,7 @@ export function* setAutoSuggestCategories({
     const { apiUrl } = yield select(getCredentials);
     try {
         const { data } = yield call(axiosCall, {
-            method: 'GET',
+            method: "GET",
             url: `${apiUrl}/api/category/?search=${query}`,
         });
         const categories: List<CategoryDetailRecord> = List(
@@ -61,7 +61,7 @@ export function* setAutoSuggestCategories({
         const error =
             err && err.response && err.response.data
                 ? err.response.data
-                : { error: 'Category search request failed' };
+                : { error: "Category search request failed" };
         yield put(searchCategoryFailure(error));
     }
 }

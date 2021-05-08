@@ -1,13 +1,13 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import * as React from "react";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
-import { path as listPath } from '../StackList/StackListRoute';
-import { path as bookSearchPath } from '../BookSearch/BookSearchRoute';
-import { path as loginPath } from '../Login/LoginRoute';
+import { path as listPath } from "../StackList/StackListRoute";
+import { path as bookSearchPath } from "../BookSearch/BookSearchRoute";
+import { path as loginPath } from "../Login/LoginRoute";
 
-import { logoff as logoffAction } from './appModule';
-import { AppState } from '../store';
+import { logoff as logoffAction } from "./appModule";
+import { AppState } from "../store";
 
 interface StateFromProps {
     token: string;

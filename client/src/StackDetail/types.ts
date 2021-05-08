@@ -1,7 +1,7 @@
-import { List } from 'immutable';
+import { List } from "immutable";
 
-import { IBook } from '../Book/types';
-import { IStack } from '../Stack/types';
+import { IBook } from "../Book/types";
+import { IStack } from "../Stack/types";
 
 export interface IStackDetail extends IStack {
     id: number;

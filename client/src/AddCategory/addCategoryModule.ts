@@ -1,16 +1,16 @@
-import { List, Record } from 'immutable';
-import { IAddCategory } from './types';
-import { ICategoryDetail } from '../Category/types';
+import { List, Record } from "immutable";
+import { IAddCategory } from "./types";
+import { ICategoryDetail } from "../Category/types";
 
 // Actions
-export const ADD_CATEGORY_ADD_REQUEST = 'ADD_CATEGORY_ADD_REQUEST';
-export const ADD_CATEGORY_ADD_SUCCESS = 'ADD_CATEGORY_ADD_SUCCESS';
-export const ADD_CATEGORY_ADD_FAILURE = 'ADD_CATEGORY_ADD_FAILURE';
+export const ADD_CATEGORY_ADD_REQUEST = "ADD_CATEGORY_ADD_REQUEST";
+export const ADD_CATEGORY_ADD_SUCCESS = "ADD_CATEGORY_ADD_SUCCESS";
+export const ADD_CATEGORY_ADD_FAILURE = "ADD_CATEGORY_ADD_FAILURE";
 
-export const ADD_CATEGORY_SEARCH_REQUEST = 'ADD_CATEGORY_SEARCH_REQUEST';
-export const ADD_CATEGORY_SEARCH_SUCCESS = 'ADD_CATEGORY_SEARCH_SUCCESS';
-export const ADD_CATEGORY_SEARCH_FAILURE = 'ADD_CATEGORY_SEARCH_FAILURE';
-export const ADD_CATEGORY_SEARCH_CLEAR = 'ADD_CATEGORY_SEARCH_CLEAR';
+export const ADD_CATEGORY_SEARCH_REQUEST = "ADD_CATEGORY_SEARCH_REQUEST";
+export const ADD_CATEGORY_SEARCH_SUCCESS = "ADD_CATEGORY_SEARCH_SUCCESS";
+export const ADD_CATEGORY_SEARCH_FAILURE = "ADD_CATEGORY_SEARCH_FAILURE";
+export const ADD_CATEGORY_SEARCH_CLEAR = "ADD_CATEGORY_SEARCH_CLEAR";
 
 /*****************
  ** Add Category **
@@ -73,21 +73,21 @@ export interface SearchCategoryClearAction {
 
 export const searchCategoryRequest: (
     query: string
-) => SearchCategoryRequestAction = query => ({
+) => SearchCategoryRequestAction = (query) => ({
     type: ADD_CATEGORY_SEARCH_REQUEST,
     query,
 });
 
 export const searchCategorySuccess: (
     suggestions: List<ICategoryDetail>
-) => SearchCategorySuccessAction = suggestions => ({
+) => SearchCategorySuccessAction = (suggestions) => ({
     type: ADD_CATEGORY_SEARCH_SUCCESS,
     suggestions,
 });
 
 export const searchCategoryFailure: (
     error: string
-) => SearchCategoryFailureAction = error => ({
+) => SearchCategoryFailureAction = (error) => ({
     type: ADD_CATEGORY_SEARCH_FAILURE,
     error,
 });
@@ -109,7 +109,8 @@ export interface AddCategoryParams {
     autoSuggestCategories?: List<ICategoryDetail>;
 }
 
-export class AddCategoryRecord extends Record(defaultAddCategoryProps)
+export class AddCategoryRecord
+    extends Record(defaultAddCategoryProps)
     implements IAddCategory {
     constructor(params?: AddCategoryParams) {
         params ? super(params) : super();

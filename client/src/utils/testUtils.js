@@ -1,9 +1,9 @@
-import { fromJS } from 'immutable';
+import { fromJS } from "immutable";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import SagaTester from 'redux-saga-tester';
-import axios from 'axios';
+import SagaTester from "redux-saga-tester";
+import axios from "axios";
 
-jest.mock('axios');
+jest.mock("axios");
 
 // eslint-disable-next-line import/prefer-default-export
 export const sagaTest = (
@@ -25,8 +25,8 @@ export const sagaTest = (
             sagaTester = new SagaTester({
                 initialState: {
                     appStore: fromJS({
-                        apiUrl: 'http://foo.bar.baz',
-                        token: 'token',
+                        apiUrl: "http://foo.bar.baz",
+                        token: "token",
                     }),
                     ...initialState,
                 },
@@ -34,17 +34,17 @@ export const sagaTest = (
             sagaTester.start(saga);
         });
 
-        it('should retrieve data from the server and send a SUCCESS action', async () => {
+        it("should retrieve data from the server and send a SUCCESS action", async () => {
             axios.mockReturnValue(Promise.resolve(response));
             sagaTester.dispatch(requestAction);
             await sagaTester.waitFor(SUCCESS);
             expect(axios).toBeCalledWith(request);
             expect(sagaTester.getLatestCalledAction()).toEqual(successAction);
         });
-        it('should send a FAILURE action when there is an error retrieving data from the server', async () => {
+        it("should send a FAILURE action when there is an error retrieving data from the server", async () => {
             // eslint-disable-next-line prefer-promise-reject-errors
             axios.mockReturnValue(
-                Promise.reject({ response: { data: 'Error message' } })
+                Promise.reject({ response: { data: "Error message" } })
             );
             sagaTester.dispatch(requestAction);
             await sagaTester.waitFor(FAILURE);

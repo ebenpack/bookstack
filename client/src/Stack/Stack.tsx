@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import { IStack } from './types';
-import { makeStackDetailPath } from '../StackDetail/StackDetailRoute';
+import { IStack } from "./types";
+import { makeStackDetailPath } from "../StackDetail/StackDetailRoute";
 
 interface StackProps {
     stack: IStack;

@@ -1,8 +1,8 @@
-import { render } from 'react-dom';
-import * as React from 'react';
-import initializeStore from './store';
-import AppRouter from './router';
-import './sass/react.scss';
+import { render } from "react-dom";
+import * as React from "react";
+import initializeStore from "./store";
+import AppRouter from "./router";
+import "./sass/react.scss";
 
 export interface BootstrapData {
     el: string;

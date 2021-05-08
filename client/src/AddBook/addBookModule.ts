@@ -1,27 +1,27 @@
-import { List, Record } from 'immutable';
+import { List, Record } from "immutable";
 
-import { IAddBook } from './types';
-import { IBook } from '../Book/types';
-import { BookRecord } from '../Book/bookModule';
+import { IAddBook } from "./types";
+import { IBook } from "../Book/types";
+import { BookRecord } from "../Book/bookModule";
 
 // Actions
-export const ADD_BOOK_REQUEST = 'ADD_BOOK_ADD_BOOK_REQUEST';
-export const ADD_BOOK_SUCCESS = 'ADD_BOOK_ADD_BOOK_SUCCESS';
-export const ADD_BOOK_FAILURE = 'ADD_BOOK_ADD_BOOK_FAILURE';
+export const ADD_BOOK_REQUEST = "ADD_BOOK_ADD_BOOK_REQUEST";
+export const ADD_BOOK_SUCCESS = "ADD_BOOK_ADD_BOOK_SUCCESS";
+export const ADD_BOOK_FAILURE = "ADD_BOOK_ADD_BOOK_FAILURE";
 
-export const GET_BOOK_REQUEST = 'ADD_BOOK_GET_BOOK_REQUEST';
-export const GET_BOOK_SUCCESS = 'ADD_BOOK_GET_BOOK_SUCCESS';
-export const GET_BOOK_FAILURE = 'ADD_BOOK_GET_BOOK_FAILURE';
+export const GET_BOOK_REQUEST = "ADD_BOOK_GET_BOOK_REQUEST";
+export const GET_BOOK_SUCCESS = "ADD_BOOK_GET_BOOK_SUCCESS";
+export const GET_BOOK_FAILURE = "ADD_BOOK_GET_BOOK_FAILURE";
 
-export const SEARCH_BOOK_REQUEST = 'ADD_BOOK_SEARCH_BOOK_REQUEST';
-export const SEARCH_BOOK_SUCCESS = 'ADD_BOOK_SEARCH_BOOK_SUCCESS';
-export const SEARCH_BOOK_FAILURE = 'ADD_BOOK_SEARCH_BOOK_FAILURE';
-export const SEARCH_BOOK_CLEAR = 'ADD_BOOK_SEARCH_BOOK_CLEAR';
+export const SEARCH_BOOK_REQUEST = "ADD_BOOK_SEARCH_BOOK_REQUEST";
+export const SEARCH_BOOK_SUCCESS = "ADD_BOOK_SEARCH_BOOK_SUCCESS";
+export const SEARCH_BOOK_FAILURE = "ADD_BOOK_SEARCH_BOOK_FAILURE";
+export const SEARCH_BOOK_CLEAR = "ADD_BOOK_SEARCH_BOOK_CLEAR";
 
-export const SELECT_BOOK_REQUEST = 'ADD_BOOK_SELECT_BOOK_REQUEST';
-export const SELECT_BOOK_SUCCESS = 'ADD_BOOK_SELECT_BOOK_SUCCESS';
-export const SELECT_BOOK_FAILURE = 'ADD_BOOK_SELECT_BOOK_FAILURE';
-export const SELECT_BOOK_CLEAR = 'ADD_BOOK_SELECT_BOOK_CLEAR';
+export const SELECT_BOOK_REQUEST = "ADD_BOOK_SELECT_BOOK_REQUEST";
+export const SELECT_BOOK_SUCCESS = "ADD_BOOK_SELECT_BOOK_SUCCESS";
+export const SELECT_BOOK_FAILURE = "ADD_BOOK_SELECT_BOOK_FAILURE";
+export const SELECT_BOOK_CLEAR = "ADD_BOOK_SELECT_BOOK_CLEAR";
 
 // Action Creators
 
@@ -43,19 +43,23 @@ export interface AddBookFailureAction {
     error: string;
 }
 
-export const addBookRequest: (book: IBook) => AddBookRequestAction = book => ({
+export const addBookRequest: (book: IBook) => AddBookRequestAction = (
+    book
+) => ({
     type: ADD_BOOK_REQUEST,
     book,
 });
 
-export const addBookSuccess: (book: IBook) => AddBookSuccessAction = book => ({
+export const addBookSuccess: (book: IBook) => AddBookSuccessAction = (
+    book
+) => ({
     type: ADD_BOOK_SUCCESS,
     book,
 });
 
-export const addBookFailure: (
-    error: string
-) => AddBookFailureAction = error => ({ type: ADD_BOOK_FAILURE, error });
+export const addBookFailure: (error: string) => AddBookFailureAction = (
+    error
+) => ({ type: ADD_BOOK_FAILURE, error });
 
 /*************
  ** Get Book **
@@ -65,7 +69,7 @@ export interface GetBookRequestAction {
     id: number;
 }
 
-export const getBookRequest: (id: number) => GetBookRequestAction = id => ({
+export const getBookRequest: (id: number) => GetBookRequestAction = (id) => ({
     type: GET_BOOK_REQUEST,
     id,
 });
@@ -92,17 +96,20 @@ export interface SearchBookClearAction {
     type: typeof SEARCH_BOOK_CLEAR;
 }
 
-export const searchBooksRequest: (
-    query: string
-) => SearchBookRequestAction = query => ({ type: SEARCH_BOOK_REQUEST, query });
+export const searchBooksRequest: (query: string) => SearchBookRequestAction = (
+    query
+) => ({ type: SEARCH_BOOK_REQUEST, query });
 
 export const searchBooksSuccess: (
     books: List<IBook>
-) => SearchBookSuccessAction = books => ({ type: SEARCH_BOOK_SUCCESS, books });
+) => SearchBookSuccessAction = (books) => ({
+    type: SEARCH_BOOK_SUCCESS,
+    books,
+});
 
-export const searchBooksFailure: (
-    error: string
-) => SearchBookFailureAction = error => ({ type: SEARCH_BOOK_FAILURE, error });
+export const searchBooksFailure: (error: string) => SearchBookFailureAction = (
+    error
+) => ({ type: SEARCH_BOOK_FAILURE, error });
 
 export const searchBooksClear: () => SearchBookClearAction = () => ({
     type: SEARCH_BOOK_CLEAR,
@@ -127,11 +134,11 @@ export interface SelectBookClearAction {
 
 export const selectBookSuccess: (
     book: BookRecord
-) => SelectBookSuccessAction = book => ({ type: SELECT_BOOK_SUCCESS, book });
+) => SelectBookSuccessAction = (book) => ({ type: SELECT_BOOK_SUCCESS, book });
 
-export const selectBookFailure: (
-    error: string
-) => SelectBookFailureAction = error => ({ type: SELECT_BOOK_FAILURE, error });
+export const selectBookFailure: (error: string) => SelectBookFailureAction = (
+    error
+) => ({ type: SELECT_BOOK_FAILURE, error });
 
 export const selectBookClear: () => SelectBookClearAction = () => ({
     type: SELECT_BOOK_CLEAR,
@@ -147,7 +154,8 @@ interface AddBookRecordParams {
     booksAutocomplete?: List<IBook>;
 }
 
-export class AddBookRecord extends Record(defaultAddBookRecordValue)
+export class AddBookRecord
+    extends Record(defaultAddBookRecordValue)
     implements IAddBook {
     constructor(params?: AddBookRecordParams) {
         params ? super(params) : super();

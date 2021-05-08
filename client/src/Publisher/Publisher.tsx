@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import { makePublisherDetailPath } from '../PublisherDetail/PublisherDetailRoute';
-import { IPublisher } from '../PublisherDetail/types';
+import { makePublisherDetailPath } from "../PublisherDetail/PublisherDetailRoute";
+import { IPublisher } from "../PublisherDetail/types";
 
 interface PublisherProps {
     publisher: IPublisher;

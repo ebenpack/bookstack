@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import { makeAuthorDetailPath } from '../AuthorDetail/AuthorDetailRoute';
-import { IAuthor } from '../AuthorDetail/types';
+import { makeAuthorDetailPath } from "../AuthorDetail/AuthorDetailRoute";
+import { IAuthor } from "../AuthorDetail/types";
 
 interface AuthorProps {
     author: IAuthor;

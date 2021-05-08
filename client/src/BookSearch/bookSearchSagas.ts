@@ -1,19 +1,19 @@
-import { List } from 'immutable';
-import { delay } from 'redux-saga/effects';
-import { put, call, take, fork, cancel } from 'redux-saga/effects';
+import { List } from "immutable";
+import { delay } from "redux-saga/effects";
+import { put, call, take, fork, cancel } from "redux-saga/effects";
 
-import { axiosCall } from '../utils/sagasUtils';
+import { axiosCall } from "../utils/sagasUtils";
 import {
     BOOK_SEARCH_REQUEST,
     bookSearchSuccess,
     bookSearchFailure,
     bookSearchClear,
-} from './bookSearchModule';
-import { BookRecord } from '../Book/bookModule';
-import { AuthorRecord } from '../AuthorDetail/authorDetailModule';
-import { PublisherRecord } from '../PublisherDetail/publisherDetailModule';
-import { IBook } from '../Book/types';
-import {SagaIterator} from "redux-saga";
+} from "./bookSearchModule";
+import { BookRecord } from "../Book/bookModule";
+import { AuthorRecord } from "../AuthorDetail/authorDetailModule";
+import { PublisherRecord } from "../PublisherDetail/publisherDetailModule";
+import { IBook } from "../Book/types";
+import { SagaIterator } from "redux-saga";
 
 interface GoogleBook {
     volumeInfo: {
@@ -34,7 +34,7 @@ function formatBook(book: GoogleBook) {
     const authors = book.volumeInfo.authors
         ? List(
               book.volumeInfo.authors.map(
-                  author =>
+                  (author) =>
                       new AuthorRecord({
                           name: author,
                       })
@@ -46,21 +46,21 @@ function formatBook(book: GoogleBook) {
             ? book.volumeInfo.publisher
             : [book.volumeInfo.publisher]
     )
-        .filter(publisher => publisher)
-        .map(publisher => new PublisherRecord({ name: publisher }));
+        .filter((publisher) => publisher)
+        .map((publisher) => new PublisherRecord({ name: publisher }));
 
     const formattedBook = {
         title: book.volumeInfo.title,
         pages: book.volumeInfo.pageCount || 0,
         isbn: book.volumeInfo.industryIdentifiers
             ? book.volumeInfo.industryIdentifiers.reduce((prev, ident) => {
-                  if (ident.type === 'ISBN_10') {
+                  if (ident.type === "ISBN_10") {
                       return ident.identifier;
-                  } else if (!prev && ident.type === 'ISBN_13') {
+                  } else if (!prev && ident.type === "ISBN_13") {
                       return ident.identifier;
                   }
                   return prev;
-              }, '')
+              }, "")
             : undefined,
         authors,
         img:
@@ -77,7 +77,7 @@ export function* bookSearch(query: string): SagaIterator {
     const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
     try {
         const response = yield call(axiosCall, {
-            method: 'GET',
+            method: "GET",
             url: googleBooksUrl,
         });
         const results = response.data;
@@ -89,7 +89,7 @@ export function* bookSearch(query: string): SagaIterator {
         const error =
             err && err.response && err.response.data
                 ? err.response.data
-                : { error: 'Add category request failed' };
+                : { error: "Add category request failed" };
         yield put(bookSearchFailure(error));
     }
 }

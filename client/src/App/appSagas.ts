@@ -1,9 +1,9 @@
-import { put, call, select, takeEvery } from 'redux-saga/effects';
+import { put, call, select, takeEvery } from "redux-saga/effects";
 import { SagaIterator } from "redux-saga";
-import { push } from 'connected-react-router';
+import { push } from "connected-react-router";
 
-import { axiosCall, getCredentials } from '../utils/sagasUtils';
-import { path } from '../StackList/StackListRoute';
+import { axiosCall, getCredentials } from "../utils/sagasUtils";
+import { path } from "../StackList/StackListRoute";
 import {
     appLoginSuccess,
     appLoginFailure,
@@ -14,12 +14,12 @@ import {
     APP_LOGIN_REQUEST,
     APP_INITIALIZE,
     APP_LOGOFF,
-} from './appModule';
+} from "./appModule";
 
 function* getStoredToken(): SagaIterator {
     const token = yield call(
         [window.localStorage, window.localStorage.getItem],
-        'token'
+        "token"
     );
     return token;
 }
@@ -27,13 +27,13 @@ function* getStoredToken(): SagaIterator {
 function* storeToken(token: string) {
     yield call(
         [window.localStorage, window.localStorage.setItem],
-        'token',
+        "token",
         token
     );
 }
 
 function* removeToken() {
-    yield call([window.localStorage, window.localStorage.removeItem], 'token');
+    yield call([window.localStorage, window.localStorage.removeItem], "token");
 }
 
 export function* initialize(): SagaIterator {
@@ -41,18 +41,22 @@ export function* initialize(): SagaIterator {
     yield put(setToken(token));
 }
 
-export function* login({ user, pass, save }: AppLoginRequestAction): SagaIterator {
+export function* login({
+    user,
+    pass,
+    save,
+}: AppLoginRequestAction): SagaIterator {
     const { apiUrl } = yield select(getCredentials);
     try {
         const response = yield call(axiosCall, {
-            method: 'POST',
+            method: "POST",
             url: `${apiUrl}/api-token-auth/`,
             data: {
                 username: user,
                 password: pass,
             },
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
         });
         const { token } = response.data;

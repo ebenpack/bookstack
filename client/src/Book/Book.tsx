@@ -1,6 +1,6 @@
-import { IBook } from '../Book/types';
-import Author from '../Author/Author';
-import Publisher from '../Publisher/Publisher';
+import { IBook } from "../Book/types";
+import Author from "../Author/Author";
+import Publisher from "../Publisher/Publisher";
 
 interface BookProps {
     staticPath: string;
@@ -21,7 +21,7 @@ const Book = ({ staticPath, book }: BookProps) => (
         <div className="column">
             By:
             <ul className="authors">
-                {book.authors.map(author => (
+                {book.authors.map((author) => (
                     <Author
                         key={author.id || `${book.title}|${author.name}`}
                         author={author}
@@ -29,7 +29,7 @@ const Book = ({ staticPath, book }: BookProps) => (
                 ))}
             </ul>
             Publshed by:
-            {book.publishers.map(publisher => (
+            {book.publishers.map((publisher) => (
                 <Publisher
                     key={publisher.id || `${book.title}|${publisher.name}`}
                     publisher={publisher}

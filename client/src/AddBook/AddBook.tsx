@@ -1,18 +1,18 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { List } from 'immutable';
+import * as React from "react";
+import { connect } from "react-redux";
+import { List } from "immutable";
 
-import Book from '../Book/Book';
-import Autocomplete from '../Autocomplete/Autocomplete';
-import { AppState } from '../store';
+import Book from "../Book/Book";
+import Autocomplete from "../Autocomplete/Autocomplete";
+import { AppState } from "../store";
 import {
     searchBooksRequest,
     getBookRequest,
     selectBookClear,
-} from './addBookModule';
-import { stackDetailAddBookRequest } from '../StackDetail/stackDetailModule';
-import { BookRecord } from '../Book/bookModule';
-import { IBook } from '../Book/types';
+} from "./addBookModule";
+import { stackDetailAddBookRequest } from "../StackDetail/stackDetailModule";
+import { BookRecord } from "../Book/bookModule";
+import { IBook } from "../Book/types";
 
 interface PropsFromState {
     booksAutocomplete: List<BookRecord>;
@@ -51,10 +51,10 @@ class AddBook extends React.Component<AddBookProps> {
         if (booksAutocomplete.size > 0) {
             autocompleteResults = (
                 <Autocomplete
-                    getDisplayProperty={suggestion => suggestion.title}
-                    getId={suggestion => suggestion.id}
+                    getDisplayProperty={(suggestion) => suggestion.title}
+                    getId={(suggestion) => suggestion.id}
                     suggestions={booksAutocomplete}
-                    onClick={bookId => getBook(bookId)}
+                    onClick={(bookId) => getBook(bookId)}
                 />
             );
         }
@@ -93,7 +93,7 @@ class AddBook extends React.Component<AddBookProps> {
                         className="input"
                         type="text"
                         value={title}
-                        onChange={e => searchBooks(e.target.value)}
+                        onChange={(e) => searchBooks(e.target.value)}
                     />
                     {autocompleteResults}
                 </label>

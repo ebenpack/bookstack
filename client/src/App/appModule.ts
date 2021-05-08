@@ -1,24 +1,24 @@
-import { Record } from 'immutable';
-import { AnyAction } from 'redux';
+import { Record } from "immutable";
+import { AnyAction } from "redux";
 
-import { IApp } from './types';
+import { IApp } from "./types";
 
 // Actions
 
-export const APP_INITIALIZE = 'APP_INITIALIZE'; // request
-export const APP_SET_STATIC_PATH = 'APP_SET_STATIC_PATH';
-export const APP_SET_API_URL = 'APP_SET_API_URL'; // set state
-export const APP_SET_TOKEN = 'APP_SET_TOKEN'; // set state
-export const APP_DELETE_TOKEN = 'APP_DELETE_TOKEN'; // set state
-export const APP_LOGOFF = 'APP_LOGOFF'; // request
-export const APP_LOGIN_SET_USER = 'APP_LOGIN_SET_USER';
-export const APP_LOGIN_SET_PASS = 'APP_LOGIN_SET_PASS';
-export const APP_LOGIN_SET_SAVE = 'APP_LOGIN_SET_SAVE';
-export const APP_LOGIN_CLEAR = 'APP_LOGIN_CLEAR';
+export const APP_INITIALIZE = "APP_INITIALIZE"; // request
+export const APP_SET_STATIC_PATH = "APP_SET_STATIC_PATH";
+export const APP_SET_API_URL = "APP_SET_API_URL"; // set state
+export const APP_SET_TOKEN = "APP_SET_TOKEN"; // set state
+export const APP_DELETE_TOKEN = "APP_DELETE_TOKEN"; // set state
+export const APP_LOGOFF = "APP_LOGOFF"; // request
+export const APP_LOGIN_SET_USER = "APP_LOGIN_SET_USER";
+export const APP_LOGIN_SET_PASS = "APP_LOGIN_SET_PASS";
+export const APP_LOGIN_SET_SAVE = "APP_LOGIN_SET_SAVE";
+export const APP_LOGIN_CLEAR = "APP_LOGIN_CLEAR";
 
-export const APP_LOGIN_REQUEST = 'APP_LOGIN_LOGIN_REQUEST';
-export const APP_LOGIN_SUCCESS = 'APP_LOGIN_LOGIN_SUCCESS';
-export const APP_LOGIN_FAILURE = 'APP_LOGIN_LOGIN_FAILURE';
+export const APP_LOGIN_REQUEST = "APP_LOGIN_LOGIN_REQUEST";
+export const APP_LOGIN_SUCCESS = "APP_LOGIN_LOGIN_SUCCESS";
+export const APP_LOGIN_FAILURE = "APP_LOGIN_LOGIN_FAILURE";
 
 export const initialize = () => ({ type: APP_INITIALIZE });
 
@@ -67,9 +67,9 @@ export const appLoginSuccess: () => AppLoginSuccessAction = () => ({
     type: APP_LOGIN_SUCCESS,
 });
 
-export const appLoginFailure: (
-    error: string
-) => AppLoginFailureAction = error => ({ type: APP_LOGIN_FAILURE, error });
+export const appLoginFailure: (error: string) => AppLoginFailureAction = (
+    error
+) => ({ type: APP_LOGIN_FAILURE, error });
 
 export const logoff = () => ({ type: APP_LOGOFF });
 
@@ -93,13 +93,13 @@ export const clearLogin = () => ({ type: APP_LOGIN_CLEAR });
 // State
 
 export const defaultAppRecordValue = {
-    apiUrl: '',
-    token: '',
-    user: '',
-    pass: '',
+    apiUrl: "",
+    token: "",
+    user: "",
+    pass: "",
     save: true,
     loginError: false,
-    staticPath: '',
+    staticPath: "",
 };
 
 interface AppParams {
@@ -130,9 +130,9 @@ export default function storeReducer(state = initialState, action: AnyAction) {
         case APP_SET_STATIC_PATH:
             return state.with({ staticPath: action.staticPath });
         case APP_SET_TOKEN:
-            return state.with({ token: action.token ? action.token : '' });
+            return state.with({ token: action.token ? action.token : "" });
         case APP_DELETE_TOKEN:
-            return state.with({ token: '' });
+            return state.with({ token: "" });
         case APP_LOGIN_SET_USER:
             return state.with({ user: action.user });
         case APP_LOGIN_SET_PASS:
@@ -145,8 +145,8 @@ export default function storeReducer(state = initialState, action: AnyAction) {
             return state.with({ loginError: true });
         case APP_LOGIN_CLEAR:
             return state.with({
-                user: '',
-                pass: '',
+                user: "",
+                pass: "",
             });
         default:
             return state;

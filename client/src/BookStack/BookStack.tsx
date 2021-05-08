@@ -1,10 +1,10 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
+import * as React from "react";
+import { connect } from "react-redux";
 
-import { IBookStack } from './types';
-import * as stackDetailActions from '../StackDetail/stackDetailModule';
-import Book from '../Book/Book';
-import ConnectedAddCategory from '../AddCategory/AddCategory';
+import { IBookStack } from "./types";
+import * as stackDetailActions from "../StackDetail/stackDetailModule";
+import Book from "../Book/Book";
+import ConnectedAddCategory from "../AddCategory/AddCategory";
 
 const preventDefault = (e: React.MouseEvent) => e.preventDefault();
 
@@ -33,13 +33,13 @@ const Position = ({
                 className="input position"
                 autoFocus
                 type="text"
-                onChange={e =>
+                onChange={(e) =>
                     e.target.value &&
                     // tslint:disable-next-line: ban
                     setNewPosition(id, parseInt(e.target.value, 10))
                 }
                 value={newPosition}
-                onBlur={e => {
+                onBlur={(e) => {
                     // tslint:disable-next-line: ban
                     const toPosition = parseInt(e.target.value, 10);
                     setEditing(id, false);
@@ -184,17 +184,17 @@ export class BookStack extends React.Component<BookStackProps> {
         };
         const moveUp = () => move(id, position, position - 1);
         const moveDown = () => move(id, position, position + 1);
-        let classString = 'bookstack columns';
+        let classString = "bookstack columns";
         if (bookStack.read) {
-            classString += ' is-read';
+            classString += " is-read";
         }
         return (
             <div
                 draggable={true}
                 className={classString}
-                onDragStart={e => {
+                onDragStart={(e) => {
                     e.dataTransfer.setData(
-                        'text',
+                        "text",
                         JSON.stringify({
                             id,
                             position,
@@ -202,9 +202,9 @@ export class BookStack extends React.Component<BookStackProps> {
                     );
                 }}
                 onDragEnd={preventDefault}
-                onDrop={e => {
+                onDrop={(e) => {
                     const { id: movedId, position: fromPosition } = JSON.parse(
-                        e.dataTransfer.getData('text')
+                        e.dataTransfer.getData("text")
                     );
                     move(movedId, fromPosition, position);
                 }}
@@ -238,7 +238,7 @@ export class BookStack extends React.Component<BookStackProps> {
                                 setReadState(bookStack.id, !bookStack.read)
                             }
                             className={`button is-centered${
-                                bookStack.read ? ' is-info is-active' : ''
+                                bookStack.read ? " is-info is-active" : ""
                             }`}
                         >
                             Read
@@ -255,7 +255,7 @@ export class BookStack extends React.Component<BookStackProps> {
                 <div className="categories column">
                     <h5>Categories</h5>
                     <ul>
-                        {bookStack.categories.map(category => (
+                        {bookStack.categories.map((category) => (
                             <li key={category.id}>
                                 {category.detail.category} -
                                 <span

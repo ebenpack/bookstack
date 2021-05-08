@@ -1,14 +1,14 @@
-import { List, Record } from 'immutable';
+import { List, Record } from "immutable";
 
-import { IPublisher } from './types';
-import { IBook } from '../Book/types';
+import { IPublisher } from "./types";
+import { IBook } from "../Book/types";
 
 // Actions
-export const PUBLISHER_INITIALIZE = 'PUBLISHER_INITIALIZE';
+export const PUBLISHER_INITIALIZE = "PUBLISHER_INITIALIZE";
 
-export const PUBLISHER_REQUEST = 'PUBLISHER_REQUEST';
-export const PUBLISHER_SUCCESS = 'PUBLISHER_SUCCESS';
-export const PUBLISHER_FAILURE = 'PUBLISHER_FAILURE';
+export const PUBLISHER_REQUEST = "PUBLISHER_REQUEST";
+export const PUBLISHER_SUCCESS = "PUBLISHER_SUCCESS";
+export const PUBLISHER_FAILURE = "PUBLISHER_FAILURE";
 
 export const initializePublisher = () => ({ type: PUBLISHER_INITIALIZE });
 
@@ -27,21 +27,23 @@ export interface PublisherFailureAction {
     error: string;
 }
 
-export const publisherRequest: (id: string) => PublisherRequestAction = id => ({
+export const publisherRequest: (id: string) => PublisherRequestAction = (
+    id
+) => ({
     type: PUBLISHER_REQUEST,
     id,
 });
 
 export const publisherSuccess: (
     publisher: IPublisher
-) => PublisherSuccessAction = publisher => ({
+) => PublisherSuccessAction = (publisher) => ({
     type: PUBLISHER_SUCCESS,
     publisher,
 });
 
-export const publisherFailure: (
-    error: string
-) => PublisherFailureAction = error => ({ type: PUBLISHER_FAILURE, error });
+export const publisherFailure: (error: string) => PublisherFailureAction = (
+    error
+) => ({ type: PUBLISHER_FAILURE, error });
 
 export type PublisherAction =
     | PublisherRequestAction
@@ -49,7 +51,7 @@ export type PublisherAction =
     | PublisherFailureAction;
 
 // State
-const defaultValue = { id: 0, name: '', books: List() };
+const defaultValue = { id: 0, name: "", books: List() };
 
 interface PublisherRecordParams {
     id?: number;
@@ -57,7 +59,8 @@ interface PublisherRecordParams {
     books?: List<IBook>;
 }
 
-export class PublisherRecord extends Record(defaultValue)
+export class PublisherRecord
+    extends Record(defaultValue)
     implements IPublisher {
     constructor(params?: PublisherRecordParams) {
         params ? super(params) : super();

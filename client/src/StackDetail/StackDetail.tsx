@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router';
-import { List } from 'immutable';
-import { IBookStack } from '../BookStack/types';
+import * as React from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router";
+import { List } from "immutable";
+import { IBookStack } from "../BookStack/types";
 
-import BookStack from '../BookStack/BookStack';
-import ConnectedAddBook from '../AddBook/AddBook';
+import BookStack from "../BookStack/BookStack";
+import ConnectedAddBook from "../AddBook/AddBook";
 
 import {
     stackDetailRequest,
@@ -17,8 +17,8 @@ import {
     stackDetailPositionRequest,
     stackDetailInitialize,
     StackDetailRecord,
-} from '../StackDetail/stackDetailModule';
-import { AppState } from '../store';
+} from "../StackDetail/stackDetailModule";
+import { AppState } from "../store";
 
 interface IUrlParams {
     id: string;

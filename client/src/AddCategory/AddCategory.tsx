@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { List } from 'immutable';
+import * as React from "react";
+import { connect } from "react-redux";
+import { List } from "immutable";
 
-import Autocomplete from '../Autocomplete/Autocomplete';
+import Autocomplete from "../Autocomplete/Autocomplete";
 
 import {
     searchCategoryRequest,
     searchCategoryClear,
-} from './addCategoryModule';
+} from "./addCategoryModule";
 import {
     stackDetailAddNewCategoryRequest,
     stackDetailAddCategoryRequest,
-} from '../StackDetail/stackDetailModule';
-import { AppState } from '../store';
-import { ICategoryDetail } from '../Category/types';
+} from "../StackDetail/stackDetailModule";
+import { AppState } from "../store";
+import { ICategoryDetail } from "../Category/types";
 
 interface PropsFromState {
     autoSuggestCategories: List<ICategoryDetail>;
@@ -40,7 +40,7 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
     constructor(props: AddCategoryProps) {
         super(props);
         this.state = {
-            category: '',
+            category: "",
         };
         this.setCategoryInput = this.setCategoryInput.bind(this);
         this.clearCategoryInput = this.clearCategoryInput.bind(this);
@@ -49,7 +49,7 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
         this.setState({ category });
     }
     clearCategoryInput() {
-        this.setCategoryInput('');
+        this.setCategoryInput("");
     }
     render() {
         const {
@@ -69,7 +69,7 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
                         className="input"
                         type="text"
                         value={category}
-                        onChange={e => {
+                        onChange={(e) => {
                             const newCategory = e.target.value;
                             if (newCategory) {
                                 this.setCategoryInput(newCategory);
@@ -79,8 +79,8 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
                                 clearAutoSuggestCategories();
                             }
                         }}
-                        onKeyUp={e => {
-                            if (e.key === 'Enter') {
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") {
                                 addNewCategory(id, category);
                                 this.clearCategoryInput();
                                 clearAutoSuggestCategories();
@@ -88,10 +88,10 @@ export class AddCategory extends React.Component<AddCategoryProps, IState> {
                         }}
                     />
                     <Autocomplete
-                        getDisplayProperty={suggestion => suggestion.category}
-                        getId={suggestion => suggestion.id}
+                        getDisplayProperty={(suggestion) => suggestion.category}
+                        getId={(suggestion) => suggestion.id}
                         suggestions={autoSuggestCategories}
-                        onClick={suggestionId => {
+                        onClick={(suggestionId) => {
                             this.clearCategoryInput();
                             clearAutoSuggestCategories();
                             addCategory(id, suggestionId);

@@ -1,7 +1,7 @@
-import { List } from 'immutable';
+import { List } from "immutable";
 
-import { IAuthor } from '../AuthorDetail/types';
-import { IPublisher } from '../PublisherDetail/types';
+import { IAuthor } from "../AuthorDetail/types";
+import { IPublisher } from "../PublisherDetail/types";
 
 export interface IBook {
     id: number;

@@ -1,7 +1,7 @@
-import { List } from 'immutable';
+import { List } from "immutable";
 
-import { ICategory } from '../Category/types';
-import { BookRecord } from '../Book/bookModule';
+import { ICategory } from "../Category/types";
+import { BookRecord } from "../Book/bookModule";
 
 export interface IBookStack {
     id: number;

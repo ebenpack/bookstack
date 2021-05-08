@@ -1,66 +1,66 @@
-import { fromJS, List, Record } from 'immutable';
-import { IStackDetail, IFullStackDetail } from './types';
-import { IBook } from '../Book/types';
-import { BookStackRecord, makeBookstack } from '../BookStack/bookstackModule';
-import { ICategory } from '../Category/types';
+import { fromJS, List, Record } from "immutable";
+import { IStackDetail, IFullStackDetail } from "./types";
+import { IBook } from "../Book/types";
+import { BookStackRecord, makeBookstack } from "../BookStack/bookstackModule";
+import { ICategory } from "../Category/types";
 
 // Actions
-export const STACK_DETAIL_INITIALIZE = 'STACK_DETAIL_INITIALIZE';
+export const STACK_DETAIL_INITIALIZE = "STACK_DETAIL_INITIALIZE";
 
-export const STACK_DETAIL_REQUEST = 'STACK_DETAIL_REQUEST';
-export const STACK_DETAIL_SUCCESS = 'STACK_DETAIL_SUCCESS';
-export const STACK_DETAIL_FAILURE = 'STACK_DETAIL_FAILURE';
-export const STACK_DETAIL_CLEAR = 'STACK_DETAIL_CLEAR';
-export const STACK_DETAIL_EDITING = 'STACK_DETAIL_EDITING';
+export const STACK_DETAIL_REQUEST = "STACK_DETAIL_REQUEST";
+export const STACK_DETAIL_SUCCESS = "STACK_DETAIL_SUCCESS";
+export const STACK_DETAIL_FAILURE = "STACK_DETAIL_FAILURE";
+export const STACK_DETAIL_CLEAR = "STACK_DETAIL_CLEAR";
+export const STACK_DETAIL_EDITING = "STACK_DETAIL_EDITING";
 
-export const STACK_DETAIL_POSITION_REQUEST = 'STACK_DETAIL_POSITION_REQUEST';
-export const STACK_DETAIL_POSITION_SUCCESS = 'STACK_DETAIL_POSITION_SUCCESS';
-export const STACK_DETAIL_POSITION_FAILURE = 'STACK_DETAIL_POSITION_FAILURE';
+export const STACK_DETAIL_POSITION_REQUEST = "STACK_DETAIL_POSITION_REQUEST";
+export const STACK_DETAIL_POSITION_SUCCESS = "STACK_DETAIL_POSITION_SUCCESS";
+export const STACK_DETAIL_POSITION_FAILURE = "STACK_DETAIL_POSITION_FAILURE";
 
 export const STACK_DETAIL_READ_STATE_REQUEST =
-    'STACK_DETAIL_READ_STATE_REQUEST';
+    "STACK_DETAIL_READ_STATE_REQUEST";
 export const STACK_DETAIL_READ_STATE_SUCCESS =
-    'STACK_DETAIL_READ_STATE_SUCCESS';
+    "STACK_DETAIL_READ_STATE_SUCCESS";
 export const STACK_DETAIL_READ_STATE_FAILURE =
-    'STACK_DETAIL_READ_STATE_FAILURE';
+    "STACK_DETAIL_READ_STATE_FAILURE";
 
-export const STACK_DETAIL_ADD_BOOK_REQUEST = 'STACK_DETAIL_ADD_BOOK_REQUEST';
-export const STACK_DETAIL_ADD_BOOK_SUCCESS = 'STACK_DETAIL_ADD_BOOK_SUCCESS';
-export const STACK_DETAIL_ADD_BOOK_FAILURE = 'STACK_DETAIL_ADD_BOOK_FAILURE';
+export const STACK_DETAIL_ADD_BOOK_REQUEST = "STACK_DETAIL_ADD_BOOK_REQUEST";
+export const STACK_DETAIL_ADD_BOOK_SUCCESS = "STACK_DETAIL_ADD_BOOK_SUCCESS";
+export const STACK_DETAIL_ADD_BOOK_FAILURE = "STACK_DETAIL_ADD_BOOK_FAILURE";
 
 export const STACK_DETAIL_REMOVE_BOOK_REQUEST =
-    'STACK_DETAIL_REMOVE_BOOK_REQUEST';
+    "STACK_DETAIL_REMOVE_BOOK_REQUEST";
 export const STACK_DETAIL_REMOVE_BOOK_SUCCESS =
-    'STACK_DETAIL_REMOVE_BOOK_SUCCESS';
+    "STACK_DETAIL_REMOVE_BOOK_SUCCESS";
 export const STACK_DETAIL_REMOVE_BOOK_FAILURE =
-    'STACK_DETAIL_REMOVE_BOOK_FAILURE';
+    "STACK_DETAIL_REMOVE_BOOK_FAILURE";
 
 export const STACK_DETAIL_ADD_CATEGORY_REQUEST =
-    'STACK_DETAIL_ADD_CATEGORY_REQUEST';
+    "STACK_DETAIL_ADD_CATEGORY_REQUEST";
 export const STACK_DETAIL_ADD_CATEGORY_SUCCESS =
-    'STACK_DETAIL_ADD_CATEGORY_SUCCESS';
+    "STACK_DETAIL_ADD_CATEGORY_SUCCESS";
 export const STACK_DETAIL_ADD_CATEGORY_FAILURE =
-    'STACK_DETAIL_ADD_CATEGORY_FAILURE';
+    "STACK_DETAIL_ADD_CATEGORY_FAILURE";
 
 export const STACK_DETAIL_ADD_NEW_CATEGORY_REQUEST =
-    'STACK_DETAIL_ADD_NEW_CATEGORY_REQUEST';
+    "STACK_DETAIL_ADD_NEW_CATEGORY_REQUEST";
 export const STACK_DETAIL_ADD_NEW_CATEGORY_SUCCESS =
-    'STACK_DETAIL_ADD_NEW_CATEGORY_SUCCESS';
+    "STACK_DETAIL_ADD_NEW_CATEGORY_SUCCESS";
 export const STACK_DETAIL_ADD_NEW_CATEGORY_FAILURE =
-    'STACK_DETAIL_ADD_NEW_CATEGORY_FAILURE';
+    "STACK_DETAIL_ADD_NEW_CATEGORY_FAILURE";
 
 export const STACK_DETAIL_REMOVE_CATEGORY_REQUEST =
-    'STACK_DETAIL_REMOVE_CATEGORY_REQUEST';
+    "STACK_DETAIL_REMOVE_CATEGORY_REQUEST";
 export const STACK_DETAIL_REMOVE_CATEGORY_SUCCESS =
-    'STACK_DETAIL_REMOVE_CATEGORY_SUCCESS';
+    "STACK_DETAIL_REMOVE_CATEGORY_SUCCESS";
 export const STACK_DETAIL_REMOVE_CATEGORY_FAILURE =
-    'STACK_DETAIL_REMOVE_CATEGORY_FAILURE';
+    "STACK_DETAIL_REMOVE_CATEGORY_FAILURE";
 
 // TODO: HOOOOOOKS?1!!?
-export const SET_EDITING = 'SET_EDITING';
-export const SET_REMOVE_CONFIRM = 'SET_REMOVE_CONFIRM';
-export const SET_ADDING_CATEGORY = 'SET_ADDING_CATEGORY';
-export const SET_NEW_POSITION = 'SET_NEW_POSITION';
+export const SET_EDITING = "SET_EDITING";
+export const SET_REMOVE_CONFIRM = "SET_REMOVE_CONFIRM";
+export const SET_ADDING_CATEGORY = "SET_ADDING_CATEGORY";
+export const SET_NEW_POSITION = "SET_NEW_POSITION";
 
 export const stackDetailInitialize = (id: number) => ({
     type: STACK_DETAIL_INITIALIZE,
@@ -93,20 +93,20 @@ export interface StackEditingClearAction {
     type: typeof STACK_DETAIL_EDITING;
 }
 
-export const stackDetailRequest: (
-    id: string
-) => StackDetailRequestAction = id => ({ type: STACK_DETAIL_REQUEST, id });
+export const stackDetailRequest: (id: string) => StackDetailRequestAction = (
+    id
+) => ({ type: STACK_DETAIL_REQUEST, id });
 
 export const stackDetailSuccess: (
     stack: StackDetailRecord
-) => StackDetailSuccessAction = stack => ({
+) => StackDetailSuccessAction = (stack) => ({
     type: STACK_DETAIL_SUCCESS,
     stack,
 });
 
-export const stackDetailFailure: (
-    error: string
-) => StackDetailFailureAction = error => ({
+export const stackDetailFailure: (error: string) => StackDetailFailureAction = (
+    error
+) => ({
     type: STACK_DETAIL_FAILURE,
     error,
 });
@@ -165,7 +165,7 @@ export const stackDetailPositionSuccess: (
 
 export const stackDetailPositionFailure: (
     error: string
-) => StackDetailPositionFailureAction = error => ({
+) => StackDetailPositionFailureAction = (error) => ({
     type: STACK_DETAIL_POSITION_FAILURE,
     error,
 });
@@ -211,7 +211,7 @@ export const stackDetailReadStateSuccess: (
 
 export const stackDetailReadStateFailure: (
     error: string
-) => StackDetailReadStateFailureAction = error => ({
+) => StackDetailReadStateFailureAction = (error) => ({
     type: STACK_DETAIL_READ_STATE_FAILURE,
     error,
 });
@@ -246,14 +246,14 @@ export const stackDetailAddBookRequest: (
 
 export const stackDetailAddBookSuccess: (
     book: BookStackRecord
-) => StackDetailAddBookSuccessAction = book => ({
+) => StackDetailAddBookSuccessAction = (book) => ({
     type: STACK_DETAIL_ADD_BOOK_SUCCESS,
     book,
 });
 
 export const stackDetailAddBookFailure: (
     error: string
-) => StackDetailAddBookFailureAction = error => ({
+) => StackDetailAddBookFailureAction = (error) => ({
     type: STACK_DETAIL_ADD_BOOK_FAILURE,
     error,
 });
@@ -278,21 +278,21 @@ export interface StackDetailRemoveBookFailureAction {
 
 export const stackDetailRemoveBookRequest: (
     id: number
-) => StackDetailRemoveBookRequestAction = id => ({
+) => StackDetailRemoveBookRequestAction = (id) => ({
     type: STACK_DETAIL_REMOVE_BOOK_REQUEST,
     id,
 });
 
 export const stackDetailRemoveBookSuccess: (
     id: number
-) => StackDetailRemoveBookSuccessAction = id => ({
+) => StackDetailRemoveBookSuccessAction = (id) => ({
     type: STACK_DETAIL_REMOVE_BOOK_SUCCESS,
     id,
 });
 
 export const stackDetailRemoveBookFailure: (
     error: string
-) => StackDetailRemoveBookFailureAction = error => ({
+) => StackDetailRemoveBookFailureAction = (error) => ({
     type: STACK_DETAIL_REMOVE_BOOK_FAILURE,
     error,
 });
@@ -337,7 +337,7 @@ export const stackDetailAddCategorySuccess: (
 
 export const stackDetailAddCategoryFailure: (
     error: string
-) => StackDetailAddCategoryFailureAction = error => ({
+) => StackDetailAddCategoryFailureAction = (error) => ({
     type: STACK_DETAIL_ADD_CATEGORY_FAILURE,
     error,
 });
@@ -375,7 +375,7 @@ export const stackDetailAddNewCategorySuccess: () => StackDetailAddNewCategorySu
 
 export const stackDetailAddNewCategoryFailure: (
     error: string
-) => StackDetailAddNewCategoryFailureAction = error => ({
+) => StackDetailAddNewCategoryFailureAction = (error) => ({
     type: STACK_DETAIL_ADD_NEW_CATEGORY_FAILURE,
     error,
 });
@@ -420,7 +420,7 @@ export const stackDetailRemoveCategorySuccess: (
 
 export const stackDetailRemoveCategoryFailure: (
     error: string
-) => StackDetailRemoveCategoryFailureAction = error => ({
+) => StackDetailRemoveCategoryFailureAction = (error) => ({
     type: STACK_DETAIL_REMOVE_CATEGORY_FAILURE,
     error,
 });
@@ -493,9 +493,9 @@ export const setNewPosition: (
 
 export const defaultStackDetailRecordValue = {
     id: 0,
-    name: '',
+    name: "",
     private: false,
-    user: '',
+    user: "",
     creation_date: new Date(),
     books: List(),
 };
@@ -509,7 +509,8 @@ export interface StackDetailParams {
     books?: List<IBook>;
 }
 
-export class StackDetailRecord extends Record(defaultStackDetailRecordValue)
+export class StackDetailRecord
+    extends Record(defaultStackDetailRecordValue)
     implements IStackDetail {
     constructor(params?: StackDetailParams) {
         params ? super(params) : super();
@@ -555,10 +556,10 @@ const setInBook = (
 ) =>
     state.setIn(
         [
-            'stackDetail',
-            'books',
+            "stackDetail",
+            "books",
             state.stackDetail.books.findIndex(
-                book => book.get('id') === bookId
+                (book) => book.get("id") === bookId
             ),
             ...path,
         ],
@@ -612,7 +613,7 @@ export default function stackDetailReducer(
             return fullStackDetailRecord;
         case STACK_DETAIL_CLEAR:
             fullStackDetailRecord = state.set(
-                'stackDetail',
+                "stackDetail",
                 fromJS({ books: [] })
             );
             return fullStackDetailRecord;
@@ -627,51 +628,51 @@ export default function stackDetailReducer(
             );
             stackDetail = state.stackDetail;
             fullStackDetailRecord = state.with({
-                stackDetail: stackDetail.set('books', books),
+                stackDetail: stackDetail.set("books", books),
             });
             return fullStackDetailRecord;
         case STACK_DETAIL_EDITING:
-            fullStackDetailRecord = state.set('editing', !state.get('editing'));
+            fullStackDetailRecord = state.set("editing", !state.get("editing"));
             return fullStackDetailRecord;
         case STACK_DETAIL_READ_STATE_SUCCESS:
             fullStackDetailRecord = setInBook(
                 state,
                 action.bookId,
-                ['read'],
+                ["read"],
                 action.readState
             );
             return fullStackDetailRecord;
         case STACK_DETAIL_REMOVE_BOOK_SUCCESS:
             books = state.stackDetail.books.remove(
-                books.findIndex(book => book.id === action.id)
+                books.findIndex((book) => book.id === action.id)
             );
-            stackDetail = state.stackDetail.set('books', books);
+            stackDetail = state.stackDetail.set("books", books);
             fullStackDetailRecord = state.with({ stackDetail });
             return fullStackDetailRecord;
         case STACK_DETAIL_ADD_CATEGORY_SUCCESS:
             fullStackDetailRecord = state.updateIn(
                 [
-                    'stackDetail',
-                    'books',
+                    "stackDetail",
+                    "books",
                     state.stackDetail.books.findIndex(
-                        book => book.get('id') === action.bookstackId
+                        (book) => book.get("id") === action.bookstackId
                     ),
-                    'categories',
+                    "categories",
                 ],
-                categories => categories.push(action.category)
+                (categories) => categories.push(action.category)
             );
             return fullStackDetailRecord;
         case STACK_DETAIL_REMOVE_CATEGORY_SUCCESS:
             fullStackDetailRecord = state.updateIn(
                 [
-                    'stackDetail',
-                    'books',
+                    "stackDetail",
+                    "books",
                     state.stackDetail.books.findIndex(
-                        book => book.get('id') === action.bookstackId
+                        (book) => book.get("id") === action.bookstackId
                     ),
-                    'categories',
+                    "categories",
                 ],
-                categories =>
+                (categories) =>
                     categories.remove(
                         categories.findIndex(
                             (book: BookStackRecord) =>
@@ -691,9 +692,9 @@ export default function stackDetailReducer(
             books.splice(to, 0, moved);
 
             stackDetail = state.stackDetail.set(
-                'books',
+                "books",
                 List(books).map((book, index: number) =>
-                    makeBookstack(book).set('position', index + 1)
+                    makeBookstack(book).set("position", index + 1)
                 )
             );
             fullStackDetailRecord = state.with({ stackDetail });
@@ -704,7 +705,7 @@ export default function stackDetailReducer(
             fullStackDetailRecord = setInBook(
                 state,
                 action.bookId,
-                ['editing'],
+                ["editing"],
                 Boolean(action.editing)
             );
             return fullStackDetailRecord;
@@ -712,7 +713,7 @@ export default function stackDetailReducer(
             fullStackDetailRecord = setInBook(
                 state,
                 action.bookId,
-                ['removeConfirm'],
+                ["removeConfirm"],
                 Boolean(action.removeConfirm)
             );
             return fullStackDetailRecord;
@@ -720,7 +721,7 @@ export default function stackDetailReducer(
             fullStackDetailRecord = setInBook(
                 state,
                 action.bookId,
-                ['addingCategory'],
+                ["addingCategory"],
                 Boolean(action.addingCategory)
             );
             return fullStackDetailRecord;
@@ -728,7 +729,7 @@ export default function stackDetailReducer(
             fullStackDetailRecord = setInBook(
                 state,
                 action.bookId,
-                ['newPosition'],
+                ["newPosition"],
                 action.newPosition
             );
             return fullStackDetailRecord;

@@ -1,9 +1,9 @@
-import { Record } from 'immutable';
-import { ICategory, ICategoryDetail } from './types';
+import { Record } from "immutable";
+import { ICategory, ICategoryDetail } from "./types";
 
 export const defaultCategoryDetailRecordValue = {
     id: 0,
-    category: '',
+    category: "",
 };
 
 export interface CategoryDetailParams {
@@ -32,7 +32,8 @@ export interface CategoryParams {
     detail?: CategoryDetailRecord;
 }
 
-export class CategoryRecord extends Record(defaultCategoryRecordValue)
+export class CategoryRecord
+    extends Record(defaultCategoryRecordValue)
     implements ICategory {
     constructor(params?: CategoryParams) {
         params ? super(params) : super();

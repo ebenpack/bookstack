@@ -1,11 +1,11 @@
-import { Record, List } from 'immutable';
+import { Record, List } from "immutable";
 
-import { IAuthor } from '../AuthorDetail/types';
-import { IBook } from '../Book/types';
+import { IAuthor } from "../AuthorDetail/types";
+import { IBook } from "../Book/types";
 
 const defaultAuthorProps: IAuthor = {
     id: 0,
-    name: '',
+    name: "",
     books: List(),
 };
 
@@ -15,7 +15,8 @@ interface AuthorParams {
     books?: List<IBook>;
 }
 
-export class AuthorRecord extends Record(defaultAuthorProps)
+export class AuthorRecord
+    extends Record(defaultAuthorProps)
     implements IAuthor {
     constructor(params?: AuthorParams) {
         params ? super(params) : super();
@@ -25,11 +26,11 @@ export class AuthorRecord extends Record(defaultAuthorProps)
     }
 }
 
-export const AUTHOR_INITIALIZE = 'AUTHOR_INITIALIZE';
+export const AUTHOR_INITIALIZE = "AUTHOR_INITIALIZE";
 
-export const AUTHOR_REQUEST = 'AUTHOR_REQUEST';
-export const AUTHOR_SUCCESS = 'AUTHOR_SUCCESS';
-export const AUTHOR_FAILURE = 'AUTHOR_FAILURE';
+export const AUTHOR_REQUEST = "AUTHOR_REQUEST";
+export const AUTHOR_SUCCESS = "AUTHOR_SUCCESS";
+export const AUTHOR_FAILURE = "AUTHOR_FAILURE";
 
 // Actions
 
@@ -51,16 +52,18 @@ export interface AuthorFailureAction {
 }
 
 // Action Creators
-export const authorRequest: (id: string) => AuthorRequestAction = id => ({
+export const authorRequest: (id: string) => AuthorRequestAction = (id) => ({
     type: AUTHOR_REQUEST,
     id,
 });
 
-export const authorSuccess: (
-    author: IAuthor
-) => AuthorSuccessAction = author => ({ type: AUTHOR_SUCCESS, author });
+export const authorSuccess: (author: IAuthor) => AuthorSuccessAction = (
+    author
+) => ({ type: AUTHOR_SUCCESS, author });
 
-export const authorFailure: (error: string) => AuthorFailureAction = error => ({
+export const authorFailure: (error: string) => AuthorFailureAction = (
+    error
+) => ({
     type: AUTHOR_FAILURE,
     error,
 });
@@ -73,7 +76,7 @@ export type AuthorAction =
 // State
 export const initialState = new AuthorRecord({
     books: List(),
-    name: '',
+    name: "",
 });
 
 export default function AuthorDetailReducer(

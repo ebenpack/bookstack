@@ -1,18 +1,18 @@
-import { List, Record } from 'immutable';
+import { List, Record } from "immutable";
 
-import { IBook } from '../Book/types';
-import { IBookSearch } from './types';
+import { IBook } from "../Book/types";
+import { IBookSearch } from "./types";
 
 // Actions
 
 // TODO: CONSOLIDATE ALL BOOK STUFF?
-export const BOOK_SEARCH_REQUEST = 'BOOK_SEARCH_REQUEST';
-export const BOOK_SEARCH_SUCCESS = 'BOOK_SEARCH_SUCCESS';
-export const BOOK_SEARCH_FAILURE = 'BOOK_SEARCH_FAILURE';
-export const BOOK_SEARCH_CLEAR = 'BOOK_SEARCH_CLEAR';
+export const BOOK_SEARCH_REQUEST = "BOOK_SEARCH_REQUEST";
+export const BOOK_SEARCH_SUCCESS = "BOOK_SEARCH_SUCCESS";
+export const BOOK_SEARCH_FAILURE = "BOOK_SEARCH_FAILURE";
+export const BOOK_SEARCH_CLEAR = "BOOK_SEARCH_CLEAR";
 
-export const BOOK_SEARCH_QUERY_SET = 'BOOK_SEARCH_QUERY_SET';
-export const BOOK_SEARCH_QUERY_CLEAR = 'BOOK_SEARCH_QUERY_CLEAR';
+export const BOOK_SEARCH_QUERY_SET = "BOOK_SEARCH_QUERY_SET";
+export const BOOK_SEARCH_QUERY_CLEAR = "BOOK_SEARCH_QUERY_CLEAR";
 
 export interface BookSearchRequestAction {
     type: typeof BOOK_SEARCH_REQUEST;
@@ -33,17 +33,20 @@ export interface BookSearchClearAction {
     type: typeof BOOK_SEARCH_CLEAR;
 }
 
-export const bookSearchRequest: (
-    query: string
-) => BookSearchRequestAction = query => ({ type: BOOK_SEARCH_REQUEST, query });
+export const bookSearchRequest: (query: string) => BookSearchRequestAction = (
+    query
+) => ({ type: BOOK_SEARCH_REQUEST, query });
 
 export const bookSearchSuccess: (
     books: List<IBook>
-) => BookSearchSuccessAction = books => ({ type: BOOK_SEARCH_SUCCESS, books });
+) => BookSearchSuccessAction = (books) => ({
+    type: BOOK_SEARCH_SUCCESS,
+    books,
+});
 
-export const bookSearchFailure: (
-    error: string
-) => BookSearchFailureAction = error => ({ type: BOOK_SEARCH_FAILURE, error });
+export const bookSearchFailure: (error: string) => BookSearchFailureAction = (
+    error
+) => ({ type: BOOK_SEARCH_FAILURE, error });
 
 export const bookSearchClear: () => BookSearchClearAction = () => ({
     type: BOOK_SEARCH_CLEAR,
@@ -58,9 +61,9 @@ export interface BookSearchQueryClearAction {
     type: typeof BOOK_SEARCH_QUERY_CLEAR;
 }
 
-export const bookSearchQuerySet: (
-    query: string
-) => BookSearchQuerySetAction = query => ({
+export const bookSearchQuerySet: (query: string) => BookSearchQuerySetAction = (
+    query
+) => ({
     type: BOOK_SEARCH_QUERY_SET,
     query,
 });
@@ -72,7 +75,7 @@ export const bookSearchQueryClear: () => BookSearchQueryClearAction = () => ({
 // State
 
 export const defaultBookSearchRecordValue = {
-    query: '',
+    query: "",
     books: List(),
 };
 
@@ -81,7 +84,8 @@ interface BookSearchParams {
     books?: List<IBook>;
 }
 
-export class BookSearchRecord extends Record(defaultBookSearchRecordValue)
+export class BookSearchRecord
+    extends Record(defaultBookSearchRecordValue)
     implements IBookSearch {
     constructor(params?: BookSearchParams) {
         params ? super(params) : super();
@@ -111,7 +115,7 @@ export default function BookSearchReducer(
         case BOOK_SEARCH_QUERY_SET:
             return state.with({ query: action.query });
         case BOOK_SEARCH_QUERY_CLEAR:
-            return state.with({ query: '' });
+            return state.with({ query: "" });
         default:
             return state;
     }

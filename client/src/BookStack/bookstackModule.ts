@@ -1,14 +1,14 @@
-import { Record, List } from 'immutable';
+import { Record, List } from "immutable";
 
-import { ICategory } from '../Category/types';
+import { ICategory } from "../Category/types";
 import {
     CategoryRecord,
     CategoryDetailRecord,
-} from '../Category/categoryModule';
-import { BookRecord, BookParams } from '../Book/bookModule';
-import { AuthorRecord } from '../AuthorDetail/authorDetailModule';
-import { PublisherRecord } from '../PublisherDetail/publisherDetailModule';
-import { IBookStack } from './types';
+} from "../Category/categoryModule";
+import { BookRecord, BookParams } from "../Book/bookModule";
+import { AuthorRecord } from "../AuthorDetail/authorDetailModule";
+import { PublisherRecord } from "../PublisherDetail/publisherDetailModule";
+import { IBookStack } from "./types";
 
 export const defaultBookStackRecordValue = {
     id: 0,
@@ -36,7 +36,8 @@ export interface BookStackParams {
     categories?: List<ICategory>;
 }
 
-export class BookStackRecord extends Record(defaultBookStackRecordValue)
+export class BookStackRecord
+    extends Record(defaultBookStackRecordValue)
     implements IBookStack {
     constructor(params?: BookStackParams) {
         params ? super(params) : super();
@@ -54,13 +55,13 @@ export const makeBook = (book: BookParams): BookRecord =>
         ...book,
         authors: List(
             book.authors
-                ? book.authors.map(author => new AuthorRecord(author))
+                ? book.authors.map((author) => new AuthorRecord(author))
                 : []
         ),
         publishers: List(
             book.publishers
                 ? book.publishers.map(
-                      publisher => new PublisherRecord(publisher)
+                      (publisher) => new PublisherRecord(publisher)
                   )
                 : []
         ),

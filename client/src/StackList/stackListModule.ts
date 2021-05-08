@@ -1,12 +1,12 @@
-import { fromJS, List } from 'immutable';
-import { StackDetailRecord } from '../StackDetail/stackDetailModule';
+import { fromJS, List } from "immutable";
+import { StackDetailRecord } from "../StackDetail/stackDetailModule";
 
 // Actions
-export const STACK_REQUEST = 'STACK_REQUEST';
-export const STACK_SUCCESS = 'STACK_SUCCESS';
-export const STACK_FAILURE = 'STACK_FAILURE';
-export const STACK_CLEAR = 'STACK_CLEAR';
-export const STACK_INITIALIZE = 'STACK_INITIALIZE';
+export const STACK_REQUEST = "STACK_REQUEST";
+export const STACK_SUCCESS = "STACK_SUCCESS";
+export const STACK_FAILURE = "STACK_FAILURE";
+export const STACK_CLEAR = "STACK_CLEAR";
+export const STACK_INITIALIZE = "STACK_INITIALIZE";
 
 export interface StackRequestAction {
     type: typeof STACK_REQUEST;
@@ -32,9 +32,9 @@ export const stackRequest: () => StackRequestAction = () => ({
 
 export const stackSuccess: (
     stack: List<StackDetailRecord>
-) => StackSuccessAction = stack => ({ type: STACK_SUCCESS, stack });
+) => StackSuccessAction = (stack) => ({ type: STACK_SUCCESS, stack });
 
-export const stackFailure: (error: string) => StackFailureAction = error => ({
+export const stackFailure: (error: string) => StackFailureAction = (error) => ({
     type: STACK_FAILURE,
     error,
 });

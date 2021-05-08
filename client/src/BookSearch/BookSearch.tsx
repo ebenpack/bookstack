@@ -1,16 +1,16 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
+import * as React from "react";
+import { connect } from "react-redux";
 
-import Book from '../Book/Book';
+import Book from "../Book/Book";
 
 import {
     bookSearchRequest,
     bookSearchQuerySet,
-} from '../BookSearch/bookSearchModule';
-import { addBookRequest } from '../AddBook/addBookModule';
-import { AppState } from '../store';
-import { List } from 'immutable';
-import { IBook } from '../Book/types';
+} from "../BookSearch/bookSearchModule";
+import { addBookRequest } from "../AddBook/addBookModule";
+import { AppState } from "../store";
+import { List } from "immutable";
+import { IBook } from "../Book/types";
 
 interface PropsFromDispatch {
     setQuery: typeof bookSearchQuerySet;
@@ -46,7 +46,7 @@ export class BookSearch extends React.Component<BookSearchProps> {
                                 className="input"
                                 type="text"
                                 value={query}
-                                onChange={e => {
+                                onChange={(e) => {
                                     const queryValue = e.target.value;
                                     setQuery(queryValue);
                                     bookSearch(queryValue);
@@ -82,8 +82,8 @@ export class BookSearch extends React.Component<BookSearchProps> {
 }
 
 const mapStateToProps = (state: AppState) => ({
-    books: state.bookSearchStore.get('books'),
-    query: state.bookSearchStore.get('query'),
+    books: state.bookSearchStore.get("books"),
+    query: state.bookSearchStore.get("query"),
     staticPath: state.appStore.staticPath,
 });
 

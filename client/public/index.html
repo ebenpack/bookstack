@@ -1,23 +1,28 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta http-equiv='Content-type' content='text/html; charset=utf-8'>
-    <link rel="icon" type="image/png" href="%PUBLIC_URL%/static/favicon.png">
-    <title>BookStack</title>
-  </head>
-  <body>
-    <div id="stack"></div>
-    <script>
-        window.BOOTSTRAP_DATA = {
-            el: '#stack',
-            staticPath: '{{ STATIC_URL }}',
-            apiUrl: '{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}'
-        };
-        window.BOOTSTRAP_DATA = {
-            el: '#stack',
-            staticPath: '',
-            apiUrl: 'http://localhost:8000'
-        };
-    </script>
-  </body>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <link
+            rel="icon"
+            type="image/png"
+            href="%PUBLIC_URL%/static/favicon.png"
+        />
+        <title>BookStack</title>
+    </head>
+    <body>
+        <div id="stack"></div>
+        <script>
+            window.BOOTSTRAP_DATA = {
+                el: "#stack",
+                staticPath: "{{ STATIC_URL }}",
+                apiUrl:
+                    "{% if request.is_secure %}https{% else %}http{% endif %}://{{ request.get_host }}",
+            };
+            window.BOOTSTRAP_DATA = {
+                el: "#stack",
+                staticPath: "",
+                apiUrl: "http://localhost:8000",
+            };
+        </script>
+    </body>
 </html>
