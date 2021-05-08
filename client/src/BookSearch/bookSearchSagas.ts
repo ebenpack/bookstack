@@ -13,6 +13,7 @@ import { BookRecord } from '../Book/bookModule';
 import { AuthorRecord } from '../AuthorDetail/authorDetailModule';
 import { PublisherRecord } from '../PublisherDetail/publisherDetailModule';
 import { IBook } from '../Book/types';
+import {SagaIterator} from "redux-saga";
 
 interface GoogleBook {
     volumeInfo: {
@@ -72,7 +73,7 @@ function formatBook(book: GoogleBook) {
     return new BookRecord(formattedBook);
 }
 
-export function* bookSearch(query: string) {
+export function* bookSearch(query: string): SagaIterator {
     const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}`;
     try {
         const response = yield call(axiosCall, {
@@ -93,7 +94,7 @@ export function* bookSearch(query: string) {
     }
 }
 
-export function* watchBookSearch() {
+export function* watchBookSearch(): SagaIterator {
     let search;
     while (true) {
         // In order to prevent making a lot of unecessary requests,

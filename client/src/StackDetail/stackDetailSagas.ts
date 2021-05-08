@@ -44,6 +44,7 @@ import {
 } from '../AddCategory/addCategoryModule';
 import { List } from 'immutable';
 import { makeBookstack, makeCategory } from '../BookStack/bookstackModule';
+import {SagaIterator} from "redux-saga";
 
 export function* loadStack({ id }: StackDetailRequestAction) {
     const { apiUrl } = yield select(getCredentials);
@@ -71,7 +72,7 @@ export function* loadStack({ id }: StackDetailRequestAction) {
 export function* updateReadState({
     bookId,
     newReadState,
-}: StackDetailReadStateRequestAction) {
+}: StackDetailReadStateRequestAction): SagaIterator {
     const { apiUrl, token } = yield select(getCredentials);
     try {
         const response = yield call(axiosCall, {
@@ -100,7 +101,7 @@ export function* updatePosition({
     id,
     from,
     to,
-}: StackDetailPositionRequestAction) {
+}: StackDetailPositionRequestAction): SagaIterator {
     const { apiUrl, token } = yield select(getCredentials);
     const stackLength = yield select(
         store => store.stackDetailStore.stackDetail.books.size
@@ -153,7 +154,7 @@ export function* deleteBook({ id }: StackDetailRemoveBookRequestAction) {
 export function* addNewCategory({
     bookstackId,
     category,
-}: StackDetailAddNewCategoryRequestAction) {
+}: StackDetailAddNewCategoryRequestAction): SagaIterator {
     yield put(addCategoryRequest(category));
     let now = yield call(getCurrentTime);
     const waitUntil = now + 2500;

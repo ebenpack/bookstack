@@ -1,4 +1,5 @@
 import { put, call, select, takeEvery } from 'redux-saga/effects';
+import { SagaIterator } from "redux-saga";
 import { push } from 'connected-react-router';
 
 import { axiosCall, getCredentials } from '../utils/sagasUtils';
@@ -15,7 +16,7 @@ import {
     APP_LOGOFF,
 } from './appModule';
 
-function* getStoredToken() {
+function* getStoredToken(): SagaIterator {
     const token = yield call(
         [window.localStorage, window.localStorage.getItem],
         'token'
@@ -35,12 +36,12 @@ function* removeToken() {
     yield call([window.localStorage, window.localStorage.removeItem], 'token');
 }
 
-export function* initialize() {
+export function* initialize(): SagaIterator {
     const token = yield call(getStoredToken);
     yield put(setToken(token));
 }
 
-export function* login({ user, pass, save }: AppLoginRequestAction) {
+export function* login({ user, pass, save }: AppLoginRequestAction): SagaIterator {
     const { apiUrl } = yield select(getCredentials);
     try {
         const response = yield call(axiosCall, {

@@ -8,8 +8,9 @@ import {
     PUBLISHER_INITIALIZE,
     PUBLISHER_REQUEST,
 } from './publisherDetailModule';
+import {SagaIterator} from "redux-saga";
 
-export function* loadPublisher({ id }: PublisherRequestAction) {
+export function* loadPublisher({ id }: PublisherRequestAction): SagaIterator {
     const { apiUrl } = yield select(getCredentials);
     try {
         const publisher = yield call(axiosCall, {

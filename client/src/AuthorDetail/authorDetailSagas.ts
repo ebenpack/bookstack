@@ -8,8 +8,9 @@ import {
     AUTHOR_REQUEST,
     AUTHOR_INITIALIZE,
 } from './authorDetailModule';
+import {SagaIterator} from "redux-saga";
 
-export function* loadAuthor({ id }: AuthorRequestAction) {
+export function* loadAuthor({ id }: AuthorRequestAction): SagaIterator {
     const { apiUrl } = yield select(getCredentials);
     try {
         const author = yield call(axiosCall, {

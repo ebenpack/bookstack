@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { List } from 'immutable';
 
 export interface AutocompleteProps<T> {

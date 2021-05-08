@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { IBook } from '../Book/types';
 import Author from '../Author/Author';
 import Publisher from '../Publisher/Publisher';
