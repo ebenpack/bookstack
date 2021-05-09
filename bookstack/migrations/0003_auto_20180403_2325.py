@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bookstack', '0002_auto_20180403_2324'),
+        ("bookstack", "0002_auto_20180403_2324"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='bookstack',
+            name="bookstack",
             unique_together=set(),
         ),
     ]

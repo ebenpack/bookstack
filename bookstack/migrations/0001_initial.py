@@ -15,88 +15,174 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Author',
+            name="Author",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Book',
+            name="Book",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('pages', models.IntegerField()),
-                ('isbn', models.CharField(max_length=15, unique=True)),
-                ('img', models.URLField(blank=True, max_length=500)),
-                ('authors', models.ManyToManyField(to='bookstack.Author')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("pages", models.IntegerField()),
+                ("isbn", models.CharField(max_length=15, unique=True)),
+                ("img", models.URLField(blank=True, max_length=500)),
+                ("authors", models.ManyToManyField(to="bookstack.Author")),
             ],
         ),
         migrations.CreateModel(
-            name='BookStack',
+            name="BookStack",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('read', models.BooleanField(default=False)),
-                ('position', models.IntegerField(db_index=True, default=0)),
-                ('book', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='bookstack.Book')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("read", models.BooleanField(default=False)),
+                ("position", models.IntegerField(db_index=True, default=0)),
+                (
+                    "book",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="bookstack.Book"
+                    ),
+                ),
             ],
             options={
-                'ordering': ['position'],
+                "ordering": ["position"],
             },
         ),
         migrations.CreateModel(
-            name='BookStackCategory',
+            name="BookStackCategory",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('bookstack', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='bookstack.BookStack')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "bookstack",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="bookstack.BookStack",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('category', models.CharField(max_length=30, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("category", models.CharField(max_length=30, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Categories',
+                "verbose_name_plural": "Categories",
             },
         ),
         migrations.CreateModel(
-            name='Publisher',
+            name="Publisher",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=50, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=50, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Stack',
+            name="Stack",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('private', models.BooleanField(default=True)),
-                ('creation_date', models.DateTimeField(auto_now_add=True)),
-                ('books', models.ManyToManyField(through='bookstack.BookStack', to='bookstack.Book')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                ("private", models.BooleanField(default=True)),
+                ("creation_date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "books",
+                    models.ManyToManyField(
+                        through="bookstack.BookStack", to="bookstack.Book"
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='bookstackcategory',
-            name='category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='bookstack.Category'),
+            model_name="bookstackcategory",
+            name="category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="bookstack.Category"
+            ),
         ),
         migrations.AddField(
-            model_name='bookstack',
-            name='categories',
-            field=models.ManyToManyField(blank=True, through='bookstack.BookStackCategory', to='bookstack.Category'),
+            model_name="bookstack",
+            name="categories",
+            field=models.ManyToManyField(
+                blank=True,
+                through="bookstack.BookStackCategory",
+                to="bookstack.Category",
+            ),
         ),
         migrations.AddField(
-            model_name='bookstack',
-            name='stack',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='bookstack.Stack'),
+            model_name="bookstack",
+            name="stack",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="bookstack.Stack"
+            ),
         ),
         migrations.AddField(
-            model_name='book',
-            name='publishers',
-            field=models.ManyToManyField(to='bookstack.Publisher'),
+            model_name="book",
+            name="publishers",
+            field=models.ManyToManyField(to="bookstack.Publisher"),
         ),
     ]

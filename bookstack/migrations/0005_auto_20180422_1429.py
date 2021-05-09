@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bookstack', '0004_auto_20180408_1953'),
+        ("bookstack", "0004_auto_20180408_1953"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='bookstack',
-            options={'ordering': ('position',)},
+            name="bookstack",
+            options={"ordering": ("position",)},
         ),
         migrations.AlterUniqueTogether(
-            name='bookstack',
-            unique_together={('position', 'stack')},
+            name="bookstack",
+            unique_together={("position", "stack")},
         ),
     ]

@@ -3,16 +3,20 @@ from django.db.models.query import QuerySet
 from django.forms import ModelForm
 from django.http import HttpRequest
 
-from bookstack.models import (Author, Book, BookStack, Category, Publisher, Stack)
+from bookstack.models import Author, Book, BookStack, Category, Publisher, Stack
 
 
 class BookStackInline(admin.StackedInline):
     model = BookStack
     extra = 0
-    ordering = ('position',)
+    ordering = ("position",)
 
     def get_queryset(self, request: HttpRequest) -> QuerySet:
-        qs = super(BookStackInline, self).get_queryset(request).prefetch_related('book__authors', 'book__publishers')
+        qs = (
+            super(BookStackInline, self)
+            .get_queryset(request)
+            .prefetch_related("book__authors", "book__publishers")
+        )
         if request.user.is_superuser:
             return qs
         return qs.filter(stack__user=request.user)
@@ -20,17 +24,25 @@ class BookStackInline(admin.StackedInline):
 
 class StackAdmin(admin.ModelAdmin):
     inlines = (BookStackInline,)
-    exclude = ('user',)
+    exclude = ("user",)
 
-    def save_model(self, request: HttpRequest, obj: Stack, form: ModelForm, change: bool) -> None:
+    def save_model(
+        self, request: HttpRequest, obj: Stack, form: ModelForm, change: bool
+    ) -> None:
         if not change:
             obj.user = request.user
         obj.save()
 
     def get_queryset(self, request: HttpRequest) -> QuerySet:
-        qs = super(StackAdmin, self).get_queryset(request).prefetch_related('bookstack_set__book__authors',
-                                                                            'bookstack_set__book__publishers',
-                                                                            'bookstack_set__categories')
+        qs = (
+            super(StackAdmin, self)
+            .get_queryset(request)
+            .prefetch_related(
+                "bookstack_set__book__authors",
+                "bookstack_set__book__publishers",
+                "bookstack_set__categories",
+            )
+        )
         if request.user.is_superuser:
             return qs
         return qs.filter(user=request.user)

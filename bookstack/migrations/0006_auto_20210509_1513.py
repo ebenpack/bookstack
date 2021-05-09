@@ -7,16 +7,20 @@ import django.db.models.constraints
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('bookstack', '0005_auto_20180422_1429'),
+        ("bookstack", "0005_auto_20180422_1429"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='bookstack',
+            name="bookstack",
             unique_together=set(),
         ),
         migrations.AddConstraint(
-            model_name='bookstack',
-            constraint=models.UniqueConstraint(deferrable=django.db.models.constraints.Deferrable['DEFERRED'], fields=('position', 'stack'), name='bookstack_position'),
+            model_name="bookstack",
+            constraint=models.UniqueConstraint(
+                deferrable=django.db.models.constraints.Deferrable["DEFERRED"],
+                fields=("position", "stack"),
+                name="bookstack_position",
+            ),
         ),
     ]

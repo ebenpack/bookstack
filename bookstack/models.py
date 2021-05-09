@@ -1,6 +1,18 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction
-from django.db.models import F, Case, When, Value, Q, Max, Count, Subquery, OuterRef, UniqueConstraint, Deferrable
+from django.db.models import (
+    F,
+    Case,
+    When,
+    Value,
+    Q,
+    Max,
+    Count,
+    Subquery,
+    OuterRef,
+    UniqueConstraint,
+    Deferrable,
+)
 from django.db.models.query import QuerySet
 
 
@@ -8,10 +20,8 @@ class Stack(models.Model):
     name = models.CharField(max_length=200)
     private = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    creation_date = models.DateTimeField(
-        auto_now_add=True
-    )
-    books = models.ManyToManyField('Book', through='BookStack')
+    creation_date = models.DateTimeField(auto_now_add=True)
+    books = models.ManyToManyField("Book", through="BookStack")
 
     def __str__(self) -> str:
         return self.name
@@ -22,8 +32,8 @@ class Book(models.Model):
     pages = models.IntegerField()
     isbn = models.CharField(max_length=15, unique=True)
     img = models.URLField(max_length=500, blank=True)
-    authors = models.ManyToManyField('Author')
-    publishers = models.ManyToManyField('Publisher')
+    authors = models.ManyToManyField("Author")
+    publishers = models.ManyToManyField("Publisher")
 
     def __str__(self) -> str:
         return self.title
@@ -31,18 +41,20 @@ class Book(models.Model):
 
 class BookStack(models.Model):
     class Meta:
-        ordering = ('position',)
+        ordering = ("position",)
         constraints = (
-            UniqueConstraint(name='bookstack_position', fields=('position', 'stack'), deferrable=Deferrable.DEFERRED),
+            UniqueConstraint(
+                name="bookstack_position",
+                fields=("position", "stack"),
+                deferrable=Deferrable.DEFERRED,
+            ),
         )
 
     stack = models.ForeignKey(Stack, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     read = models.BooleanField(default=False)
     categories = models.ManyToManyField(
-        'Category',
-        through='BookStackCategory',
-        blank=True
+        "Category", through="BookStackCategory", blank=True
     )
     position = models.IntegerField(default=0, db_index=True)
 
@@ -80,14 +92,11 @@ class BookStack(models.Model):
             position=Case(
                 When(
                     (Q(position__gte=start) & Q(position__lte=end)),
-                    then=F('position') + direction
+                    then=F("position") + direction,
                 ),
-                When(
-                    position=from_position,
-                    then=to_position
-                ),
-                default=F('position'),
-                output_field=models.IntegerField()
+                When(position=from_position, then=to_position),
+                default=F("position"),
+                output_field=models.IntegerField(),
             )
         )
 
@@ -96,7 +105,7 @@ class BookStack(models.Model):
             read=Case(
                 When(read=True, then=Value(False)),
                 default=Value(True),
-                output_field=models.BooleanField()
+                output_field=models.BooleanField(),
             )
         )
         self.refresh_from_db()
@@ -125,7 +134,7 @@ class BookStackCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:
-        unique_together = ('category', 'bookstack')
+        unique_together = ("category", "bookstack")
 
 
 class Author(models.Model):
