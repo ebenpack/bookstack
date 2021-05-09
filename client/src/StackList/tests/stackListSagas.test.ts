@@ -1,19 +1,27 @@
 import { sagaTest } from "../../utils/testUtils";
 import { watchLoadStacklist } from "../stackListSagas";
-import { initialState, stack, STACK } from "../stackListModule";
+import {
+    initialState,
+    STACK_FAILURE,
+    STACK_SUCCESS,
+    stackFailure,
+    stackRequest,
+    stackSuccess,
+} from "../stackListModule";
 
-sagaTest(
-    "loadStacklist",
-    { addBookStore: initialState },
-    watchLoadStacklist,
-    {
-        url: "http://foo.bar.baz/api/stack/",
-        method: "GET",
-    },
-    { data: "foo" },
-    stack.request("foobarbaz"),
-    stack.success("foo"),
-    stack.failure("Error message"),
-    STACK.SUCCESS,
-    STACK.FAILURE
-);
+describe("loadStacklist", () => {
+    sagaTest(
+        { addBookStore: initialState },
+        watchLoadStacklist,
+        {
+            url: "http://foo.bar.baz/api/stack/",
+            method: "GET",
+        },
+        { data: "foo" },
+        stackRequest("foobarbaz"),
+        stackSuccess("foo"),
+        stackFailure("Error message"),
+        STACK_SUCCESS,
+        STACK_FAILURE
+    );
+});

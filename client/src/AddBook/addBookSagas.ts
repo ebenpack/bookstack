@@ -13,11 +13,11 @@ import {
     SEARCH_BOOK_REQUEST,
     GET_BOOK_REQUEST,
     ADD_BOOK_REQUEST,
+    addBookSuccess,
 } from "./addBookModule";
 import { makeBook } from "../BookStack/bookstackModule";
 import { List } from "immutable";
 import { IBook } from "../Book/types";
-import { stackDetailAddBookSuccess } from "../StackDetail/stackDetailModule";
 
 export function* searchBooks({ query }: SearchBookRequestAction) {
     const { apiUrl } = yield select(getCredentials);
@@ -65,10 +65,10 @@ export function* addBook({ book }: AddBookRequestAction) {
                 "Content-Type": "application/json",
                 Authorization: `Token ${token}`,
             },
-            data: book.toJS(),
+            data: book,
         });
 
-        yield put(stackDetailAddBookSuccess(data));
+        yield put(addBookSuccess(data));
     } catch (err) {
         const error =
             err && err.response && err.response.data

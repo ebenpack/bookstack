@@ -3,6 +3,9 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
+        "@testing-library/jest-dom": "^5.11.4",
+        "@testing-library/react": "^11.1.0",
+        "@testing-library/user-event": "^12.1.10",
         "@types/history": "^4.7.3",
         "@types/immutable": "^3.8.7",
         "@types/jest": "24.0.19",
@@ -37,7 +40,8 @@
         "gts": "^1.1.0",
         "prettier": "2.2.1",
         "redux-devtools-extension": "^2.13.8",
-        "redux-saga-tester": "^1.0.582"
+        "redux-saga-tester": "^1.0.582",
+        "ts-jest": "^26.5.6"
     },
     "scripts": {
         "start": "react-scripts start",
@@ -47,7 +51,10 @@
         "prettier": "prettier --write ."
     },
     "eslintConfig": {
-        "extends": "react-app"
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
     },
     "browserslist": {
         "production": [

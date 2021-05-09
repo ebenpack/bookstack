@@ -1,19 +1,27 @@
 import { sagaTest } from "../../utils/testUtils";
 import { watchLoadPublisher } from "../publisherDetailSagas";
-import { initialState, PUBLISHER, publisher } from "../publisherDetailModule";
+import {
+    initialState,
+    PUBLISHER_FAILURE,
+    PUBLISHER_SUCCESS,
+    publisherFailure,
+    publisherRequest,
+    publisherSuccess,
+} from "../publisherDetailModule";
 
-sagaTest(
-    "loadPublisher",
-    { addBookStore: initialState },
-    watchLoadPublisher,
-    {
-        method: "GET",
-        url: "http://foo.bar.baz/api/publisher/foobarbaz/",
-    },
-    { data: "foo" },
-    publisher.request("foobarbaz"),
-    publisher.success("foo"),
-    publisher.failure("Error message"),
-    PUBLISHER.SUCCESS,
-    PUBLISHER.FAILURE
-);
+describe("loadPublisher", () => {
+    sagaTest(
+        { addBookStore: initialState },
+        watchLoadPublisher,
+        {
+            method: "GET",
+            url: "http://foo.bar.baz/api/publisher/foobarbaz/",
+        },
+        { data: "foo" },
+        publisherRequest("foobarbaz"),
+        publisherSuccess("foo"),
+        publisherFailure("Error message"),
+        PUBLISHER_SUCCESS,
+        PUBLISHER_FAILURE
+    );
+});

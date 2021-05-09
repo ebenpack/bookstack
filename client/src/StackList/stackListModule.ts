@@ -45,7 +45,7 @@ export const initializeStack = () => ({ type: STACK_INITIALIZE });
 
 export type StackActionTypes = StackSuccessAction | StackClearAction;
 
-const initialState: List<StackDetailRecord> = List();
+export const initialState: List<StackDetailRecord> = List();
 
 // State
 export default function stackListReducer(

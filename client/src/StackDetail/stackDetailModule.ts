@@ -545,7 +545,7 @@ export class FullStackDetailRecord
     }
 }
 
-const initialState = new FullStackDetailRecord();
+export const initialState = new FullStackDetailRecord();
 
 const setInBook = (
     state: FullStackDetailRecord,

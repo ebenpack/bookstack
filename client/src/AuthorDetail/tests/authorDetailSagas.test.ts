@@ -1,19 +1,27 @@
 import { sagaTest } from "../../utils/testUtils";
 import { watchLoadAuthor } from "../authorDetailSagas";
-import { initialState, AUTHOR, author } from "../authorDetailModule";
+import {
+    AUTHOR_FAILURE,
+    AUTHOR_SUCCESS,
+    authorFailure,
+    authorRequest,
+    authorSuccess,
+    initialState,
+} from "../authorDetailModule";
 
-sagaTest(
-    "loadAuthor",
-    { addBookStore: initialState },
-    watchLoadAuthor,
-    {
-        method: "GET",
-        url: "http://foo.bar.baz/api/author/foobarbaz/",
-    },
-    { data: "foo" },
-    author.request("foobarbaz"),
-    author.success("foo"),
-    author.failure("Error message"),
-    AUTHOR.SUCCESS,
-    AUTHOR.FAILURE
-);
+describe("loadAuthor", () => {
+    sagaTest(
+        { addBookStore: initialState },
+        watchLoadAuthor,
+        {
+            method: "GET",
+            url: "http://foo.bar.baz/api/author/foobarbaz/",
+        },
+        { data: "foo" },
+        authorRequest("foobarbaz"),
+        authorSuccess("foo"),
+        authorFailure("Error message"),
+        AUTHOR_SUCCESS,
+        AUTHOR_FAILURE
+    );
+});

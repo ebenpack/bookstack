@@ -1,66 +1,89 @@
-import { fromJS } from "immutable";
+import { List } from "immutable";
 import { sagaTest } from "../../utils/testUtils";
 import { watchBookSearch, watchGetBook, watchAddBook } from "../addBookSagas";
 import {
     initialState,
-    addBook,
-    getBook,
-    searchBooks,
-    selectBook,
-    ADD_BOOK,
-    SELECT_BOOK,
-    SEARCH_BOOK,
+    searchBooksRequest,
+    searchBooksSuccess,
+    searchBooksFailure,
+    getBookRequest,
+    selectBookSuccess,
+    selectBookFailure,
+    SELECT_BOOK_SUCCESS,
+    SELECT_BOOK_FAILURE,
+    ADD_BOOK_SUCCESS,
+    ADD_BOOK_FAILURE,
+    addBookRequest,
+    addBookSuccess,
+    addBookFailure,
+    SEARCH_BOOK_SUCCESS,
+    SEARCH_BOOK_FAILURE,
 } from "../addBookModule";
+import { makeBook } from "../../BookStack/bookstackModule";
+import { Book } from "../../Book/types";
 
-sagaTest(
-    "bookSearch",
-    { addBookStore: initialState },
-    watchBookSearch,
-    {
-        method: "GET",
-        url: "http://foo.bar.baz/api/book/?search=foobarbaz",
-    },
-    { data: "foo" },
-    searchBooks.request("foobarbaz"),
-    searchBooks.success("foo"),
-    searchBooks.failure("Error message"),
-    SEARCH_BOOK.SUCCESS,
-    SEARCH_BOOK.FAILURE
-);
+const testBook: Book = {
+    id: 1,
+    img: "/img",
+    title: "Gravity's Rainbow",
+    pages: 1000,
+    isbn: "321093812",
+    publishers: [],
+    authors: [],
+};
 
-sagaTest(
-    "getBook",
-    { addBookStore: initialState },
-    watchGetBook,
-    {
-        method: "GET",
-        url: "http://foo.bar.baz/api/book/foobarbaz/",
-    },
-    { data: "foo" },
-    getBook.request("foobarbaz"),
-    selectBook.success("foo"),
-    selectBook.failure("Error message"),
-    SELECT_BOOK.SUCCESS,
-    SELECT_BOOK.FAILURE
-);
-
-sagaTest(
-    "addBook",
-    { addBookStore: initialState },
-    watchAddBook,
-    {
-        method: "POST",
-        url: "http://foo.bar.baz/api/book/",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: "Token token",
+describe("bookSearch", () => {
+    sagaTest(
+        { addBookStore: initialState },
+        watchBookSearch,
+        {
+            method: "GET",
+            url: "http://foo.bar.baz/api/book/?search=foobarbaz",
         },
-        data: { title: "foo" },
-    },
-    { data: "foo" },
-    addBook.request(fromJS({ title: "foo" })),
-    addBook.success("foo"),
-    addBook.failure("Error message"),
-    ADD_BOOK.SUCCESS,
-    ADD_BOOK.FAILURE
-);
+        { data: [testBook] },
+        searchBooksRequest("foobarbaz"),
+        searchBooksSuccess(List([testBookRecord])),
+        searchBooksFailure("Error message"),
+        SEARCH_BOOK_SUCCESS,
+        SEARCH_BOOK_FAILURE
+    );
+});
+
+describe("getBook", () => {
+    sagaTest(
+        { addBookStore: initialState },
+        watchGetBook,
+        {
+            method: "GET",
+            url: "http://foo.bar.baz/api/book/1/",
+        },
+        { data: testBook },
+        getBookRequest(1),
+        selectBookSuccess(testBookRecord),
+        selectBookFailure("Error message"),
+        SELECT_BOOK_SUCCESS,
+        SELECT_BOOK_FAILURE
+    );
+});
+
+describe("addBook", () => {
+    sagaTest(
+        { addBookStore: initialState },
+        watchAddBook,
+        {
+            method: "POST",
+            url: "http://foo.bar.baz/api/book/",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Token token",
+            },
+            data: { ...testBook, authors: [], publishers: [] },
+        },
+        { data: { ...testBook, authors: [], publishers: [] } },
+        addBookRequest(testBook),
+        addBookSuccess(testBook),
+        addBookFailure("Error message"),
+        ADD_BOOK_SUCCESS,
+        ADD_BOOK_FAILURE
+    );
+});

@@ -5,45 +5,57 @@ import {
 } from "../addCategorySagas";
 import {
     initialState,
-    addCategory,
-    categorySearch,
-    ADD,
-    SEARCH,
+    ADD_CATEGORY_ADD_SUCCESS,
+    ADD_CATEGORY_ADD_FAILURE,
+    addCategoryRequest,
+    addCategorySuccess,
+    addCategoryFailure,
+    searchCategoryRequest,
+    searchCategorySuccess,
+    searchCategoryFailure,
+    ADD_CATEGORY_SEARCH_SUCCESS,
+    ADD_CATEGORY_SEARCH_FAILURE,
 } from "../addCategoryModule";
+import { List } from "immutable";
+import { CategoryDetailRecord } from "../../Category/categoryModule";
 
-sagaTest(
-    "addCategory",
-    { addBookStore: initialState },
-    watchAddCategory,
-    {
-        url: "http://foo.bar.baz/api/category/",
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: "Token token",
+describe("addCategory", () => {
+    sagaTest(
+        { addBookStore: initialState },
+        watchAddCategory,
+        {
+            url: "http://foo.bar.baz/api/category/",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Token token",
+            },
+            data: { category: "foobarbaz" },
         },
-        data: { category: "foobarbaz" },
-    },
-    { data: "foo" },
-    addCategory.request("foobarbaz"),
-    addCategory.success("foo"),
-    addCategory.failure("Error message"),
-    ADD.SUCCESS,
-    ADD.FAILURE
-);
+        { data: "foo" },
+        addCategoryRequest("foobarbaz"),
+        addCategorySuccess("foo"),
+        addCategoryFailure("Error message"),
+        ADD_CATEGORY_ADD_SUCCESS,
+        ADD_CATEGORY_ADD_FAILURE
+    );
+});
 
-sagaTest(
-    "setAutoSuggestCategories",
-    { addBookStore: initialState },
-    watchSetAutoSuggestCategories,
-    {
-        url: "http://foo.bar.baz/api/category/?search=foobarbaz",
-        method: "GET",
-    },
-    { data: "foo" },
-    categorySearch.request("foobarbaz"),
-    categorySearch.success("foo"),
-    categorySearch.failure("Error message"),
-    SEARCH.SUCCESS,
-    SEARCH.FAILURE
-);
+describe("setAutoSuggestCategories", () => {
+    sagaTest(
+        { addBookStore: initialState },
+        watchSetAutoSuggestCategories,
+        {
+            url: "http://foo.bar.baz/api/category/?search=foobarbaz",
+            method: "GET",
+        },
+        { data: "foo" },
+        searchCategoryRequest("foobarbaz"),
+        searchCategorySuccess(
+            List([new CategoryDetailRecord({ category: "fiction" })])
+        ),
+        searchCategoryFailure("Error message"),
+        ADD_CATEGORY_SEARCH_SUCCESS,
+        ADD_CATEGORY_SEARCH_FAILURE
+    );
+});
