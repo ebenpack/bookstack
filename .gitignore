@@ -11,3 +11,4 @@ bundle.js
 htmlcov/
 bookstack_react.html
 yarn-error.log
+.env/
