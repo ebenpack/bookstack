@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction
-from django.db.models import F, Case, When, Value, Q, Max, Count, Subquery, OuterRef
+from django.db.models import F, Case, When, Value, Q, Max, Count, Subquery, OuterRef, UniqueConstraint, Deferrable
 from django.db.models.query import QuerySet
 
 
@@ -13,7 +13,7 @@ class Stack(models.Model):
     )
     books = models.ManyToManyField('Book', through='BookStack')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
 
@@ -32,7 +32,9 @@ class Book(models.Model):
 class BookStack(models.Model):
     class Meta:
         ordering = ('position',)
-        unique_together = ('position', 'stack')
+        constraints = (
+            UniqueConstraint(name='bookstack_position', fields=('position', 'stack'), deferrable=Deferrable.DEFERRED),
+        )
 
     stack = models.ForeignKey(Stack, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -47,7 +49,6 @@ class BookStack(models.Model):
     def max_position(self) -> int:
         return self.stack.bookstack_set.count()
 
-    @transaction.atomic
     def renumber(self, to_position: int) -> None:
         """Re-number book positions in the stack. After this method is executed,
         all books in a stack will be numbered sequentially from 1-n, where n is
@@ -75,26 +76,20 @@ class BookStack(models.Model):
             end = end - 1
             direction = 1
 
-        offset = max_position
-
-        # This is done in two separate phases in order to avoid running afoul of uniqueness constraints
-        # The items are first put into the correct relative order, and are simultaneously shifted by an offset
         bookstack_set.update(
             position=Case(
                 When(
                     (Q(position__gte=start) & Q(position__lte=end)),
-                    then=F('position') + direction + offset
+                    then=F('position') + direction
                 ),
                 When(
                     position=from_position,
-                    then=to_position + offset
+                    then=to_position
                 ),
-                default=F('position') + offset,
+                default=F('position'),
                 output_field=models.IntegerField()
             )
         )
-        # All bookstacks in the set are then shifted back by the offset
-        bookstack_set.update(position=F('position') - offset)
 
     def toggle_read(self) -> QuerySet:
         BookStack.objects.filter(id=self.id).update(

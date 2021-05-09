@@ -281,7 +281,7 @@ def test_bookstack_renumber_queries(db, django_assert_num_queries, admin_client)
     renumber_url = reverse("bookstack:bookstack-renumber", kwargs={'pk': bookstack.id})
     # Given: The new position to which the bookstack will be moved
     new_position = bookstack.max_position()
-    with django_assert_num_queries(19):
+    with django_assert_num_queries(16):
         # When: A request is made to renumber the bookstack
         # Then: Only the expected number of queries will have been made
         admin_client.patch(renumber_url, data=json.dumps({'position': new_position}),
