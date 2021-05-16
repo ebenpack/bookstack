@@ -48,7 +48,6 @@ class StackViewSet(viewsets.ModelViewSet):
         "bookstack_set__book__authors",
         "bookstack_set__book__publishers",
         "bookstack_set__bookstackcategory_set__category"
-        # 'bookstack_set__user'
     ).select_related("user")
     serializer_class = serializers.StackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
@@ -90,15 +89,6 @@ class BookStackViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.BookStackSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def list(self, request, *args, **kwargs):
-        serializer = serializers.BookStackSerializer(self.queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None, *args, **kwargs):
-        bookstack_detail = get_object_or_404(self.queryset, pk=pk)
-        serializer = serializers.BookStackSerializer(bookstack_detail)
-        return Response(serializer.data)
-
     def destroy(self, request, pk=None, *args, **kwargs):
         # Move item to last position in stack
         # before deleting, in order to maintain
@@ -115,11 +105,11 @@ class BookStackViewSet(viewsets.ModelViewSet):
             position = int(request.data["position"])
             bookstack = self.get_object()
             bookstack.renumber(position)
-        except (ValueError, IndexError):
+        except ValueError:
             content = {"detail": "Invalid position supplied"}
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
         bookstack = self.get_object()
-        serializer = serializers.BookStackSerializer(bookstack, partial=True)
+        serializer = self.serializer_class(bookstack, partial=True)
         return Response(serializer.data)
 
 
@@ -161,8 +151,8 @@ class AuthorViewSet(viewsets.ModelViewSet):
     search_fields = ("name",)
 
     def list(self, request, *args, **kwargs):
-        queryset = Author.objects
-        serializer = serializers.AuthorSerializer(queryset, many=True)
+        queryset = Author.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None, *args, **kwargs):
@@ -187,8 +177,8 @@ class PublisherViewSet(viewsets.ModelViewSet):
     search_fields = ("name",)
 
     def list(self, request, *args, **kwargs):
-        queryset = Publisher.objects
-        serializer = serializers.PublisherSerializer(queryset, many=True)
+        queryset = Publisher.objects.all()
+        serializer = self.serializer_class(queryset, many=True)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None, *args, **kwargs):
