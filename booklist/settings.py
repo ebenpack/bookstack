@@ -3,6 +3,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 PROJECT_PATH = os.path.realpath(os.path.dirname(__file__))
 
+# TODO: Rotate key and remove from source control if/when this ever gets deployed anywhere
 SECRET_KEY = "vbmb999aw1_zm8jgpb@%$))a_c#x3sc4h3_2nmu(t32do(wjxz"
 DEBUG = True
 
