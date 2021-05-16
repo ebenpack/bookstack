@@ -290,14 +290,18 @@ def test_bookstack_renumber_position_out_of_bounds(db, admin_client):
     book = Book.objects.create(title="foobar", pages=1729, isbn="foobar", img="")
     # Given: A book in the stack
     bookstack = BookStack.objects.create(book=book, stack=stack)
+    original_positions = list(stack.bookstack_set.values("id", "position"))
     # Given: The renumber bookstack URL
     renumber_url = reverse("bookstack:bookstack-renumber", kwargs={"pk": bookstack.id})
     # When: A request is made to renumber the bookstack to a position that is out of bounds
     renumber_response = admin_client.patch(
         renumber_url, data=json.dumps({"position": 30}), content_type="application/json"
     )
-    # Then: A 400 response is returned
-    assert renumber_response.status_code == 400
+    # Then: A 200 response is returned
+    assert renumber_response.status_code == 200
+    # Then: The bookstack is still in its original order
+    new_positions = list(stack.bookstack_set.values("id", "position"))
+    assert new_positions == original_positions
 
 
 def test_bookstack_renumber_queries(db, django_assert_num_queries, admin_client):
@@ -308,7 +312,7 @@ def test_bookstack_renumber_queries(db, django_assert_num_queries, admin_client)
     renumber_url = reverse("bookstack:bookstack-renumber", kwargs={"pk": bookstack.id})
     # Given: The new position to which the bookstack will be moved
     new_position = bookstack.max_position()
-    with django_assert_num_queries(16):
+    with django_assert_num_queries(15):
         # When: A request is made to renumber the bookstack
         # Then: Only the expected number of queries will have been made
         admin_client.patch(

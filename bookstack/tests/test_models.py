@@ -40,6 +40,20 @@ def test_random_renumbering_preserves_positioning_invariant():
         assert actual_positions == expected_positions
 
 
+def test_renumber_executes_single_query(django_assert_num_queries):
+    for stack in Stack.objects.all():
+        bookstack = stack.bookstack_set.first()
+        max_position = bookstack.max_position()
+
+        assert bookstack.position == 1
+        assert bookstack.position != max_position
+
+        with django_assert_num_queries(1):
+            # When: A request is made to renumber the bookstack
+            # Then: Only the expected number of queries will have been made
+            bookstack.renumber(max_position)
+
+
 def test_renumber_from_front_to_back_preserves_positioning_invariant():
     stack = Stack.objects.first()
     stack_size = stack.bookstack_set.count()
@@ -84,15 +98,22 @@ def test_renumber_to_current_position_doesnt_do_anything():
     assert bookstack_id == stack.bookstack_set.first().id
 
 
-def test_renumber_to_position_outside_of_bounds_raises_index_error():
+def test_renumber_to_position_outside_of_bounds_doesnt_do_anything():
     stack = Stack.objects.first()
     stack_size = stack.bookstack_set.count()
     bookstack = stack.bookstack_set.first()
-    with pytest.raises(IndexError):
-        bookstack.renumber(0)
 
-    with pytest.raises(IndexError):
-        bookstack.renumber(stack_size + 1)
+    original_positions = list(stack.bookstack_set.values("id", "position"))
+
+    bookstack.renumber(0)
+
+    new_positions = list(stack.bookstack_set.values("id", "position"))
+    assert new_positions == original_positions
+
+    bookstack.renumber(stack_size + 1)
+
+    new_positions = list(stack.bookstack_set.values("id", "position"))
+    assert new_positions == original_positions
 
 
 def test_saving_without_position_sets_position_to_end():

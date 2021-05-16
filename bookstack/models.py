@@ -66,16 +66,12 @@ class BookStack(models.Model):
         all books in a stack will be numbered sequentially from 1-n, where n is
         the number of books in the stack, and each book will have a unique position.
         """
+        bookstack_set = self.stack.bookstack_set.select_for_update()
+
         from_position = self.position
 
         if from_position == to_position:
             return
-
-        bookstack_set = self.stack.bookstack_set.select_for_update()
-        max_position = self.max_position()
-
-        if to_position <= 0 or to_position > max_position:
-            raise IndexError
 
         start = min(from_position, to_position)
         end = max(from_position, to_position)
@@ -88,13 +84,22 @@ class BookStack(models.Model):
             end = end - 1
             direction = 1
 
-        bookstack_set.update(
+        move_in_bounds = Q(to_position__gt=0) & Q(
+            to_position__lte=Subquery(
+                bookstack_set.order_by("-position").values("position")[:1]
+            )
+        )
+
+        bookstack_set.annotate(
+            new_position=F("position") + direction, to_position=Value(to_position)
+        ).update(
             position=Case(
+                When(~move_in_bounds, then=F("position")),
                 When(
                     (Q(position__gte=start) & Q(position__lte=end)),
-                    then=F("position") + direction,
+                    then=F("new_position"),
                 ),
-                When(position=from_position, then=to_position),
+                When(Q(position=from_position), then=to_position),
                 default=F("position"),
                 output_field=models.IntegerField(),
             )
